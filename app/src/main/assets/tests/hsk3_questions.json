@@ -1,0 +1,2702 @@
+[
+  {
+    "id": "hsk3_q1",
+    "level": 3,
+    "prompt": "Переведите: 如果",
+    "answers": [
+      {
+        "id": "hsk3_q1_0",
+        "text": "Если",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q1_1",
+        "text": "Потому что",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q1_2",
+        "text": "Хотя",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q1_3",
+        "text": "Поэтому",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q2",
+    "level": 3,
+    "prompt": "Переведите: 但是",
+    "answers": [
+      {
+        "id": "hsk3_q2_0",
+        "text": "Но / однако",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q2_1",
+        "text": "И",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q2_2",
+        "text": "Потом",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q2_3",
+        "text": "Или",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q3",
+    "level": 3,
+    "prompt": "Переведите: 参加",
+    "answers": [
+      {
+        "id": "hsk3_q3_0",
+        "text": "Участвовать",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q3_1",
+        "text": "Объяснять",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q3_2",
+        "text": "Исправлять",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q3_3",
+        "text": "Платить",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q4",
+    "level": 3,
+    "prompt": "Переведите: 影响",
+    "answers": [
+      {
+        "id": "hsk3_q4_0",
+        "text": "Влиять",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q4_1",
+        "text": "Соглашаться",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q4_2",
+        "text": "Двигаться",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q4_3",
+        "text": "Забывать",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q5",
+    "level": 3,
+    "prompt": "Переведите: 结果",
+    "answers": [
+      {
+        "id": "hsk3_q5_0",
+        "text": "Результат",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q5_1",
+        "text": "Причина",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q5_2",
+        "text": "Идея",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q5_3",
+        "text": "Ошибка",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q6",
+    "level": 3,
+    "prompt": "Переведите: 了解",
+    "answers": [
+      {
+        "id": "hsk3_q6_0",
+        "text": "Понимать / знать",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q6_1",
+        "text": "Бояться",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q6_2",
+        "text": "Слушать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q6_3",
+        "text": "Считать",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q7",
+    "level": 3,
+    "prompt": "Переведите: 习惯",
+    "answers": [
+      {
+        "id": "hsk3_q7_0",
+        "text": "Привычка / привыкать",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q7_1",
+        "text": "План",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q7_2",
+        "text": "Вкус",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q7_3",
+        "text": "Спорт",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q8",
+    "level": 3,
+    "prompt": "Переведите: 终于",
+    "answers": [
+      {
+        "id": "hsk3_q8_0",
+        "text": "Наконец-то",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q8_1",
+        "text": "Снова",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q8_2",
+        "text": "Сразу",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q8_3",
+        "text": "Обычно",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q9",
+    "level": 3,
+    "prompt": "Переведите: 以前",
+    "answers": [
+      {
+        "id": "hsk3_q9_0",
+        "text": "Раньше",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q9_1",
+        "text": "Позже",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q9_2",
+        "text": "Теперь",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q9_3",
+        "text": "Завтра",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q10",
+    "level": 3,
+    "prompt": "Переведите: 环境",
+    "answers": [
+      {
+        "id": "hsk3_q10_0",
+        "text": "Окружающая среда",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q10_1",
+        "text": "Погода",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q10_2",
+        "text": "Время",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q10_3",
+        "text": "Место",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q11",
+    "level": 3,
+    "prompt": "Переведите: 经验",
+    "answers": [
+      {
+        "id": "hsk3_q11_0",
+        "text": "Опыт",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q11_1",
+        "text": "План",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q11_2",
+        "text": "Ошибка",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q11_3",
+        "text": "Уровень",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q12",
+    "level": 3,
+    "prompt": "Переведите: 决定",
+    "answers": [
+      {
+        "id": "hsk3_q12_0",
+        "text": "Решать / решение",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q12_1",
+        "text": "Забывать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q12_2",
+        "text": "Спрашивать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q12_3",
+        "text": "Играть",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q13",
+    "level": 3,
+    "prompt": "Переведите: 选择",
+    "answers": [
+      {
+        "id": "hsk3_q13_0",
+        "text": "Выбирать",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q13_1",
+        "text": "Решать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q13_2",
+        "text": "Считать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q13_3",
+        "text": "Покупать",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q14",
+    "level": 3,
+    "prompt": "Переведите: 比较",
+    "answers": [
+      {
+        "id": "hsk3_q14_0",
+        "text": "Сравнивать / довольно",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q14_1",
+        "text": "Покупать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q14_2",
+        "text": "Продавать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q14_3",
+        "text": "Решать",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q15",
+    "level": 3,
+    "prompt": "Переведите: 解决",
+    "answers": [
+      {
+        "id": "hsk3_q15_0",
+        "text": "Решать (проблему)",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q15_1",
+        "text": "Создавать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q15_2",
+        "text": "Забывать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q15_3",
+        "text": "Объяснять",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q16",
+    "level": 3,
+    "prompt": "Переведите: 感觉",
+    "answers": [
+      {
+        "id": "hsk3_q16_0",
+        "text": "Чувствовать / ощущение",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q16_1",
+        "text": "Слышать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q16_2",
+        "text": "Видеть",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q16_3",
+        "text": "Понимать",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q17",
+    "level": 3,
+    "prompt": "Переведите: 关心",
+    "answers": [
+      {
+        "id": "hsk3_q17_0",
+        "text": "Заботиться",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q17_1",
+        "text": "Забывать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q17_2",
+        "text": "Ненавидеть",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q17_3",
+        "text": "Бежать",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q18",
+    "level": 3,
+    "prompt": "Переведите: 注意",
+    "answers": [
+      {
+        "id": "hsk3_q18_0",
+        "text": "Обращать внимание",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q18_1",
+        "text": "Забывать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q18_2",
+        "text": "Игнорировать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q18_3",
+        "text": "Бояться",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q19",
+    "level": 3,
+    "prompt": "Переведите: 努力",
+    "answers": [
+      {
+        "id": "hsk3_q19_0",
+        "text": "Стараться / усердный",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q19_1",
+        "text": "Ленивый",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q19_2",
+        "text": "Усталый",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q19_3",
+        "text": "Грустный",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q20",
+    "level": 3,
+    "prompt": "Переведите: 机会",
+    "answers": [
+      {
+        "id": "hsk3_q20_0",
+        "text": "Возможность / шанс",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q20_1",
+        "text": "Проблема",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q20_2",
+        "text": "Ошибка",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q20_3",
+        "text": "Трудность",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q21",
+    "level": 3,
+    "prompt": "Переведите: 当然",
+    "answers": [
+      {
+        "id": "hsk3_q21_0",
+        "text": "Конечно",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q21_1",
+        "text": "Возможно",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q21_2",
+        "text": "Может быть",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q21_3",
+        "text": "Наверное",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q22",
+    "level": 3,
+    "prompt": "Переведите: 一般",
+    "answers": [
+      {
+        "id": "hsk3_q22_0",
+        "text": "Обычный / обычно",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q22_1",
+        "text": "Особенный",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q22_2",
+        "text": "Странный",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q22_3",
+        "text": "Редкий",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q23",
+    "level": 3,
+    "prompt": "Переведите: 必须",
+    "answers": [
+      {
+        "id": "hsk3_q23_0",
+        "text": "Должен / обязательно",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q23_1",
+        "text": "Может",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q23_2",
+        "text": "Хочет",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q23_3",
+        "text": "Иногда",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q24",
+    "level": 3,
+    "prompt": "Переведите: 或者",
+    "answers": [
+      {
+        "id": "hsk3_q24_0",
+        "text": "Или",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q24_1",
+        "text": "И",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q24_2",
+        "text": "Но",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q24_3",
+        "text": "Потому что",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q25",
+    "level": 3,
+    "prompt": "Переведите: 虽然",
+    "answers": [
+      {
+        "id": "hsk3_q25_0",
+        "text": "Хотя",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q25_1",
+        "text": "Если",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q25_2",
+        "text": "Потому что",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q25_3",
+        "text": "Поэтому",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q26",
+    "level": 3,
+    "prompt": "Переведите: 着急",
+    "answers": [
+      {
+        "id": "hsk3_q26_0",
+        "text": "Волноваться / торопиться",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q26_1",
+        "text": "Радоваться",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q26_2",
+        "text": "Отдыхать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q26_3",
+        "text": "Спать",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q27",
+    "level": 3,
+    "prompt": "Переведите: 可怜",
+    "answers": [
+      {
+        "id": "hsk3_q27_0",
+        "text": "Жалкий / бедный",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q27_1",
+        "text": "Богатый",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q27_2",
+        "text": "Красивый",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q27_3",
+        "text": "Весёлый",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q28",
+    "level": 3,
+    "prompt": "Переведите: 丰富",
+    "answers": [
+      {
+        "id": "hsk3_q28_0",
+        "text": "Богатый / обильный",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q28_1",
+        "text": "Бедный",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q28_2",
+        "text": "Простой",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q28_3",
+        "text": "Лёгкий",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q29",
+    "level": 3,
+    "prompt": "Переведите: 安全",
+    "answers": [
+      {
+        "id": "hsk3_q29_0",
+        "text": "Безопасный",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q29_1",
+        "text": "Опасный",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q29_2",
+        "text": "Быстрый",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q29_3",
+        "text": "Удобный",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q30",
+    "level": 3,
+    "prompt": "Переведите: 危险",
+    "answers": [
+      {
+        "id": "hsk3_q30_0",
+        "text": "Опасный",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q30_1",
+        "text": "Безопасный",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q30_2",
+        "text": "Удобный",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q30_3",
+        "text": "Тихий",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q31",
+    "level": 3,
+    "prompt": "Переведите: 详细",
+    "answers": [
+      {
+        "id": "hsk3_q31_0",
+        "text": "Подробный",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q31_1",
+        "text": "Краткий",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q31_2",
+        "text": "Простой",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q31_3",
+        "text": "Быстрый",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q32",
+    "level": 3,
+    "prompt": "Переведите: 严格",
+    "answers": [
+      {
+        "id": "hsk3_q32_0",
+        "text": "Строгий",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q32_1",
+        "text": "Мягкий",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q32_2",
+        "text": "Добрый",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q32_3",
+        "text": "Ленивый",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q33",
+    "level": 3,
+    "prompt": "Переведите: 合适",
+    "answers": [
+      {
+        "id": "hsk3_q33_0",
+        "text": "Подходящий",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q33_1",
+        "text": "Неудобный",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q33_2",
+        "text": "Странный",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q33_3",
+        "text": "Далёкий",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q34",
+    "level": 3,
+    "prompt": "Переведите: 方便",
+    "answers": [
+      {
+        "id": "hsk3_q34_0",
+        "text": "Удобный",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q34_1",
+        "text": "Далёкий",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q34_2",
+        "text": "Опасный",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q34_3",
+        "text": "Дорогой",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q35",
+    "level": 3,
+    "prompt": "Переведите: 顺利",
+    "answers": [
+      {
+        "id": "hsk3_q35_0",
+        "text": "Гладко / успешно",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q35_1",
+        "text": "Трудно",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q35_2",
+        "text": "Медленно",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q35_3",
+        "text": "Случайно",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q36",
+    "level": 3,
+    "prompt": "Переведите: 我已经吃过了",
+    "answers": [
+      {
+        "id": "hsk3_q36_0",
+        "text": "Я уже поел",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q36_1",
+        "text": "Я ещё не ел",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q36_2",
+        "text": "Я ем сейчас",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q36_3",
+        "text": "Я буду есть",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q37",
+    "level": 3,
+    "prompt": "Переведите: 如果明天下雨，我就不去了",
+    "answers": [
+      {
+        "id": "hsk3_q37_0",
+        "text": "Если завтра будет дождь, я не пойду",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q37_1",
+        "text": "Завтра дождь, я иду",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q37_2",
+        "text": "Я пойду если будет солнце",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q37_3",
+        "text": "Мне нравится дождь",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q38",
+    "level": 3,
+    "prompt": "Переведите: 虽然很累，但是我很开心",
+    "answers": [
+      {
+        "id": "hsk3_q38_0",
+        "text": "Хотя я устал, но я очень счастлив",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q38_1",
+        "text": "Я устал и грустен",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q38_2",
+        "text": "Я не устал",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q38_3",
+        "text": "Я хочу спать",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q39",
+    "level": 3,
+    "prompt": "Переведите: 他对这个工作很满意",
+    "answers": [
+      {
+        "id": "hsk3_q39_0",
+        "text": "Он доволен этой работой",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q39_1",
+        "text": "Он ненавидит работу",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q39_2",
+        "text": "Он ищет работу",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q39_3",
+        "text": "Он потерял работу",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q40",
+    "level": 3,
+    "prompt": "Переведите: 我打算暑假去旅游",
+    "answers": [
+      {
+        "id": "hsk3_q40_0",
+        "text": "Я планирую путешествовать на каникулах",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q40_1",
+        "text": "Я не люблю путешествовать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q40_2",
+        "text": "Я работаю на каникулах",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q40_3",
+        "text": "Я уже путешествовал",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q41",
+    "level": 3,
+    "prompt": "Переведите: 请你把窗户关上",
+    "answers": [
+      {
+        "id": "hsk3_q41_0",
+        "text": "Пожалуйста, закройте окно",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q41_1",
+        "text": "Откройте окно",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q41_2",
+        "text": "Помойте окно",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q41_3",
+        "text": "Разбейте окно",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q42",
+    "level": 3,
+    "prompt": "Переведите: 这件事对他影响很大",
+    "answers": [
+      {
+        "id": "hsk3_q42_0",
+        "text": "Это дело сильно на него повлияло",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q42_1",
+        "text": "Он не знает об этом",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q42_2",
+        "text": "Это неважно",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q42_3",
+        "text": "Он забыл об этом",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q43",
+    "level": 3,
+    "prompt": "Переведите: 你应该多运动",
+    "answers": [
+      {
+        "id": "hsk3_q43_0",
+        "text": "Тебе нужно больше заниматься спортом",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q43_1",
+        "text": "Ты не должен бегать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q43_2",
+        "text": "Ты слишком много бегаешь",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q43_3",
+        "text": "Спорт вреден",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q44",
+    "level": 3,
+    "prompt": "Переведите: 他不但聪明，而且很努力",
+    "answers": [
+      {
+        "id": "hsk3_q44_0",
+        "text": "Он не только умный, но и трудолюбивый",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q44_1",
+        "text": "Он умный, но ленивый",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q44_2",
+        "text": "Он глупый и ленивый",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q44_3",
+        "text": "Он только трудолюбивый",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q45",
+    "level": 3,
+    "prompt": "Переведите: 我们需要更多时间",
+    "answers": [
+      {
+        "id": "hsk3_q45_0",
+        "text": "Нам нужно больше времени",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q45_1",
+        "text": "У нас много времени",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q45_2",
+        "text": "Время не важно",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q45_3",
+        "text": "Мы уже опоздали",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q46",
+    "level": 3,
+    "prompt": "Переведите: 这个办法不太好",
+    "answers": [
+      {
+        "id": "hsk3_q46_0",
+        "text": "Этот способ не очень хороший",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q46_1",
+        "text": "Этот способ отличный",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q46_2",
+        "text": "Нет никакого способа",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q46_3",
+        "text": "Способ очень новый",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q47",
+    "level": 3,
+    "prompt": "Переведите: 我把书放在桌子上了",
+    "answers": [
+      {
+        "id": "hsk3_q47_0",
+        "text": "Я положил книгу на стол",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q47_1",
+        "text": "Я взял книгу со стола",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q47_2",
+        "text": "Книга упала со стола",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q47_3",
+        "text": "На столе нет книги",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q48",
+    "level": 3,
+    "prompt": "Переведите: 他一直在等你",
+    "answers": [
+      {
+        "id": "hsk3_q48_0",
+        "text": "Он всё время тебя ждал",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q48_1",
+        "text": "Он уже ушёл",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q48_2",
+        "text": "Он не хочет ждать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q48_3",
+        "text": "Он тебя не знает",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q49",
+    "level": 3,
+    "prompt": "Переведите: 你能帮我翻译一下吗？",
+    "answers": [
+      {
+        "id": "hsk3_q49_0",
+        "text": "Можешь помочь мне перевести?",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q49_1",
+        "text": "Ты умеешь переводить?",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q49_2",
+        "text": "Не переводи это",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q49_3",
+        "text": "Это не нужно переводить",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q50",
+    "level": 3,
+    "prompt": "Переведите: 最近我很忙，没时间休息",
+    "answers": [
+      {
+        "id": "hsk3_q50_0",
+        "text": "В последнее время я занят, нет времени отдохнуть",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q50_1",
+        "text": "Я всегда отдыхаю",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q50_2",
+        "text": "Я не хочу работать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q50_3",
+        "text": "У меня свободное время",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q51",
+    "level": 3,
+    "prompt": "Переведите: 这个电影让我很感动",
+    "answers": [
+      {
+        "id": "hsk3_q51_0",
+        "text": "Этот фильм меня очень тронул",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q51_1",
+        "text": "Фильм скучный",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q51_2",
+        "text": "Фильм страшный",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q51_3",
+        "text": "Фильм смешной",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q52",
+    "level": 3,
+    "prompt": "Переведите: 她终于找到了工作",
+    "answers": [
+      {
+        "id": "hsk3_q52_0",
+        "text": "Она наконец нашла работу",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q52_1",
+        "text": "Она потеряла работу",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q52_2",
+        "text": "Она ищет работу",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q52_3",
+        "text": "Она не хочет работать",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q53",
+    "level": 3,
+    "prompt": "Переведите: 我们之间有误会",
+    "answers": [
+      {
+        "id": "hsk3_q53_0",
+        "text": "Между нами произошло недоразумение",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q53_1",
+        "text": "Мы хорошие друзья",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q53_2",
+        "text": "Мы давно знакомы",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q53_3",
+        "text": "Мы не знакомы",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q54",
+    "level": 3,
+    "prompt": "Переведите: 他的建议很有道理",
+    "answers": [
+      {
+        "id": "hsk3_q54_0",
+        "text": "Его предложение очень разумное",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q54_1",
+        "text": "Его идея глупая",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q54_2",
+        "text": "Он не даёт советов",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q54_3",
+        "text": "Он молчит",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q55",
+    "level": 3,
+    "prompt": "Переведите: 明天可能会下雪",
+    "answers": [
+      {
+        "id": "hsk3_q55_0",
+        "text": "Завтра, возможно, пойдёт снег",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q55_1",
+        "text": "Завтра точно будет снег",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q55_2",
+        "text": "Снега не будет",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q55_3",
+        "text": "Вчера шёл снег",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q56",
+    "level": 3,
+    "prompt": "Вставьте: ___他很忙，___他还是来了。",
+    "answers": [
+      {
+        "id": "hsk3_q56_0",
+        "text": "虽然…但是",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q56_1",
+        "text": "因为…所以",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q56_2",
+        "text": "如果…就",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q56_3",
+        "text": "不但…而且",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q57",
+    "level": 3,
+    "prompt": "Вставьте: ___你有时间，___来找我吧。",
+    "answers": [
+      {
+        "id": "hsk3_q57_0",
+        "text": "如果…就",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q57_1",
+        "text": "虽然…但是",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q57_2",
+        "text": "因为…所以",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q57_3",
+        "text": "不但…而且",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q58",
+    "level": 3,
+    "prompt": "Вставьте: 他___会说中文，___会说日文。",
+    "answers": [
+      {
+        "id": "hsk3_q58_0",
+        "text": "不但…而且",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q58_1",
+        "text": "虽然…但是",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q58_2",
+        "text": "因为…所以",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q58_3",
+        "text": "如果…就",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q59",
+    "level": 3,
+    "prompt": "Что означает конструкция «把» в предложении?",
+    "answers": [
+      {
+        "id": "hsk3_q59_0",
+        "text": "Указывает на действие с конкретным объектом",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q59_1",
+        "text": "Указывает на вопрос",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q59_2",
+        "text": "Указывает на время",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q59_3",
+        "text": "Указывает на место",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q60",
+    "level": 3,
+    "prompt": "Выберите правильную «把»-конструкцию:",
+    "answers": [
+      {
+        "id": "hsk3_q60_0",
+        "text": "他把门关上了",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q60_1",
+        "text": "他关上了把门",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q60_2",
+        "text": "把他门关上了",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q60_3",
+        "text": "他门把关上了",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q61",
+    "level": 3,
+    "prompt": "Вставьте: 他___我说了这件事。(предлог «к/с»)",
+    "answers": [
+      {
+        "id": "hsk3_q61_0",
+        "text": "跟",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q61_1",
+        "text": "把",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q61_2",
+        "text": "被",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q61_3",
+        "text": "让",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q62",
+    "level": 3,
+    "prompt": "Вставьте: 这本书___他拿走了。(пассив)",
+    "answers": [
+      {
+        "id": "hsk3_q62_0",
+        "text": "被",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q62_1",
+        "text": "把",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q62_2",
+        "text": "跟",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q62_3",
+        "text": "让",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q63",
+    "level": 3,
+    "prompt": "Вставьте: 妈妈___我去买东西。(заставить/попросить)",
+    "answers": [
+      {
+        "id": "hsk3_q63_0",
+        "text": "让",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q63_1",
+        "text": "被",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q63_2",
+        "text": "把",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q63_3",
+        "text": "跟",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q64",
+    "level": 3,
+    "prompt": "Выберите правильный вариант: 我来中国___两年了。",
+    "answers": [
+      {
+        "id": "hsk3_q64_0",
+        "text": "已经",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q64_1",
+        "text": "正在",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q64_2",
+        "text": "将要",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q64_3",
+        "text": "刚才",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q65",
+    "level": 3,
+    "prompt": "Выберите: 他学中文学了___。(как долго?)",
+    "answers": [
+      {
+        "id": "hsk3_q65_0",
+        "text": "三年",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q65_1",
+        "text": "三天前",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q65_2",
+        "text": "三次",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q65_3",
+        "text": "第三",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q66",
+    "level": 3,
+    "prompt": "Какое слово означает «всё ещё» (продолжение)?",
+    "answers": [
+      {
+        "id": "hsk3_q66_0",
+        "text": "还是",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q66_1",
+        "text": "已经",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q66_2",
+        "text": "马上",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q66_3",
+        "text": "刚才",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q67",
+    "level": 3,
+    "prompt": "Вставьте: 越来越___了。(холодно)",
+    "answers": [
+      {
+        "id": "hsk3_q67_0",
+        "text": "冷",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q67_1",
+        "text": "热",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q67_2",
+        "text": "好",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q67_3",
+        "text": "多",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q68",
+    "level": 3,
+    "prompt": "Что означает «越…越…»?",
+    "answers": [
+      {
+        "id": "hsk3_q68_0",
+        "text": "Чем больше… тем больше…",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q68_1",
+        "text": "И… и…",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q68_2",
+        "text": "Или… или…",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q68_3",
+        "text": "Ни… ни…",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q69",
+    "level": 3,
+    "prompt": "Вставьте: 这道题___难___简单。(ни… ни…)",
+    "answers": [
+      {
+        "id": "hsk3_q69_0",
+        "text": "不…也不",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q69_1",
+        "text": "又…又",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q69_2",
+        "text": "越…越",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q69_3",
+        "text": "一…就",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q70",
+    "level": 3,
+    "prompt": "Что означает «一…就…»?",
+    "answers": [
+      {
+        "id": "hsk3_q70_0",
+        "text": "Как только… сразу…",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q70_1",
+        "text": "И… и…",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q70_2",
+        "text": "Чем… тем…",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q70_3",
+        "text": "Хотя… но…",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q71",
+    "level": 3,
+    "prompt": "Выберите правильное: 他除了英语___会说法语。",
+    "answers": [
+      {
+        "id": "hsk3_q71_0",
+        "text": "以外，还",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q71_1",
+        "text": "以后，就",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q71_2",
+        "text": "以前，也",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q71_3",
+        "text": "之后，再",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q72",
+    "level": 3,
+    "prompt": "Что означает «对…来说»?",
+    "answers": [
+      {
+        "id": "hsk3_q72_0",
+        "text": "Для кого-то / с точки зрения",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q72_1",
+        "text": "Вместе с",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q72_2",
+        "text": "Потому что",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q72_3",
+        "text": "Из-за",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q73",
+    "level": 3,
+    "prompt": "这本书的___很有意思。(содержание)",
+    "answers": [
+      {
+        "id": "hsk3_q73_0",
+        "text": "内容",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q73_1",
+        "text": "封面",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q73_2",
+        "text": "颜色",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q73_3",
+        "text": "价格",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q74",
+    "level": 3,
+    "prompt": "我们应该___环境。(защищать)",
+    "answers": [
+      {
+        "id": "hsk3_q74_0",
+        "text": "保护",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q74_1",
+        "text": "破坏",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q74_2",
+        "text": "忘记",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q74_3",
+        "text": "离开",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q75",
+    "level": 3,
+    "prompt": "他对学习很有___。(интерес)",
+    "answers": [
+      {
+        "id": "hsk3_q75_0",
+        "text": "兴趣",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q75_1",
+        "text": "经验",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q75_2",
+        "text": "机会",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q75_3",
+        "text": "困难",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q76",
+    "level": 3,
+    "prompt": "这次考试我___了。(провалить)",
+    "answers": [
+      {
+        "id": "hsk3_q76_0",
+        "text": "失败",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q76_1",
+        "text": "成功",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q76_2",
+        "text": "开始",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q76_3",
+        "text": "结束",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q77",
+    "level": 3,
+    "prompt": "老师让我们写一篇___。(сочинение)",
+    "answers": [
+      {
+        "id": "hsk3_q77_0",
+        "text": "文章",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q77_1",
+        "text": "信",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q77_2",
+        "text": "日记",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q77_3",
+        "text": "名字",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q78",
+    "level": 3,
+    "prompt": "他的___很好，从不迟到。(привычки)",
+    "answers": [
+      {
+        "id": "hsk3_q78_0",
+        "text": "习惯",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q78_1",
+        "text": "成绩",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q78_2",
+        "text": "身体",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q78_3",
+        "text": "心情",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q79",
+    "level": 3,
+    "prompt": "这个问题的___是什么？(причина)",
+    "answers": [
+      {
+        "id": "hsk3_q79_0",
+        "text": "原因",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q79_1",
+        "text": "结果",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q79_2",
+        "text": "答案",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q79_3",
+        "text": "办法",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q80",
+    "level": 3,
+    "prompt": "请大家___安静。(сохранять)",
+    "answers": [
+      {
+        "id": "hsk3_q80_0",
+        "text": "保持",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q80_1",
+        "text": "打破",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q80_2",
+        "text": "增加",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q80_3",
+        "text": "减少",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q81",
+    "level": 3,
+    "prompt": "我们需要___这个问题。(обсудить)",
+    "answers": [
+      {
+        "id": "hsk3_q81_0",
+        "text": "讨论",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q81_1",
+        "text": "忘记",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q81_2",
+        "text": "避免",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q81_3",
+        "text": "拒绝",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q82",
+    "level": 3,
+    "prompt": "他在网上___了一本书。(заказать)",
+    "answers": [
+      {
+        "id": "hsk3_q82_0",
+        "text": "订",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q82_1",
+        "text": "写",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q82_2",
+        "text": "读",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q82_3",
+        "text": "扔",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q83",
+    "level": 3,
+    "prompt": "Найдите синоним к «高兴»:",
+    "answers": [
+      {
+        "id": "hsk3_q83_0",
+        "text": "开心",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q83_1",
+        "text": "难过",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q83_2",
+        "text": "生气",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q83_3",
+        "text": "害怕",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q84",
+    "level": 3,
+    "prompt": "Найдите синоним к «帮助»:",
+    "answers": [
+      {
+        "id": "hsk3_q84_0",
+        "text": "帮忙",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q84_1",
+        "text": "阻止",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q84_2",
+        "text": "拒绝",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q84_3",
+        "text": "忽视",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q85",
+    "level": 3,
+    "prompt": "Найдите синоним к «马上»:",
+    "answers": [
+      {
+        "id": "hsk3_q85_0",
+        "text": "立刻",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q85_1",
+        "text": "慢慢",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q85_2",
+        "text": "以后",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q85_3",
+        "text": "从前",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q86",
+    "level": 3,
+    "prompt": "Найдите синоним к «聪明»:",
+    "answers": [
+      {
+        "id": "hsk3_q86_0",
+        "text": "机灵",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q86_1",
+        "text": "笨",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q86_2",
+        "text": "傻",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q86_3",
+        "text": "慢",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q87",
+    "level": 3,
+    "prompt": "Найдите антоним к «安全»:",
+    "answers": [
+      {
+        "id": "hsk3_q87_0",
+        "text": "危险",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q87_1",
+        "text": "方便",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q87_2",
+        "text": "舒服",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q87_3",
+        "text": "简单",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q88",
+    "level": 3,
+    "prompt": "Найдите антоним к «简单»:",
+    "answers": [
+      {
+        "id": "hsk3_q88_0",
+        "text": "复杂",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q88_1",
+        "text": "容易",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q88_2",
+        "text": "方便",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q88_3",
+        "text": "清楚",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q89",
+    "level": 3,
+    "prompt": "Найдите антоним к «成功»:",
+    "answers": [
+      {
+        "id": "hsk3_q89_0",
+        "text": "失败",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q89_1",
+        "text": "努力",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q89_2",
+        "text": "开始",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q89_3",
+        "text": "继续",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q90",
+    "level": 3,
+    "prompt": "Найдите антоним к «丰富»:",
+    "answers": [
+      {
+        "id": "hsk3_q90_0",
+        "text": "贫乏",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q90_1",
+        "text": "重要",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q90_2",
+        "text": "美丽",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q90_3",
+        "text": "聪明",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q91",
+    "level": 3,
+    "prompt": "Найдите антоним к «详细»:",
+    "answers": [
+      {
+        "id": "hsk3_q91_0",
+        "text": "简略",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q91_1",
+        "text": "复杂",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q91_2",
+        "text": "困难",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q91_3",
+        "text": "重要",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q92",
+    "level": 3,
+    "prompt": "Найдите антоним к «严格»:",
+    "answers": [
+      {
+        "id": "hsk3_q92_0",
+        "text": "宽松",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q92_1",
+        "text": "认真",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q92_2",
+        "text": "仔细",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q92_3",
+        "text": "努力",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q93",
+    "level": 3,
+    "prompt": "Переведите: 只要",
+    "answers": [
+      {
+        "id": "hsk3_q93_0",
+        "text": "Лишь бы / если только",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q93_1",
+        "text": "Даже если",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q93_2",
+        "text": "Хотя",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q93_3",
+        "text": "Несмотря на",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q94",
+    "level": 3,
+    "prompt": "Переведите: 无论",
+    "answers": [
+      {
+        "id": "hsk3_q94_0",
+        "text": "Независимо от",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q94_1",
+        "text": "Потому что",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q94_2",
+        "text": "Если",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q94_3",
+        "text": "Хотя",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q95",
+    "level": 3,
+    "prompt": "Переведите: 到处",
+    "answers": [
+      {
+        "id": "hsk3_q95_0",
+        "text": "Везде / повсюду",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q95_1",
+        "text": "Нигде",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q95_2",
+        "text": "Где-то",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q95_3",
+        "text": "Здесь",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q96",
+    "level": 3,
+    "prompt": "Переведите: 难道",
+    "answers": [
+      {
+        "id": "hsk3_q96_0",
+        "text": "Разве / неужели",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q96_1",
+        "text": "Конечно",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q96_2",
+        "text": "Наверное",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q96_3",
+        "text": "Возможно",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q97",
+    "level": 3,
+    "prompt": "Переведите: 恐怕",
+    "answers": [
+      {
+        "id": "hsk3_q97_0",
+        "text": "Боюсь, что / наверное",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q97_1",
+        "text": "Конечно",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q97_2",
+        "text": "Обязательно",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q97_3",
+        "text": "Точно",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q98",
+    "level": 3,
+    "prompt": "Переведите: 其实",
+    "answers": [
+      {
+        "id": "hsk3_q98_0",
+        "text": "На самом деле",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q98_1",
+        "text": "Может быть",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q98_2",
+        "text": "Наверное",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q98_3",
+        "text": "Вроде бы",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q99",
+    "level": 3,
+    "prompt": "Переведите: 及时",
+    "answers": [
+      {
+        "id": "hsk3_q99_0",
+        "text": "Своевременно",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q99_1",
+        "text": "Медленно",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q99_2",
+        "text": "Поздно",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q99_3",
+        "text": "Случайно",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk3_q100",
+    "level": 3,
+    "prompt": "Переведите: 主要",
+    "answers": [
+      {
+        "id": "hsk3_q100_0",
+        "text": "Главный / основной",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk3_q100_1",
+        "text": "Второстепенный",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q100_2",
+        "text": "Маленький",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk3_q100_3",
+        "text": "Обычный",
+        "isCorrect": false
+      }
+    ]
+  }
+]

@@ -1,0 +1,1247 @@
+package com.subnetik.unlock.presentation.screens.teacher
+
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.subnetik.unlock.data.remote.dto.admin.AdminGroup
+import com.subnetik.unlock.data.remote.dto.admin.AdminHomeworkAssignment
+import com.subnetik.unlock.data.remote.dto.admin.HomeworkStudentGroupOverview
+import com.subnetik.unlock.data.remote.dto.admin.HomeworkStudentRatingEntry
+import com.subnetik.unlock.presentation.screens.admin.components.AdminBackground
+import com.subnetik.unlock.presentation.theme.*
+import java.text.SimpleDateFormat
+import java.util.*
+
+@Composable
+fun TeacherGroupsScreen(
+    viewModel: TeacherGroupsViewModel = hiltViewModel(),
+) {
+    val uiState by viewModel.uiState.collectAsState()
+    val isDark = uiState.isDarkTheme ?: isSystemInDarkTheme()
+
+    // Full-screen overlays from group detail
+    if (uiState.selectedGroup != null) {
+        TeacherGroupsDetailScreen(viewModel = viewModel, isDark = isDark)
+        return
+    }
+
+    if (uiState.showNewHomework) {
+        TeacherGroupsNewHomeworkScreen(viewModel = viewModel, isDark = isDark)
+        return
+    }
+
+    val primaryText = if (isDark) Color.White else MaterialTheme.colorScheme.onSurface
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        AdminBackground(isDark = isDark)
+
+        Column(modifier = Modifier.fillMaxSize()) {
+            // Tab selector: Мои группы | Домашние задания
+            val tabs = listOf("Мои группы", "Домашние задания")
+            val selectedTab = uiState.selectedTab
+
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .statusBarsPadding()
+                    .padding(horizontal = Brand.Spacing.lg, vertical = Brand.Spacing.sm),
+                shape = Brand.Shapes.full,
+                color = if (isDark) Color.White.copy(alpha = 0.06f) else Color.Black.copy(alpha = 0.06f),
+            ) {
+                Row(modifier = Modifier.padding(3.dp)) {
+                    tabs.forEachIndexed { index, title ->
+                        val isSelected = selectedTab == index
+                        Surface(
+                            onClick = { viewModel.selectTab(index) },
+                            modifier = Modifier.weight(1f),
+                            shape = Brand.Shapes.full,
+                            color = if (isSelected) {
+                                if (isDark) Color.White.copy(alpha = 0.12f) else Color.White
+                            } else Color.Transparent,
+                        ) {
+                            Text(
+                                text = title,
+                                modifier = Modifier.padding(vertical = 8.dp),
+                                textAlign = TextAlign.Center,
+                                style = MaterialTheme.typography.labelMedium,
+                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                                color = if (isSelected) primaryText else primaryText.copy(alpha = 0.5f),
+                            )
+                        }
+                    }
+                }
+            }
+
+            when (selectedTab) {
+                0 -> MyGroupsTab(uiState = uiState, isDark = isDark, viewModel = viewModel)
+                1 -> HomeworkTab(uiState = uiState, isDark = isDark, viewModel = viewModel)
+            }
+        }
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// TAB 1: Мои группы
+// ═══════════════════════════════════════════════════════════════
+
+@Composable
+private fun MyGroupsTab(
+    uiState: TeacherGroupsUiState,
+    isDark: Boolean,
+    viewModel: TeacherGroupsViewModel,
+) {
+    val primaryText = if (isDark) Color.White else MaterialTheme.colorScheme.onSurface
+    val secondaryText = if (isDark) Color.White.copy(alpha = 0.5f) else MaterialTheme.colorScheme.onSurfaceVariant
+    val todayToken = remember { TeacherHomeViewModel.todayToken() }
+
+    LazyColumn(
+        contentPadding = PaddingValues(horizontal = Brand.Spacing.lg, vertical = Brand.Spacing.md),
+        verticalArrangement = Arrangement.spacedBy(Brand.Spacing.md),
+    ) {
+        // Header with refresh
+        item {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    "Мои группы",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = primaryText,
+                )
+                IconButton(onClick = { viewModel.loadData() }) {
+                    Icon(
+                        Icons.Default.Refresh,
+                        contentDescription = "Обновить",
+                        tint = BrandBlue,
+                    )
+                }
+            }
+        }
+
+        // Stats row
+        item {
+            val todayGroups = uiState.groups.filter {
+                TeacherHomeViewModel.matchesSchedule(it.scheduleDays, todayToken)
+            }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(Brand.Spacing.sm),
+            ) {
+                GroupStatPill("${uiState.groups.size}", "ВСЕГО ГРУПП", BrandGreen, isDark, Modifier.weight(1f))
+                GroupStatPill("${uiState.totalStudents}", "МОИХ УЧЕНИКОВ", BrandGold, isDark, Modifier.weight(1f))
+                GroupStatPill("${todayGroups.size}", "УРОКОВ СЕГОДНЯ", BrandBlue, isDark, Modifier.weight(1f))
+            }
+        }
+
+        if (uiState.isLoading) {
+            item {
+                Box(
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 40.dp),
+                    contentAlignment = Alignment.Center,
+                ) { CircularProgressIndicator(modifier = Modifier.size(32.dp)) }
+            }
+        } else {
+            // Group cards
+            items(uiState.groups, key = { it.id }) { group ->
+                val isToday = TeacherHomeViewModel.matchesSchedule(group.scheduleDays, todayToken)
+                TeacherGroupCard(
+                    group = group,
+                    isToday = isToday,
+                    isDark = isDark,
+                    onClick = { viewModel.selectGroup(group) },
+                )
+            }
+        }
+
+        item { Spacer(Modifier.height(Brand.Spacing.xl)) }
+    }
+}
+
+@Composable
+private fun GroupStatPill(
+    value: String, label: String, tint: Color, isDark: Boolean, modifier: Modifier,
+) {
+    Surface(
+        modifier = modifier,
+        shape = RoundedCornerShape(14.dp),
+        color = tint.copy(alpha = 0.08f),
+        border = BorderStroke(1.dp, tint.copy(alpha = if (isDark) 0.3f else 0.2f)),
+    ) {
+        Column(modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp)) {
+            Text(value, fontSize = 22.sp, fontWeight = FontWeight.Bold, color = tint)
+            Spacer(Modifier.height(2.dp))
+            Text(
+                label, style = MaterialTheme.typography.labelSmall, fontSize = 9.sp,
+                color = if (isDark) Color.White.copy(alpha = 0.5f) else MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+    }
+}
+
+@Composable
+private fun TeacherGroupCard(
+    group: AdminGroup, isToday: Boolean, isDark: Boolean, onClick: () -> Unit,
+) {
+    val hskColor = hskLevelColor(group.hskLevel)
+    val cardColor = if (isDark) Color.White.copy(alpha = 0.06f) else Color.White.copy(alpha = 0.9f)
+    val strokeColor = if (isToday) BrandGold.copy(alpha = 0.5f) else hskColor.copy(alpha = 0.3f)
+    val primaryText = if (isDark) Color.White else MaterialTheme.colorScheme.onSurface
+    val secondaryText = if (isDark) Color.White.copy(alpha = 0.5f) else MaterialTheme.colorScheme.onSurfaceVariant
+
+    val (timeStart, timeEnd) = remember(group.scheduleTime) {
+        TeacherHomeViewModel.parseTimeRange(group.scheduleTime)
+    }
+
+    Surface(
+        onClick = onClick,
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        color = cardColor,
+        border = BorderStroke(1.dp, strokeColor),
+    ) {
+        Row(
+            modifier = Modifier.padding(Brand.Spacing.md),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            // HSK badge
+            Box(
+                modifier = Modifier
+                    .size(48.dp)
+                    .background(Brush.linearGradient(hskLevelGradient(group.hskLevel)), RoundedCornerShape(12.dp)),
+                contentAlignment = Alignment.Center,
+            ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text("HSK", fontSize = 8.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                    Text("${group.hskLevel}", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                }
+            }
+
+            Spacer(Modifier.width(Brand.Spacing.md))
+
+            Column(modifier = Modifier.weight(1f)) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        group.name,
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = primaryText,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f, fill = false),
+                    )
+                    if (isToday) {
+                        Spacer(Modifier.width(8.dp))
+                        Surface(
+                            shape = Brand.Shapes.full,
+                            color = BrandGold.copy(alpha = 0.15f),
+                        ) {
+                            Text(
+                                "Сегодня",
+                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
+                                style = MaterialTheme.typography.labelSmall,
+                                fontWeight = FontWeight.Bold,
+                                color = BrandGold,
+                                fontSize = 10.sp,
+                            )
+                        }
+                    }
+                }
+                Spacer(Modifier.height(4.dp))
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(Brand.Spacing.md),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                        Icon(Icons.Default.Schedule, contentDescription = null, modifier = Modifier.size(12.dp), tint = secondaryText)
+                        Text("$timeStart - $timeEnd", style = MaterialTheme.typography.bodySmall, color = secondaryText)
+                    }
+                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                        Icon(Icons.Default.CalendarToday, contentDescription = null, modifier = Modifier.size(12.dp), tint = secondaryText)
+                        Text(group.scheduleDays ?: "", style = MaterialTheme.typography.bodySmall, color = secondaryText)
+                    }
+                    if (group.classroom != null) {
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                            Icon(Icons.Default.MeetingRoom, contentDescription = null, modifier = Modifier.size(12.dp), tint = secondaryText)
+                            Text(group.classroom, style = MaterialTheme.typography.bodySmall, color = secondaryText)
+                        }
+                    }
+                }
+            }
+
+            Column(horizontalAlignment = Alignment.End) {
+                Text(
+                    "${group.studentsCount}",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = hskColor,
+                )
+                Text(
+                    "учеников",
+                    style = MaterialTheme.typography.labelSmall,
+                    fontSize = 10.sp,
+                    color = secondaryText,
+                )
+            }
+
+            Spacer(Modifier.width(4.dp))
+
+            Icon(
+                Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                contentDescription = null,
+                tint = secondaryText,
+            )
+        }
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// TAB 2: Домашние задания
+// ═══════════════════════════════════════════════════════════════
+
+@Composable
+private fun HomeworkTab(
+    uiState: TeacherGroupsUiState,
+    isDark: Boolean,
+    viewModel: TeacherGroupsViewModel,
+) {
+    val primaryText = if (isDark) Color.White else MaterialTheme.colorScheme.onSurface
+    val secondaryText = if (isDark) Color.White.copy(alpha = 0.5f) else MaterialTheme.colorScheme.onSurfaceVariant
+
+    // Sub-tabs: Задания | Рейтинг
+    val hwTabs = listOf("Задания", "Рейтинг")
+    val selectedHwTab = uiState.selectedHomeworkTab
+
+    LazyColumn(
+        contentPadding = PaddingValues(horizontal = Brand.Spacing.lg, vertical = Brand.Spacing.md),
+        verticalArrangement = Arrangement.spacedBy(Brand.Spacing.md),
+    ) {
+        // Title + buttons
+        item {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    "Домашние задания",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = primaryText,
+                )
+                Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                    if (selectedHwTab == 0) {
+                        IconButton(onClick = { viewModel.openNewHomework() }) {
+                            Icon(Icons.Default.AddCircle, contentDescription = "Создать", tint = BrandBlue)
+                        }
+                    }
+                    IconButton(onClick = { viewModel.loadHomework() }) {
+                        Icon(Icons.Default.Refresh, contentDescription = "Обновить", tint = BrandBlue)
+                    }
+                }
+            }
+        }
+
+        // Sub-tab row
+        item {
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = Brand.Shapes.full,
+                color = if (isDark) Color.White.copy(alpha = 0.06f) else Color.Black.copy(alpha = 0.06f),
+            ) {
+                Row(modifier = Modifier.padding(3.dp)) {
+                    hwTabs.forEachIndexed { index, title ->
+                        val isSelected = selectedHwTab == index
+                        Surface(
+                            onClick = { viewModel.selectHomeworkTab(index) },
+                            modifier = Modifier.weight(1f),
+                            shape = Brand.Shapes.full,
+                            color = if (isSelected) {
+                                if (isDark) Color.White.copy(alpha = 0.12f) else Color.White
+                            } else Color.Transparent,
+                        ) {
+                            Text(
+                                text = title,
+                                modifier = Modifier.padding(vertical = 8.dp),
+                                textAlign = TextAlign.Center,
+                                style = MaterialTheme.typography.labelMedium,
+                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                                color = if (isSelected) primaryText else primaryText.copy(alpha = 0.5f),
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
+        when (selectedHwTab) {
+            0 -> {
+                // Stats row
+                item {
+                    val overdueCount = uiState.assignments.count { assignment ->
+                        assignment.dueDate != null && assignment.isCompleted != true && run {
+                            try {
+                                val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+                                val dueDate = sdf.parse(assignment.dueDate.take(10))
+                                dueDate != null && dueDate.before(Date())
+                            } catch (_: Exception) { false }
+                        }
+                    }
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(Brand.Spacing.sm),
+                    ) {
+                        GroupStatPill("${uiState.assignments.size}", "ВСЕГО ЗАДАНИЙ", BrandGreen, isDark, Modifier.weight(1f))
+                        GroupStatPill("${uiState.groups.size}", "ГРУПП", BrandTeal, isDark, Modifier.weight(1f))
+                        GroupStatPill("$overdueCount", "ПРОСРОЧЕНО", BrandCoral, isDark, Modifier.weight(1f))
+                    }
+                }
+
+                // Show completed toggle
+                item {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { viewModel.toggleShowCompleted() },
+                        horizontalArrangement = Arrangement.End,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Icon(
+                            if (uiState.showCompleted) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                            contentDescription = null,
+                            modifier = Modifier.size(16.dp),
+                            tint = BrandTeal,
+                        )
+                        Spacer(Modifier.width(6.dp))
+                        Text(
+                            if (uiState.showCompleted) "Скрыть завершённые" else "Показать завершённые",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = BrandTeal,
+                        )
+                    }
+                }
+
+                if (uiState.isLoadingHomework) {
+                    item {
+                        Box(
+                            modifier = Modifier.fillMaxWidth().padding(vertical = 40.dp),
+                            contentAlignment = Alignment.Center,
+                        ) { CircularProgressIndicator(modifier = Modifier.size(32.dp)) }
+                    }
+                } else {
+                    val filtered = if (uiState.showCompleted) {
+                        uiState.assignments
+                    } else {
+                        uiState.assignments.filter { it.isCompleted != true }
+                    }
+
+                    if (filtered.isEmpty()) {
+                        item {
+                            Box(
+                                modifier = Modifier.fillMaxWidth().padding(vertical = 40.dp),
+                                contentAlignment = Alignment.Center,
+                            ) {
+                                Text("Нет заданий", color = secondaryText)
+                            }
+                        }
+                    } else {
+                        items(filtered, key = { it.id }) { assignment ->
+                            HomeworkCard(assignment = assignment, isDark = isDark, viewModel = viewModel)
+                        }
+                    }
+                }
+            }
+
+            1 -> {
+                // Rating tab - group filter chips
+                item {
+                    if (uiState.ratingGroups.isEmpty() && !uiState.isLoadingRating) {
+                        // Show group chips from main groups for filtering
+                        LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            items(uiState.groups, key = { it.id }) { group ->
+                                val isSelected = uiState.ratingSelectedGroupId == group.id
+                                Surface(
+                                    onClick = { viewModel.selectRatingGroup(group.id) },
+                                    shape = Brand.Shapes.full,
+                                    color = if (isSelected) BrandBlue else if (isDark) Color.White.copy(alpha = 0.06f) else Color.Black.copy(alpha = 0.06f),
+                                    border = if (isSelected) null else BorderStroke(1.dp, if (isDark) Color.White.copy(alpha = 0.1f) else Color.Black.copy(alpha = 0.06f)),
+                                ) {
+                                    Text(
+                                        group.name,
+                                        modifier = Modifier.padding(horizontal = 14.dp, vertical = 6.dp),
+                                        style = MaterialTheme.typography.labelMedium,
+                                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                                        color = if (isSelected) Color.White else primaryText.copy(alpha = 0.7f),
+                                        maxLines = 1,
+                                    )
+                                }
+                            }
+                        }
+                    } else if (uiState.ratingGroups.isNotEmpty()) {
+                        LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            items(uiState.ratingGroups, key = { it.id }) { group ->
+                                val isSelected = uiState.ratingSelectedGroupId == group.id
+                                Surface(
+                                    onClick = { viewModel.selectRatingGroup(group.id) },
+                                    shape = Brand.Shapes.full,
+                                    color = if (isSelected) BrandBlue else if (isDark) Color.White.copy(alpha = 0.06f) else Color.Black.copy(alpha = 0.06f),
+                                    border = if (isSelected) null else BorderStroke(1.dp, if (isDark) Color.White.copy(alpha = 0.1f) else Color.Black.copy(alpha = 0.06f)),
+                                ) {
+                                    Text(
+                                        group.name,
+                                        modifier = Modifier.padding(horizontal = 14.dp, vertical = 6.dp),
+                                        style = MaterialTheme.typography.labelMedium,
+                                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                                        color = if (isSelected) Color.White else primaryText.copy(alpha = 0.7f),
+                                        maxLines = 1,
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (uiState.isLoadingRating) {
+                    item {
+                        Box(
+                            modifier = Modifier.fillMaxWidth().padding(vertical = 40.dp),
+                            contentAlignment = Alignment.Center,
+                        ) { CircularProgressIndicator(modifier = Modifier.size(32.dp)) }
+                    }
+                } else {
+                    val selectedGroup = uiState.ratingGroups.find { it.id == uiState.ratingSelectedGroupId }
+                    val ratingEntries = selectedGroup?.rating ?: emptyList()
+
+                    if (ratingEntries.isEmpty()) {
+                        item {
+                            Column(
+                                modifier = Modifier.fillMaxWidth().padding(vertical = 40.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                            ) {
+                                Icon(
+                                    Icons.Default.BarChart,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(48.dp),
+                                    tint = BrandGold.copy(alpha = 0.4f),
+                                )
+                                Spacer(Modifier.height(Brand.Spacing.md))
+                                Text("Нет данных рейтинга", color = secondaryText)
+                            }
+                        }
+                    } else {
+                        items(ratingEntries) { entry ->
+                            RatingEntryCard(entry = entry, isDark = isDark)
+                        }
+                    }
+                }
+            }
+        }
+
+        item { Spacer(Modifier.height(Brand.Spacing.xl)) }
+    }
+}
+
+@Composable
+private fun HomeworkCard(
+    assignment: AdminHomeworkAssignment, isDark: Boolean, viewModel: TeacherGroupsViewModel,
+) {
+    val cardColor = if (isDark) Color.White.copy(alpha = 0.06f) else Color.White.copy(alpha = 0.9f)
+    val primaryText = if (isDark) Color.White else MaterialTheme.colorScheme.onSurface
+    val secondaryText = if (isDark) Color.White.copy(alpha = 0.5f) else MaterialTheme.colorScheme.onSurfaceVariant
+
+    val isOverdue = assignment.dueDate != null && assignment.isCompleted != true && run {
+        try {
+            val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+            val dueDate = sdf.parse(assignment.dueDate.take(10))
+            dueDate != null && dueDate.before(Date())
+        } catch (_: Exception) { false }
+    }
+
+    val strokeColor = when {
+        isOverdue -> BrandCoral.copy(alpha = 0.5f)
+        assignment.isCompleted == true -> BrandGreen.copy(alpha = 0.3f)
+        else -> if (isDark) Color.White.copy(alpha = 0.08f) else Color.Black.copy(alpha = 0.06f)
+    }
+
+    val iconBgColor = when {
+        isOverdue -> BrandCoral.copy(alpha = 0.15f)
+        assignment.isCompleted == true -> BrandGreen.copy(alpha = 0.15f)
+        else -> BrandGold.copy(alpha = 0.15f)
+    }
+
+    val iconTint = when {
+        isOverdue -> BrandCoral
+        assignment.isCompleted == true -> BrandGreen
+        else -> BrandGold
+    }
+
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        color = cardColor,
+        border = BorderStroke(1.dp, strokeColor),
+    ) {
+        Row(
+            modifier = Modifier.padding(Brand.Spacing.md),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(44.dp)
+                    .background(iconBgColor, RoundedCornerShape(12.dp)),
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    if (isOverdue) Icons.Default.Warning else Icons.Default.Assignment,
+                    contentDescription = null,
+                    tint = iconTint,
+                    modifier = Modifier.size(22.dp),
+                )
+            }
+
+            Spacer(Modifier.width(Brand.Spacing.md))
+
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    assignment.title,
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = primaryText,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(Brand.Spacing.md),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                        Icon(Icons.Default.Groups, contentDescription = null, modifier = Modifier.size(12.dp), tint = secondaryText)
+                        Text(assignment.groupName, style = MaterialTheme.typography.bodySmall, color = secondaryText, maxLines = 1)
+                    }
+                    if (assignment.dueDate != null) {
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                            Icon(Icons.Default.CalendarToday, contentDescription = null, modifier = Modifier.size(12.dp), tint = if (isOverdue) BrandCoral else secondaryText)
+                            Text(
+                                formatDueDate(assignment.dueDate),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = if (isOverdue) BrandCoral else secondaryText,
+                            )
+                        }
+                    }
+                }
+                if (!assignment.description.isNullOrBlank()) {
+                    Spacer(Modifier.height(4.dp))
+                    Text(
+                        assignment.description,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = secondaryText.copy(alpha = 0.7f),
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                }
+            }
+
+            Icon(
+                Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                contentDescription = null,
+                tint = secondaryText,
+            )
+        }
+    }
+}
+
+@Composable
+private fun RatingEntryCard(entry: HomeworkStudentRatingEntry, isDark: Boolean) {
+    val cardColor = if (isDark) Color.White.copy(alpha = 0.06f) else Color.White.copy(alpha = 0.9f)
+    val strokeColor = if (isDark) Color.White.copy(alpha = 0.06f) else Color.Black.copy(alpha = 0.04f)
+    val primaryText = if (isDark) Color.White else MaterialTheme.colorScheme.onSurface
+    val secondaryText = if (isDark) Color.White.copy(alpha = 0.5f) else MaterialTheme.colorScheme.onSurfaceVariant
+
+    val rankColor = when (entry.rank) {
+        1 -> BrandGold
+        2 -> Color(0xFFC0C0C0)
+        3 -> Color(0xFFCD7F32)
+        else -> secondaryText
+    }
+
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        color = cardColor,
+        border = BorderStroke(1.dp, strokeColor),
+    ) {
+        Row(
+            modifier = Modifier.padding(Brand.Spacing.md),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            // Rank badge
+            Box(
+                modifier = Modifier
+                    .size(36.dp)
+                    .background(rankColor.copy(alpha = 0.15f), CircleShape),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(
+                    "#${entry.rank}",
+                    style = MaterialTheme.typography.labelMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = rankColor,
+                )
+            }
+
+            Spacer(Modifier.width(Brand.Spacing.md))
+
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    entry.student?.displayName ?: "?",
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = primaryText,
+                )
+                Text(
+                    "Заданий: ${entry.gradedAssignments} • Ср. оценка: ${entry.averageGrade?.let { String.format("%.1f", it) } ?: "—"}",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = secondaryText,
+                )
+            }
+
+            Surface(
+                shape = RoundedCornerShape(8.dp),
+                color = BrandGold.copy(alpha = 0.12f),
+            ) {
+                Text(
+                    "${entry.totalScore}",
+                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+                    style = MaterialTheme.typography.labelLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = BrandGold,
+                )
+            }
+        }
+    }
+}
+
+private fun formatDueDate(raw: String): String {
+    return try {
+        val input = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US)
+        val output = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.US)
+        val date = input.parse(raw.take(19))
+        if (date != null) output.format(date) else raw.take(16)
+    } catch (_: Exception) {
+        try {
+            val input = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+            val output = SimpleDateFormat("dd.MM.yyyy", Locale.US)
+            val date = input.parse(raw.take(10))
+            if (date != null) output.format(date) else raw.take(10)
+        } catch (_: Exception) { raw.take(16) }
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// Group Detail (reuses existing screens but with own ViewModel)
+// ═══════════════════════════════════════════════════════════════
+
+@Composable
+fun TeacherGroupsDetailScreen(viewModel: TeacherGroupsViewModel, isDark: Boolean) {
+    val uiState by viewModel.uiState.collectAsState()
+    val group = uiState.selectedGroup ?: return
+
+    if (uiState.showAttendance && uiState.selectedStudent != null) {
+        TeacherGroupsAttendanceScreen(viewModel = viewModel, isDark = isDark)
+        return
+    }
+
+    if (uiState.showProgress && uiState.selectedStudent != null) {
+        TeacherGroupsProgressScreen(viewModel = viewModel, isDark = isDark)
+        return
+    }
+
+    val primaryText = if (isDark) Color.White else MaterialTheme.colorScheme.onSurface
+    val secondaryText = if (isDark) Color.White.copy(alpha = 0.5f) else MaterialTheme.colorScheme.onSurfaceVariant
+    val cardColor = if (isDark) Color.White.copy(alpha = 0.06f) else Color.White.copy(alpha = 0.9f)
+    val strokeColor = if (isDark) Color.White.copy(alpha = 0.08f) else Color.Black.copy(alpha = 0.06f)
+    val (timeStart, timeEnd) = remember(group.scheduleTime) { TeacherHomeViewModel.parseTimeRange(group.scheduleTime) }
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        AdminBackground(isDark = isDark)
+        Column(modifier = Modifier.fillMaxSize()) {
+            Row(
+                modifier = Modifier.fillMaxWidth().statusBarsPadding().padding(horizontal = Brand.Spacing.lg, vertical = Brand.Spacing.md),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(group.name, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, color = primaryText, modifier = Modifier.weight(1f), maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Surface(onClick = { viewModel.closeGroupDetail() }, shape = Brand.Shapes.full, color = if (isDark) Color.White.copy(alpha = 0.08f) else Color.Black.copy(alpha = 0.06f)) {
+                    Text("Закрыть", modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp), style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold, color = primaryText)
+                }
+            }
+            LazyColumn(contentPadding = PaddingValues(horizontal = Brand.Spacing.lg, vertical = Brand.Spacing.sm), verticalArrangement = Arrangement.spacedBy(Brand.Spacing.md)) {
+                item {
+                    Surface(modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(18.dp), color = cardColor, border = BorderStroke(1.dp, strokeColor)) {
+                        Column(modifier = Modifier.padding(Brand.Spacing.lg)) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Box(modifier = Modifier.size(48.dp).background(Brush.linearGradient(hskLevelGradient(group.hskLevel)), RoundedCornerShape(12.dp)), contentAlignment = Alignment.Center) {
+                                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                        Text("HSK", fontSize = 8.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                                        Text("${group.hskLevel}", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                                    }
+                                }
+                                Spacer(Modifier.width(Brand.Spacing.md))
+                                Column {
+                                    Text(group.name, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, color = primaryText)
+                                    Text("Уровень HSK ${group.hskLevel}", style = MaterialTheme.typography.bodySmall, color = secondaryText)
+                                }
+                            }
+                            Spacer(Modifier.height(Brand.Spacing.lg))
+                            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Brand.Spacing.sm)) {
+                                DetailInfoChip(Icons.Default.Schedule, "$timeStart - $timeEnd", isDark, Modifier.weight(1f))
+                                DetailInfoChip(Icons.Default.CalendarToday, group.scheduleDays ?: "", isDark, Modifier.weight(1f))
+                                DetailInfoChip(Icons.Default.MeetingRoom, "Каб. ${group.classroom ?: "?"}", isDark, Modifier.weight(1f))
+                                DetailInfoChip(Icons.Default.Groups, "${group.studentsCount}", isDark, Modifier.weight(1f))
+                            }
+                        }
+                    }
+                }
+                // Homework section
+                item {
+                    Surface(onClick = { viewModel.openNewHomework(group.id) }, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(18.dp), color = cardColor, border = BorderStroke(1.dp, strokeColor)) {
+                        Row(modifier = Modifier.padding(Brand.Spacing.lg), verticalAlignment = Alignment.CenterVertically) {
+                            Box(modifier = Modifier.size(40.dp).background(BrandIndigo.copy(alpha = 0.12f), RoundedCornerShape(10.dp)), contentAlignment = Alignment.Center) {
+                                Icon(Icons.Default.MenuBook, contentDescription = null, tint = BrandIndigo, modifier = Modifier.size(20.dp))
+                            }
+                            Spacer(Modifier.width(Brand.Spacing.md))
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text("Задания группы", style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Bold, color = primaryText)
+                                Text("Создать новое домашнее задание", style = MaterialTheme.typography.bodySmall, color = secondaryText)
+                            }
+                            Box(modifier = Modifier.size(32.dp).background(BrandBlue.copy(alpha = 0.12f), CircleShape), contentAlignment = Alignment.Center) {
+                                Icon(Icons.Default.Add, contentDescription = null, tint = BrandBlue, modifier = Modifier.size(18.dp))
+                            }
+                        }
+                    }
+                }
+                item { Text("Учащиеся группы    ${uiState.groupStudents.size}", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold, color = primaryText) }
+                if (uiState.isLoadingStudents) {
+                    item { Box(modifier = Modifier.fillMaxWidth().padding(vertical = Brand.Spacing.xl), contentAlignment = Alignment.Center) { CircularProgressIndicator(modifier = Modifier.size(32.dp)) } }
+                } else {
+                    items(uiState.groupStudents, key = { it.id }) { student ->
+                        GroupStudentCard(student = student, isDark = isDark, onProgressClick = { viewModel.openProgress(student) }, onAttendanceClick = { viewModel.openAttendance(student) })
+                    }
+                }
+                item { Spacer(Modifier.height(Brand.Spacing.xl)) }
+            }
+        }
+    }
+}
+
+@Composable
+private fun DetailInfoChip(icon: androidx.compose.ui.graphics.vector.ImageVector, text: String, isDark: Boolean, modifier: Modifier = Modifier) {
+    val bgColor = if (isDark) Color.White.copy(alpha = 0.06f) else Color.Black.copy(alpha = 0.04f)
+    val textColor = if (isDark) Color.White.copy(alpha = 0.7f) else MaterialTheme.colorScheme.onSurfaceVariant
+    Surface(modifier = modifier, shape = RoundedCornerShape(10.dp), color = bgColor) {
+        Column(modifier = Modifier.padding(vertical = 8.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+            Icon(icon, contentDescription = null, modifier = Modifier.size(16.dp), tint = textColor)
+            Spacer(Modifier.height(4.dp))
+            Text(text, style = MaterialTheme.typography.labelSmall, fontSize = 10.sp, color = textColor, maxLines = 1, overflow = TextOverflow.Ellipsis)
+        }
+    }
+}
+
+@Composable
+private fun GroupStudentCard(student: com.subnetik.unlock.data.remote.dto.admin.AdminStudent, isDark: Boolean, onProgressClick: () -> Unit, onAttendanceClick: () -> Unit) {
+    val cardColor = if (isDark) Color.White.copy(alpha = 0.06f) else Color.White.copy(alpha = 0.9f)
+    val strokeColor = if (isDark) Color.White.copy(alpha = 0.06f) else Color.Black.copy(alpha = 0.04f)
+    val primaryText = if (isDark) Color.White else MaterialTheme.colorScheme.onSurface
+    val secondaryText = if (isDark) Color.White.copy(alpha = 0.5f) else MaterialTheme.colorScheme.onSurfaceVariant
+    Surface(modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(16.dp), color = cardColor, border = BorderStroke(1.dp, strokeColor)) {
+        Row(modifier = Modifier.padding(Brand.Spacing.md), verticalAlignment = Alignment.CenterVertically) {
+            val avatarUrl = student.avatarUrl?.let { url -> if (url.startsWith("http")) url else "https://unlocklingua.com$url" }
+            if (avatarUrl != null) {
+                coil3.compose.AsyncImage(model = avatarUrl, contentDescription = student.fullName, modifier = Modifier.size(40.dp).clip(CircleShape))
+            } else {
+                Box(modifier = Modifier.size(40.dp).background(BrandBlue.copy(alpha = 0.12f), CircleShape), contentAlignment = Alignment.Center) {
+                    Text(student.firstName.take(1).uppercase(), style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold, color = BrandBlue)
+                }
+            }
+            Spacer(Modifier.width(Brand.Spacing.md))
+            Column(modifier = Modifier.weight(1f)) {
+                Text(student.fullName, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = primaryText, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Text("Посещаемость: ${student.attendanceCount}/${student.totalLessons} • ${student.attendancePercent}%", style = MaterialTheme.typography.bodySmall, color = secondaryText)
+            }
+            IconButton(onClick = onProgressClick, modifier = Modifier.size(36.dp)) {
+                Icon(Icons.Default.BarChart, contentDescription = "Прогресс", tint = BrandTeal, modifier = Modifier.size(22.dp))
+            }
+            IconButton(onClick = onAttendanceClick, modifier = Modifier.size(36.dp)) {
+                Icon(Icons.Default.Settings, contentDescription = "Посещаемость", tint = BrandBlue, modifier = Modifier.size(22.dp))
+            }
+        }
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// Attendance Screen (for Groups tab)
+// ═══════════════════════════════════════════════════════════════
+
+@Composable
+fun TeacherGroupsAttendanceScreen(viewModel: TeacherGroupsViewModel, isDark: Boolean) {
+    val uiState by viewModel.uiState.collectAsState()
+    val student = uiState.selectedStudent ?: return
+    val primaryText = if (isDark) Color.White else MaterialTheme.colorScheme.onSurface
+    val secondaryText = if (isDark) Color.White.copy(alpha = 0.5f) else MaterialTheme.colorScheme.onSurfaceVariant
+    val cardColor = if (isDark) Color.White.copy(alpha = 0.06f) else Color.White.copy(alpha = 0.9f)
+    val strokeColor = if (isDark) Color.White.copy(alpha = 0.08f) else Color.Black.copy(alpha = 0.06f)
+
+    val cal = Calendar.getInstance()
+    val monthName = SimpleDateFormat("LLLL yyyy", Locale("ru")).format(cal.time)
+        .replaceFirstChar { it.uppercase() }
+    val today = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(Date())
+
+    val presentCount = uiState.attendanceMap.values.count { it }
+    val totalCount = uiState.lessonDates.size
+    val pct = if (totalCount > 0) presentCount * 100 / totalCount else 0
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        AdminBackground(isDark = isDark)
+        Column(modifier = Modifier.fillMaxSize()) {
+            Row(modifier = Modifier.fillMaxWidth().statusBarsPadding().padding(horizontal = Brand.Spacing.lg, vertical = Brand.Spacing.md), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                Text(student.fullName, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, color = primaryText)
+                Surface(onClick = { viewModel.closeAttendance() }, shape = Brand.Shapes.full, color = if (isDark) Color.White.copy(alpha = 0.08f) else Color.Black.copy(alpha = 0.06f)) {
+                    Text("Закрыть", modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp), style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold, color = primaryText)
+                }
+            }
+            Column(modifier = Modifier.fillMaxWidth().padding(horizontal = Brand.Spacing.lg)) {
+                Surface(modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(18.dp), color = cardColor, border = BorderStroke(1.dp, strokeColor)) {
+                    Column(modifier = Modifier.padding(Brand.Spacing.lg)) {
+                        Text("Посещаемость", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, color = primaryText)
+                        Spacer(Modifier.height(4.dp))
+                        Text(monthName, style = MaterialTheme.typography.bodySmall, color = secondaryText)
+                        Spacer(Modifier.height(Brand.Spacing.lg))
+                        // Date chips in FlowRow-like layout (4 per row)
+                        val rows = uiState.lessonDates.chunked(4)
+                        rows.forEach { row ->
+                            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Brand.Spacing.sm)) {
+                                row.forEach { date ->
+                                    val isPresent = uiState.attendanceMap[date] == true
+                                    val isToday = date == today
+                                    val dayPart = date.takeLast(2) + "." + date.substring(5, 7)
+                                    Surface(
+                                        onClick = { viewModel.toggleAttendance(date) },
+                                        modifier = Modifier.weight(1f),
+                                        shape = RoundedCornerShape(10.dp),
+                                        color = if (isPresent) BrandTeal.copy(alpha = 0.15f) else if (isDark) Color.White.copy(alpha = 0.04f) else Color.Black.copy(alpha = 0.03f),
+                                        border = BorderStroke(1.dp, if (isPresent) BrandTeal.copy(alpha = 0.4f) else if (isDark) Color.White.copy(alpha = 0.06f) else Color.Black.copy(alpha = 0.04f)),
+                                    ) {
+                                        Column(modifier = Modifier.padding(vertical = 8.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                                            Text(dayPart, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold, color = if (isPresent) BrandTeal else primaryText)
+                                            if (isToday) {
+                                                Text("Сегодня", style = MaterialTheme.typography.labelSmall, fontSize = 8.sp, color = secondaryText)
+                                            }
+                                        }
+                                    }
+                                }
+                                // Pad remaining
+                                repeat(4 - row.size) { Spacer(Modifier.weight(1f)) }
+                            }
+                            Spacer(Modifier.height(Brand.Spacing.sm))
+                        }
+                        Spacer(Modifier.height(Brand.Spacing.md))
+                        Text("Итого: $presentCount/$totalCount • $pct%", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.SemiBold, color = primaryText)
+                        Spacer(Modifier.height(Brand.Spacing.lg))
+                        Button(
+                            onClick = { viewModel.saveAttendance() },
+                            modifier = Modifier.fillMaxWidth().height(48.dp),
+                            shape = Brand.Shapes.full,
+                            enabled = !uiState.isSavingAttendance,
+                            colors = ButtonDefaults.buttonColors(containerColor = BrandIndigo),
+                        ) {
+                            if (uiState.isSavingAttendance) {
+                                CircularProgressIndicator(modifier = Modifier.size(20.dp), color = Color.White, strokeWidth = 2.dp)
+                            } else {
+                                Text("Сохранить", fontWeight = FontWeight.Bold, color = Color.White)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// Progress Screen (for Groups tab)
+// ═══════════════════════════════════════════════════════════════
+
+@Composable
+fun TeacherGroupsProgressScreen(viewModel: TeacherGroupsViewModel, isDark: Boolean) {
+    val uiState by viewModel.uiState.collectAsState()
+    val student = uiState.selectedStudent ?: return
+    val primaryText = if (isDark) Color.White else MaterialTheme.colorScheme.onSurface
+    val secondaryText = if (isDark) Color.White.copy(alpha = 0.5f) else MaterialTheme.colorScheme.onSurfaceVariant
+    val cardColor = if (isDark) Color.White.copy(alpha = 0.06f) else Color.White.copy(alpha = 0.9f)
+    val strokeColor = if (isDark) Color.White.copy(alpha = 0.08f) else Color.Black.copy(alpha = 0.06f)
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        AdminBackground(isDark = isDark)
+        Column(modifier = Modifier.fillMaxSize()) {
+            Row(modifier = Modifier.fillMaxWidth().statusBarsPadding().padding(horizontal = Brand.Spacing.lg, vertical = Brand.Spacing.md), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                Text("Прогресс", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, color = primaryText)
+                Surface(onClick = { viewModel.closeProgress() }, shape = Brand.Shapes.full, color = if (isDark) Color.White.copy(alpha = 0.08f) else Color.Black.copy(alpha = 0.06f)) {
+                    Text("Закрыть", modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp), style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold, color = primaryText)
+                }
+            }
+            Column(modifier = Modifier.fillMaxWidth().padding(horizontal = Brand.Spacing.lg).verticalScroll(rememberScrollState())) {
+                // Student info
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    val avatarUrl = student.avatarUrl?.let { url -> if (url.startsWith("http")) url else "https://unlocklingua.com$url" }
+                    if (avatarUrl != null) {
+                        coil3.compose.AsyncImage(model = avatarUrl, contentDescription = student.fullName, modifier = Modifier.size(48.dp).clip(CircleShape))
+                    } else {
+                        Box(modifier = Modifier.size(48.dp).background(BrandBlue.copy(alpha = 0.12f), CircleShape), contentAlignment = Alignment.Center) {
+                            Text(student.firstName.take(1).uppercase(), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, color = BrandBlue)
+                        }
+                    }
+                    Spacer(Modifier.width(Brand.Spacing.md))
+                    Column {
+                        Text(student.fullName, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, color = primaryText)
+                        Text("Академический прогресс", style = MaterialTheme.typography.bodySmall, color = secondaryText)
+                    }
+                }
+                Spacer(Modifier.height(Brand.Spacing.xl))
+
+                if (uiState.isLoadingProgress) {
+                    Box(modifier = Modifier.fillMaxWidth().padding(vertical = 40.dp), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator(modifier = Modifier.size(32.dp))
+                    }
+                } else {
+                    val progress = uiState.studentProgress
+                    // HSK Tests
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(Icons.Default.CheckCircle, contentDescription = null, tint = BrandBlue, modifier = Modifier.size(20.dp))
+                        Spacer(Modifier.width(Brand.Spacing.sm))
+                        Text("Тесты HSK", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, color = primaryText)
+                    }
+                    Spacer(Modifier.height(Brand.Spacing.md))
+
+                    for (level in 1..6) {
+                        val testItem = progress?.tests?.find { it.levelId == "$level" || it.levelId == "hsk$level" }
+                        val isLocked = level > 1 && (progress?.tests?.find { it.levelId == "${level - 1}" || it.levelId == "hsk${level - 1}" }?.bestScore ?: 0) == 0
+                        Surface(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp), shape = RoundedCornerShape(14.dp), color = cardColor, border = BorderStroke(1.dp, strokeColor)) {
+                            Row(modifier = Modifier.padding(Brand.Spacing.md), verticalAlignment = Alignment.CenterVertically) {
+                                Box(modifier = Modifier.size(36.dp).background(Brush.linearGradient(hskLevelGradient(level)), RoundedCornerShape(10.dp)), contentAlignment = Alignment.Center) {
+                                    Text("$level", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                                }
+                                Spacer(Modifier.width(Brand.Spacing.md))
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text("HSK $level", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = primaryText)
+                                    Text(
+                                        when {
+                                            isLocked -> "Пройдите HSK ${level - 1}"
+                                            testItem?.bestScore != null && testItem.bestScore > 0 -> "Лучший: ${testItem.bestScore}/${testItem.totalQuestions ?: "?"}"
+                                            else -> "Не начат"
+                                        },
+                                        style = MaterialTheme.typography.bodySmall, color = secondaryText,
+                                    )
+                                }
+                                if (isLocked) {
+                                    Icon(Icons.Default.Lock, contentDescription = null, modifier = Modifier.size(18.dp), tint = secondaryText)
+                                }
+                            }
+                        }
+                    }
+
+                    Spacer(Modifier.height(Brand.Spacing.xl))
+
+                    // Vocabulary
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text("📚", fontSize = 18.sp)
+                        Spacer(Modifier.width(Brand.Spacing.sm))
+                        Text("Словарь", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, color = primaryText)
+                    }
+                    Spacer(Modifier.height(Brand.Spacing.md))
+
+                    if (progress?.vocabulary.isNullOrEmpty()) {
+                        Text("Ученик ещё не изучал словарь", style = MaterialTheme.typography.bodyMedium, color = secondaryText)
+                    } else {
+                        progress?.vocabulary?.forEach { vocab ->
+                            Surface(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp), shape = RoundedCornerShape(14.dp), color = cardColor, border = BorderStroke(1.dp, strokeColor)) {
+                                Row(modifier = Modifier.padding(Brand.Spacing.md), verticalAlignment = Alignment.CenterVertically) {
+                                    Text("HSK ${vocab.level}", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = primaryText)
+                                    Spacer(Modifier.weight(1f))
+                                    Text("${vocab.knownCount}/${vocab.totalWords}", style = MaterialTheme.typography.bodySmall, color = secondaryText)
+                                }
+                            }
+                        }
+                    }
+
+                    Spacer(Modifier.height(Brand.Spacing.xl))
+                }
+            }
+        }
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// New Homework Screen
+// ═══════════════════════════════════════════════════════════════
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TeacherGroupsNewHomeworkScreen(viewModel: TeacherGroupsViewModel, isDark: Boolean) {
+    val uiState by viewModel.uiState.collectAsState()
+    val primaryText = if (isDark) Color.White else MaterialTheme.colorScheme.onSurface
+    val secondaryText = if (isDark) Color.White.copy(alpha = 0.5f) else MaterialTheme.colorScheme.onSurfaceVariant
+    val fieldBg = if (isDark) Color.White.copy(alpha = 0.06f) else Color.Black.copy(alpha = 0.04f)
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        AdminBackground(isDark = isDark)
+        Column(modifier = Modifier.fillMaxSize()) {
+            // Header
+            Row(
+                modifier = Modifier.fillMaxWidth().statusBarsPadding().padding(horizontal = Brand.Spacing.lg, vertical = Brand.Spacing.md),
+                horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Surface(onClick = { viewModel.closeNewHomework() }, shape = Brand.Shapes.full, color = if (isDark) Color.White.copy(alpha = 0.08f) else Color.Black.copy(alpha = 0.06f)) {
+                    Text("Отмена", modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp), style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold, color = primaryText)
+                }
+                Text("Новое задание", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, color = primaryText)
+                Surface(
+                    onClick = { viewModel.createHomework() },
+                    shape = Brand.Shapes.full,
+                    color = if (uiState.homeworkTitle.isNotBlank() && !uiState.isCreatingHomework)
+                        BrandBlue.copy(alpha = 0.12f) else Color.Transparent,
+                    enabled = uiState.homeworkTitle.isNotBlank() && !uiState.isCreatingHomework,
+                ) {
+                    Text(
+                        "Создать",
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                        style = MaterialTheme.typography.labelMedium,
+                        fontWeight = FontWeight.SemiBold,
+                        color = if (uiState.homeworkTitle.isNotBlank()) BrandBlue else secondaryText,
+                    )
+                }
+            }
+
+            Column(
+                modifier = Modifier.fillMaxWidth().padding(horizontal = Brand.Spacing.lg).verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(Brand.Spacing.lg),
+            ) {
+                // Group selector chips
+                Column {
+                    Text("Группа", style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold, color = primaryText)
+                    Spacer(Modifier.height(Brand.Spacing.sm))
+                    LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        items(uiState.groups, key = { it.id }) { group ->
+                            val isSelected = uiState.homeworkGroupId == group.id
+                            Surface(
+                                onClick = { viewModel.updateHomeworkGroupId(group.id) },
+                                shape = Brand.Shapes.full,
+                                color = if (isSelected) BrandBlue else if (isDark) Color.White.copy(alpha = 0.06f) else Color.Black.copy(alpha = 0.06f),
+                            ) {
+                                Text(
+                                    group.name, modifier = Modifier.padding(horizontal = 14.dp, vertical = 6.dp),
+                                    style = MaterialTheme.typography.labelMedium,
+                                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                                    color = if (isSelected) Color.White else primaryText.copy(alpha = 0.7f),
+                                    maxLines = 1,
+                                )
+                            }
+                        }
+                    }
+                }
+
+                // Title field
+                Column {
+                    Text("Название задания *", style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold, color = primaryText)
+                    Spacer(Modifier.height(Brand.Spacing.sm))
+                    OutlinedTextField(
+                        value = uiState.homeworkTitle,
+                        onValueChange = { viewModel.updateHomeworkTitle(it) },
+                        modifier = Modifier.fillMaxWidth(),
+                        placeholder = { Text("Например: Урок 5, упражнения 1-3", color = secondaryText) },
+                        shape = RoundedCornerShape(12.dp),
+                        singleLine = true,
+                    )
+                }
+
+                // Description field
+                Column {
+                    Text("Описание", style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold, color = primaryText)
+                    Spacer(Modifier.height(Brand.Spacing.sm))
+                    OutlinedTextField(
+                        value = uiState.homeworkDescription,
+                        onValueChange = { viewModel.updateHomeworkDescription(it) },
+                        modifier = Modifier.fillMaxWidth().height(120.dp),
+                        shape = RoundedCornerShape(12.dp),
+                    )
+                }
+
+                // Deadline toggle
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text("Установить дедлайн", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.SemiBold, color = primaryText)
+                    Switch(
+                        checked = uiState.homeworkHasDeadline,
+                        onCheckedChange = { viewModel.toggleHomeworkDeadline(it) },
+                    )
+                }
+
+                if (uiState.homeworkHasDeadline) {
+                    val datePickerState = rememberDatePickerState(
+                        initialSelectedDateMillis = uiState.homeworkDueDate ?: System.currentTimeMillis(),
+                    )
+
+                    LaunchedEffect(datePickerState.selectedDateMillis) {
+                        datePickerState.selectedDateMillis?.let { viewModel.updateHomeworkDueDate(it) }
+                    }
+
+                    DatePicker(
+                        state = datePickerState,
+                        modifier = Modifier.fillMaxWidth(),
+                        title = null,
+                        headline = null,
+                        showModeToggle = false,
+                    )
+                }
+
+                Spacer(Modifier.height(Brand.Spacing.xl))
+            }
+        }
+
+        if (uiState.isCreatingHomework) {
+            Box(modifier = Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.4f)), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator()
+            }
+        }
+    }
+}
+

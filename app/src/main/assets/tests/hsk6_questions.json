@@ -1,0 +1,2702 @@
+[
+  {
+    "id": "hsk6_q1",
+    "level": 6,
+    "prompt": "Переведите: 一旦",
+    "answers": [
+      {
+        "id": "hsk6_q1_0",
+        "text": "Как только / если вдруг",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q1_1",
+        "text": "Пока",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q1_2",
+        "text": "Потому что",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q1_3",
+        "text": "Несмотря на",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q2",
+    "level": 6,
+    "prompt": "Переведите: 迫切",
+    "answers": [
+      {
+        "id": "hsk6_q2_0",
+        "text": "Крайне необходимый / срочный",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q2_1",
+        "text": "Возможный",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q2_2",
+        "text": "Обычный",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q2_3",
+        "text": "Достаточный",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q3",
+    "level": 6,
+    "prompt": "Переведите: 凝聚",
+    "answers": [
+      {
+        "id": "hsk6_q3_0",
+        "text": "Сплачивать / концентрировать",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q3_1",
+        "text": "Разделять",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q3_2",
+        "text": "Копировать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q3_3",
+        "text": "Избегать",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q4",
+    "level": 6,
+    "prompt": "Переведите: 贯彻",
+    "answers": [
+      {
+        "id": "hsk6_q4_0",
+        "text": "Проводить в жизнь / реализовывать",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q4_1",
+        "text": "Останавливать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q4_2",
+        "text": "Отменять",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q4_3",
+        "text": "Разрушать",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q5",
+    "level": 6,
+    "prompt": "Переведите: 领悟",
+    "answers": [
+      {
+        "id": "hsk6_q5_0",
+        "text": "Постигать / осознавать",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q5_1",
+        "text": "Сомневаться",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q5_2",
+        "text": "Забывать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q5_3",
+        "text": "Отрицать",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q6",
+    "level": 6,
+    "prompt": "Переведите: 顿时",
+    "answers": [
+      {
+        "id": "hsk6_q6_0",
+        "text": "Вдруг / тотчас",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q6_1",
+        "text": "Постепенно",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q6_2",
+        "text": "Редко",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q6_3",
+        "text": "Вовремя",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q7",
+    "level": 6,
+    "prompt": "Переведите: 典型",
+    "answers": [
+      {
+        "id": "hsk6_q7_0",
+        "text": "Типичный",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q7_1",
+        "text": "Случайный",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q7_2",
+        "text": "Временный",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q7_3",
+        "text": "Подробный",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q8",
+    "level": 6,
+    "prompt": "Переведите: 罕见",
+    "answers": [
+      {
+        "id": "hsk6_q8_0",
+        "text": "Редкий / необычный",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q8_1",
+        "text": "Обычный",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q8_2",
+        "text": "Частый",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q8_3",
+        "text": "Ранний",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q9",
+    "level": 6,
+    "prompt": "Переведите: 兼顾",
+    "answers": [
+      {
+        "id": "hsk6_q9_0",
+        "text": "Совмещать / учитывать оба",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q9_1",
+        "text": "Отказываться",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q9_2",
+        "text": "Исключать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q9_3",
+        "text": "Забывать",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q10",
+    "level": 6,
+    "prompt": "Переведите: 斟酌",
+    "answers": [
+      {
+        "id": "hsk6_q10_0",
+        "text": "Тщательно обдумывать",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q10_1",
+        "text": "Быстро решать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q10_2",
+        "text": "Игнорировать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q10_3",
+        "text": "Забывать",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q11",
+    "level": 6,
+    "prompt": "Переведите: 渊博",
+    "answers": [
+      {
+        "id": "hsk6_q11_0",
+        "text": "Эрудированный / глубоко знающий",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q11_1",
+        "text": "Невежественный",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q11_2",
+        "text": "Простой",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q11_3",
+        "text": "Глупый",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q12",
+    "level": 6,
+    "prompt": "Переведите: 卓越",
+    "answers": [
+      {
+        "id": "hsk6_q12_0",
+        "text": "Выдающийся",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q12_1",
+        "text": "Обычный",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q12_2",
+        "text": "Посредственный",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q12_3",
+        "text": "Плохой",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q13",
+    "level": 6,
+    "prompt": "Переведите: 隐患",
+    "answers": [
+      {
+        "id": "hsk6_q13_0",
+        "text": "Скрытая угроза / опасность",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q13_1",
+        "text": "Явная польза",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q13_2",
+        "text": "Открытый доступ",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q13_3",
+        "text": "Лёгкая задача",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q14",
+    "level": 6,
+    "prompt": "Переведите: 弥补",
+    "answers": [
+      {
+        "id": "hsk6_q14_0",
+        "text": "Восполнять / компенсировать",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q14_1",
+        "text": "Разрушать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q14_2",
+        "text": "Терять",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q14_3",
+        "text": "Увеличивать",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q15",
+    "level": 6,
+    "prompt": "Переведите: 奠定",
+    "answers": [
+      {
+        "id": "hsk6_q15_0",
+        "text": "Закладывать (основу)",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q15_1",
+        "text": "Разрушать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q15_2",
+        "text": "Забывать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q15_3",
+        "text": "Отменять",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q16",
+    "level": 6,
+    "prompt": "Переведите: 筹备",
+    "answers": [
+      {
+        "id": "hsk6_q16_0",
+        "text": "Подготавливать / организовывать",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q16_1",
+        "text": "Отменять",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q16_2",
+        "text": "Забывать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q16_3",
+        "text": "Откладывать",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q17",
+    "level": 6,
+    "prompt": "Переведите: 践踏",
+    "answers": [
+      {
+        "id": "hsk6_q17_0",
+        "text": "Попирать / растаптывать",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q17_1",
+        "text": "Защищать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q17_2",
+        "text": "Хвалить",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q17_3",
+        "text": "Поддерживать",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q18",
+    "level": 6,
+    "prompt": "Переведите: 蕴含",
+    "answers": [
+      {
+        "id": "hsk6_q18_0",
+        "text": "Содержать в себе / скрывать",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q18_1",
+        "text": "Показывать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q18_2",
+        "text": "Выбрасывать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q18_3",
+        "text": "Терять",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q19",
+    "level": 6,
+    "prompt": "Переведите: 抵御",
+    "answers": [
+      {
+        "id": "hsk6_q19_0",
+        "text": "Противостоять / отражать",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q19_1",
+        "text": "Принимать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q19_2",
+        "text": "Приветствовать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q19_3",
+        "text": "Поддерживать",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q20",
+    "level": 6,
+    "prompt": "Переведите: 衍生",
+    "answers": [
+      {
+        "id": "hsk6_q20_0",
+        "text": "Производный / порождать",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q20_1",
+        "text": "Исходный",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q20_2",
+        "text": "Основной",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q20_3",
+        "text": "Главный",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q21",
+    "level": 6,
+    "prompt": "Переведите: 彰显",
+    "answers": [
+      {
+        "id": "hsk6_q21_0",
+        "text": "Проявлять / демонстрировать",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q21_1",
+        "text": "Скрывать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q21_2",
+        "text": "Прятать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q21_3",
+        "text": "Уменьшать",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q22",
+    "level": 6,
+    "prompt": "Переведите: 瞻仰",
+    "answers": [
+      {
+        "id": "hsk6_q22_0",
+        "text": "Благоговейно взирать / почитать",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q22_1",
+        "text": "Презирать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q22_2",
+        "text": "Игнорировать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q22_3",
+        "text": "Забывать",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q23",
+    "level": 6,
+    "prompt": "Переведите: 颠覆",
+    "answers": [
+      {
+        "id": "hsk6_q23_0",
+        "text": "Ниспровергать / подрывать",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q23_1",
+        "text": "Укреплять",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q23_2",
+        "text": "Поддерживать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q23_3",
+        "text": "Строить",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q24",
+    "level": 6,
+    "prompt": "Переведите: 磋商",
+    "answers": [
+      {
+        "id": "hsk6_q24_0",
+        "text": "Вести переговоры / консультироваться",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q24_1",
+        "text": "Спорить",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q24_2",
+        "text": "Молчать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q24_3",
+        "text": "Отказывать",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q25",
+    "level": 6,
+    "prompt": "Переведите: 遏制",
+    "answers": [
+      {
+        "id": "hsk6_q25_0",
+        "text": "Сдерживать / пресекать",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q25_1",
+        "text": "Поощрять",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q25_2",
+        "text": "Развивать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q25_3",
+        "text": "Увеличивать",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q26",
+    "level": 6,
+    "prompt": "Переведите: 笃信",
+    "answers": [
+      {
+        "id": "hsk6_q26_0",
+        "text": "Глубоко верить / твёрдо верить",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q26_1",
+        "text": "Сомневаться",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q26_2",
+        "text": "Отрицать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q26_3",
+        "text": "Забывать",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q27",
+    "level": 6,
+    "prompt": "Переведите: 怠慢",
+    "answers": [
+      {
+        "id": "hsk6_q27_0",
+        "text": "Пренебрегать / проявлять неуважение",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q27_1",
+        "text": "Уважать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q27_2",
+        "text": "Хвалить",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q27_3",
+        "text": "Восхищаться",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q28",
+    "level": 6,
+    "prompt": "Переведите: 嘱咐",
+    "answers": [
+      {
+        "id": "hsk6_q28_0",
+        "text": "Наставлять / давать наказ",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q28_1",
+        "text": "Забывать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q28_2",
+        "text": "Игнорировать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q28_3",
+        "text": "Критиковать",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q29",
+    "level": 6,
+    "prompt": "Переведите: 竞相",
+    "answers": [
+      {
+        "id": "hsk6_q29_0",
+        "text": "Наперебой / соревнуясь друг с другом",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q29_1",
+        "text": "Медленно",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q29_2",
+        "text": "Неохотно",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q29_3",
+        "text": "Лениво",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q30",
+    "level": 6,
+    "prompt": "Переведите: 匮乏",
+    "answers": [
+      {
+        "id": "hsk6_q30_0",
+        "text": "Нехватка / дефицит",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q30_1",
+        "text": "Изобилие",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q30_2",
+        "text": "Достаток",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q30_3",
+        "text": "Избыток",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q31",
+    "level": 6,
+    "prompt": "Переведите: 素养",
+    "answers": [
+      {
+        "id": "hsk6_q31_0",
+        "text": "Культура / образованность",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q31_1",
+        "text": "Невежество",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q31_2",
+        "text": "Грубость",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q31_3",
+        "text": "Лень",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q32",
+    "level": 6,
+    "prompt": "Переведите: 夯实",
+    "answers": [
+      {
+        "id": "hsk6_q32_0",
+        "text": "Укреплять / делать прочным",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q32_1",
+        "text": "Разрушать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q32_2",
+        "text": "Ослаблять",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q32_3",
+        "text": "Терять",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q33",
+    "level": 6,
+    "prompt": "Переведите: 辨析",
+    "answers": [
+      {
+        "id": "hsk6_q33_0",
+        "text": "Различать / анализировать",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q33_1",
+        "text": "Смешивать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q33_2",
+        "text": "Путать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q33_3",
+        "text": "Забывать",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q34",
+    "level": 6,
+    "prompt": "Переведите: 遵循",
+    "answers": [
+      {
+        "id": "hsk6_q34_0",
+        "text": "Следовать / соблюдать",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q34_1",
+        "text": "Нарушать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q34_2",
+        "text": "Игнорировать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q34_3",
+        "text": "Отменять",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q35",
+    "level": 6,
+    "prompt": "Переведите: 诠释",
+    "answers": [
+      {
+        "id": "hsk6_q35_0",
+        "text": "Интерпретировать / толковать",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q35_1",
+        "text": "Скрывать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q35_2",
+        "text": "Забывать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q35_3",
+        "text": "Отвергать",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q36",
+    "level": 6,
+    "prompt": "Переведите: 话虽如此，他还是决定再试一次",
+    "answers": [
+      {
+        "id": "hsk6_q36_0",
+        "text": "Тем не менее он решил попробовать ещё раз",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q36_1",
+        "text": "Он сразу отказался",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q36_2",
+        "text": "Он не понимал",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q36_3",
+        "text": "Он отменил встречу",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q37",
+    "level": 6,
+    "prompt": "Переведите: 这一发现具有里程碑式的意义",
+    "answers": [
+      {
+        "id": "hsk6_q37_0",
+        "text": "Это открытие имеет эпохальное значение",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q37_1",
+        "text": "Открытие незначительно",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q37_2",
+        "text": "Открытие ложно",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q37_3",
+        "text": "Значения нет",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q38",
+    "level": 6,
+    "prompt": "Переведите: 他以身作则，赢得了大家的尊敬",
+    "answers": [
+      {
+        "id": "hsk6_q38_0",
+        "text": "Он подаёт пример личным поведением и заслужил уважение",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q38_1",
+        "text": "Его никто не уважает",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q38_2",
+        "text": "Он плохой пример",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q38_3",
+        "text": "Он всех критикует",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q39",
+    "level": 6,
+    "prompt": "Переведите: 这部作品融汇了东西方的文化精髓",
+    "answers": [
+      {
+        "id": "hsk6_q39_0",
+        "text": "Это произведение объединяет культурную суть Востока и Запада",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q39_1",
+        "text": "Произведение только западное",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q39_2",
+        "text": "Произведение бессмысленное",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q39_3",
+        "text": "Нет связи с культурой",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q40",
+    "level": 6,
+    "prompt": "Переведите: 面对困境，他泰然自若",
+    "answers": [
+      {
+        "id": "hsk6_q40_0",
+        "text": "Перед лицом трудностей он оставался невозмутимым",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q40_1",
+        "text": "Он испугался",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q40_2",
+        "text": "Он убежал",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q40_3",
+        "text": "Он заплакал",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q41",
+    "level": 6,
+    "prompt": "Переведите: 他对这个领域的贡献是不可磨灭的",
+    "answers": [
+      {
+        "id": "hsk6_q41_0",
+        "text": "Его вклад в эту область неизгладим",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q41_1",
+        "text": "Его вклад ничтожен",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q41_2",
+        "text": "Он ничего не сделал",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q41_3",
+        "text": "Его забыли",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q42",
+    "level": 6,
+    "prompt": "Переведите: 这种现象在当代社会屡见不鲜",
+    "answers": [
+      {
+        "id": "hsk6_q42_0",
+        "text": "Это явление нередко встречается в современном обществе",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q42_1",
+        "text": "Это никогда не бывает",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q42_2",
+        "text": "Это крайне редко",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q42_3",
+        "text": "Общество так не считает",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q43",
+    "level": 6,
+    "prompt": "Переведите: 科学研究贵在坚持不懈",
+    "answers": [
+      {
+        "id": "hsk6_q43_0",
+        "text": "Ценность научных исследований — в неустанном упорстве",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q43_1",
+        "text": "Наука не требует усилий",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q43_2",
+        "text": "Достаточно таланта",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q43_3",
+        "text": "Упорство не важно",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q44",
+    "level": 6,
+    "prompt": "Переведите: 他在逆境中锤炼了坚强的意志",
+    "answers": [
+      {
+        "id": "hsk6_q44_0",
+        "text": "В трудностях он закалил сильную волю",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q44_1",
+        "text": "Трудности его сломили",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q44_2",
+        "text": "Он не сопротивлялся",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q44_3",
+        "text": "Он сдался",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q45",
+    "level": 6,
+    "prompt": "Переведите: 我们要以开放的心态拥抱变化",
+    "answers": [
+      {
+        "id": "hsk6_q45_0",
+        "text": "Мы должны с открытым сердцем принимать перемены",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q45_1",
+        "text": "Перемены вредны",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q45_2",
+        "text": "Нужно сопротивляться",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q45_3",
+        "text": "Открытость опасна",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q46",
+    "level": 6,
+    "prompt": "Переведите: 教育不应该只注重成绩，更应该注重品德",
+    "answers": [
+      {
+        "id": "hsk6_q46_0",
+        "text": "Образование должно уделять внимание не только оценкам, но и морали",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q46_1",
+        "text": "Только оценки важны",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q46_2",
+        "text": "Мораль не нужна",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q46_3",
+        "text": "Образование не важно",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q47",
+    "level": 6,
+    "prompt": "Переведите: 这种做法无异于饮鸩止渴",
+    "answers": [
+      {
+        "id": "hsk6_q47_0",
+        "text": "Это равносильно питью яда для утоления жажды",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q47_1",
+        "text": "Это хороший метод",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q47_2",
+        "text": "Это правильный путь",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q47_3",
+        "text": "Это безопасно",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q48",
+    "level": 6,
+    "prompt": "Переведите: 他博学多才，是学术界的翘楚",
+    "answers": [
+      {
+        "id": "hsk6_q48_0",
+        "text": "Он эрудированный и талантливый — лучший в науке",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q48_1",
+        "text": "Он обычный учёный",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q48_2",
+        "text": "Он не любит науку",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q48_3",
+        "text": "Он неизвестен",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q49",
+    "level": 6,
+    "prompt": "Переведите: 古人云：学而不思则罔，思而不学则殆",
+    "answers": [
+      {
+        "id": "hsk6_q49_0",
+        "text": "Древние говорили: учёба без размышления бесполезна, размышление без учёбы опасно",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q49_1",
+        "text": "Учиться не нужно",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q49_2",
+        "text": "Думать вредно",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q49_3",
+        "text": "Древние не учились",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q50",
+    "level": 6,
+    "prompt": "Переведите: 历史的车轮滚滚向前，不可阻挡",
+    "answers": [
+      {
+        "id": "hsk6_q50_0",
+        "text": "Колесо истории катится вперёд — его не остановить",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q50_1",
+        "text": "Историю можно остановить",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q50_2",
+        "text": "История не движется",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q50_3",
+        "text": "Прошлое важнее будущего",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q51",
+    "level": 6,
+    "prompt": "Переведите: 文化传承需要每一代人的参与",
+    "answers": [
+      {
+        "id": "hsk6_q51_0",
+        "text": "Культурное наследие требует участия каждого поколения",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q51_1",
+        "text": "Культура сама сохраняется",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q51_2",
+        "text": "Одно поколение достаточно",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q51_3",
+        "text": "Культура не важна",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q52",
+    "level": 6,
+    "prompt": "Переведите: 他的见解独到而深刻",
+    "answers": [
+      {
+        "id": "hsk6_q52_0",
+        "text": "Его взгляды уникальны и глубоки",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q52_1",
+        "text": "Его мнение обычное",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q52_2",
+        "text": "Он поверхностный",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q52_3",
+        "text": "Он неоригинальный",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q53",
+    "level": 6,
+    "prompt": "Переведите: 社会各阶层应当携手共进",
+    "answers": [
+      {
+        "id": "hsk6_q53_0",
+        "text": "Все слои общества должны идти вперёд рука об руку",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q53_1",
+        "text": "Общество разделено",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q53_2",
+        "text": "Сотрудничество не нужно",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q53_3",
+        "text": "Каждый сам за себя",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q54",
+    "level": 6,
+    "prompt": "Переведите: 这位学者在学术上造诣颇深",
+    "answers": [
+      {
+        "id": "hsk6_q54_0",
+        "text": "Этот учёный имеет глубокие достижения в науке",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q54_1",
+        "text": "Он не занимается наукой",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q54_2",
+        "text": "Он начинающий",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q54_3",
+        "text": "Он ничего не знает",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q55",
+    "level": 6,
+    "prompt": "Переведите: 真正的智慧在于知道自己的无知",
+    "answers": [
+      {
+        "id": "hsk6_q55_0",
+        "text": "Истинная мудрость — в осознании собственного невежества",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q55_1",
+        "text": "Мудрость — это всё знать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q55_2",
+        "text": "Невежество — это хорошо",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q55_3",
+        "text": "Знание не нужно",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q56",
+    "level": 6,
+    "prompt": "Что означает «不惜»?",
+    "answers": [
+      {
+        "id": "hsk6_q56_0",
+        "text": "Не пожалеть / любой ценой",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q56_1",
+        "text": "Не хотеть",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q56_2",
+        "text": "Не мочь",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q56_3",
+        "text": "Не знать",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q57",
+    "level": 6,
+    "prompt": "Что означает «有鉴于此»?",
+    "answers": [
+      {
+        "id": "hsk6_q57_0",
+        "text": "Принимая это во внимание",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q57_1",
+        "text": "Несмотря на это",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q57_2",
+        "text": "Игнорируя это",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q57_3",
+        "text": "Забывая об этом",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q58",
+    "level": 6,
+    "prompt": "Что означает «不言而喻»?",
+    "answers": [
+      {
+        "id": "hsk6_q58_0",
+        "text": "Само собой разумеется",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q58_1",
+        "text": "Нужно объяснить",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q58_2",
+        "text": "Непонятно",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q58_3",
+        "text": "Спорно",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q59",
+    "level": 6,
+    "prompt": "Что означает «不遗余力»?",
+    "answers": [
+      {
+        "id": "hsk6_q59_0",
+        "text": "Не жалея усилий / изо всех сил",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q59_1",
+        "text": "Лениво",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q59_2",
+        "text": "Случайно",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q59_3",
+        "text": "Неохотно",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q60",
+    "level": 6,
+    "prompt": "Что означает «义不容辞»?",
+    "answers": [
+      {
+        "id": "hsk6_q60_0",
+        "text": "Долг обязывает / неотложно",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q60_1",
+        "text": "Можно отказаться",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q60_2",
+        "text": "Неважно",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q60_3",
+        "text": "Не срочно",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q61",
+    "level": 6,
+    "prompt": "Что означает «归根到底»?",
+    "answers": [
+      {
+        "id": "hsk6_q61_0",
+        "text": "В конечном счёте / по сути",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q61_1",
+        "text": "В начале",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q61_2",
+        "text": "Случайно",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q61_3",
+        "text": "Иногда",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q62",
+    "level": 6,
+    "prompt": "Что означает «无可厚非»?",
+    "answers": [
+      {
+        "id": "hsk6_q62_0",
+        "text": "Не за что упрекать / допустимо",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q62_1",
+        "text": "Совершенно неправильно",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q62_2",
+        "text": "Абсолютно запрещено",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q62_3",
+        "text": "Строго осуждается",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q63",
+    "level": 6,
+    "prompt": "Что означает «有目共睹»?",
+    "answers": [
+      {
+        "id": "hsk6_q63_0",
+        "text": "Всем очевидно / общеизвестно",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q63_1",
+        "text": "Никто не знает",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q63_2",
+        "text": "Скрыто",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q63_3",
+        "text": "Спорно",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q64",
+    "level": 6,
+    "prompt": "Что означает «名副其实»?",
+    "answers": [
+      {
+        "id": "hsk6_q64_0",
+        "text": "Соответствовать своему названию",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q64_1",
+        "text": "Ложное название",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q64_2",
+        "text": "Без названия",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q64_3",
+        "text": "Странное имя",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q65",
+    "level": 6,
+    "prompt": "Что означает «相辅相成»?",
+    "answers": [
+      {
+        "id": "hsk6_q65_0",
+        "text": "Взаимно дополнять друг друга",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q65_1",
+        "text": "Противоречить друг другу",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q65_2",
+        "text": "Не связаны",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q65_3",
+        "text": "Конкурировать",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q66",
+    "level": 6,
+    "prompt": "Вставьте: ___困难再大，我们___要克服。",
+    "answers": [
+      {
+        "id": "hsk6_q66_0",
+        "text": "哪怕…也",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q66_1",
+        "text": "因为…所以",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q66_2",
+        "text": "虽然…但是",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q66_3",
+        "text": "如果…就",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q67",
+    "level": 6,
+    "prompt": "Вставьте: 他之所以成功，___他努力了十年。",
+    "answers": [
+      {
+        "id": "hsk6_q67_0",
+        "text": "是因为",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q67_1",
+        "text": "尽管",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q67_2",
+        "text": "虽然",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q67_3",
+        "text": "由于",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q68",
+    "level": 6,
+    "prompt": "Что означает «尚且…何况…»?",
+    "answers": [
+      {
+        "id": "hsk6_q68_0",
+        "text": "Даже… не говоря уже о…",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q68_1",
+        "text": "Потому что",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q68_2",
+        "text": "Если",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q68_3",
+        "text": "Хотя",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q69",
+    "level": 6,
+    "prompt": "Что означает «与日俱增»?",
+    "answers": [
+      {
+        "id": "hsk6_q69_0",
+        "text": "С каждым днём возрастать",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q69_1",
+        "text": "Уменьшаться",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q69_2",
+        "text": "Не меняться",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q69_3",
+        "text": "Исчезать",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q70",
+    "level": 6,
+    "prompt": "Что означает «迫在眉睫»?",
+    "answers": [
+      {
+        "id": "hsk6_q70_0",
+        "text": "Неотложный / дело не терпит отлагательства",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q70_1",
+        "text": "Далёкий",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q70_2",
+        "text": "Неважный",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q70_3",
+        "text": "Медленный",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q71",
+    "level": 6,
+    "prompt": "Что означает «刻舟求剑»?",
+    "answers": [
+      {
+        "id": "hsk6_q71_0",
+        "text": "Действовать по устаревшим шаблонам",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q71_1",
+        "text": "Искать мечом",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q71_2",
+        "text": "Рубить дерево",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q71_3",
+        "text": "Плыть на лодке",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q72",
+    "level": 6,
+    "prompt": "Что означает «掩耳盗铃»?",
+    "answers": [
+      {
+        "id": "hsk6_q72_0",
+        "text": "Обманывать самого себя",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q72_1",
+        "text": "Красть колокол",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q72_2",
+        "text": "Закрывать уши",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q72_3",
+        "text": "Прятать вещи",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q73",
+    "level": 6,
+    "prompt": "Что означает «守株待兔»?",
+    "answers": [
+      {
+        "id": "hsk6_q73_0",
+        "text": "Ждать удачи, ничего не делая",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q73_1",
+        "text": "Охотиться на зайца",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q73_2",
+        "text": "Сажать дерево",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q73_3",
+        "text": "Ловить рыбу",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q74",
+    "level": 6,
+    "prompt": "Что означает «画龙点睛»?",
+    "answers": [
+      {
+        "id": "hsk6_q74_0",
+        "text": "Добавить завершающий штрих",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q74_1",
+        "text": "Нарисовать дракона",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q74_2",
+        "text": "Раскрасить глаза",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q74_3",
+        "text": "Начать рисовать",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q75",
+    "level": 6,
+    "prompt": "Что означает «井底之蛙»?",
+    "answers": [
+      {
+        "id": "hsk6_q75_0",
+        "text": "Лягушка в колодце (ограниченный кругозор)",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q75_1",
+        "text": "Мудрая лягушка",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q75_2",
+        "text": "Глубокий колодец",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q75_3",
+        "text": "Прыгающая лягушка",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q76",
+    "level": 6,
+    "prompt": "Что означает «班门弄斧»?",
+    "answers": [
+      {
+        "id": "hsk6_q76_0",
+        "text": "Показывать мастерство перед мастером",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q76_1",
+        "text": "Учиться у мастера",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q76_2",
+        "text": "Быть мастером",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q76_3",
+        "text": "Продавать топоры",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q77",
+    "level": 6,
+    "prompt": "Что означает «塞翁失马»?",
+    "answers": [
+      {
+        "id": "hsk6_q77_0",
+        "text": "Не знаешь, что обернётся благом",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q77_1",
+        "text": "Потерять лошадь",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q77_2",
+        "text": "Старый конюх",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q77_3",
+        "text": "Быстрая лошадь",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q78",
+    "level": 6,
+    "prompt": "Что означает «叶公好龙»?",
+    "answers": [
+      {
+        "id": "hsk6_q78_0",
+        "text": "Любить на словах, но бояться на деле",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q78_1",
+        "text": "Любить драконов",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q78_2",
+        "text": "Быть храбрым",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q78_3",
+        "text": "Коллекционировать",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q79",
+    "level": 6,
+    "prompt": "Что означает «杯弓蛇影»?",
+    "answers": [
+      {
+        "id": "hsk6_q79_0",
+        "text": "Пугаться мнимой опасности / быть мнительным",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q79_1",
+        "text": "Пить из стакана",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q79_2",
+        "text": "Стрелять из лука",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q79_3",
+        "text": "Бояться змей",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q80",
+    "level": 6,
+    "prompt": "Что означает «亡羊补牢»?",
+    "answers": [
+      {
+        "id": "hsk6_q80_0",
+        "text": "Лучше поздно, чем никогда (исправить ошибку)",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q80_1",
+        "text": "Потерять овцу",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q80_2",
+        "text": "Построить забор",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q80_3",
+        "text": "Считать овец",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q81",
+    "level": 6,
+    "prompt": "Что означает «鹤立鸡群»?",
+    "answers": [
+      {
+        "id": "hsk6_q81_0",
+        "text": "Выделяться среди посредственностей",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q81_1",
+        "text": "Быть обычным",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q81_2",
+        "text": "Группа птиц",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q81_3",
+        "text": "Курица и журавль",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q82",
+    "level": 6,
+    "prompt": "Что означает «破釜沉舟»?",
+    "answers": [
+      {
+        "id": "hsk6_q82_0",
+        "text": "Сжечь мосты / решимость идти до конца",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q82_1",
+        "text": "Потопить лодку",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q82_2",
+        "text": "Сдаться",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q82_3",
+        "text": "Вернуться назад",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q83",
+    "level": 6,
+    "prompt": "Что означает «雪中送炭»?",
+    "answers": [
+      {
+        "id": "hsk6_q83_0",
+        "text": "Помощь в трудную минуту",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q83_1",
+        "text": "Продавать уголь",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q83_2",
+        "text": "Играть в снегу",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q83_3",
+        "text": "Разжигать огонь",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q84",
+    "level": 6,
+    "prompt": "Что означает «锦上添花»?",
+    "answers": [
+      {
+        "id": "hsk6_q84_0",
+        "text": "Украшать и без того красивое",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q84_1",
+        "text": "Вышивать цветы",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q84_2",
+        "text": "Покупать ткань",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q84_3",
+        "text": "Сажать цветы",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q85",
+    "level": 6,
+    "prompt": "Что означает «纸上谈兵»?",
+    "answers": [
+      {
+        "id": "hsk6_q85_0",
+        "text": "Быть теоретиком без практики",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q85_1",
+        "text": "Читать книги",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q85_2",
+        "text": "Писать письма",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q85_3",
+        "text": "Играть в войну",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q86",
+    "level": 6,
+    "prompt": "Найдите синоним к «卓越»:",
+    "answers": [
+      {
+        "id": "hsk6_q86_0",
+        "text": "杰出",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q86_1",
+        "text": "平庸",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q86_2",
+        "text": "普通",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q86_3",
+        "text": "一般",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q87",
+    "level": 6,
+    "prompt": "Найдите синоним к «迫切»:",
+    "answers": [
+      {
+        "id": "hsk6_q87_0",
+        "text": "紧迫",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q87_1",
+        "text": "缓慢",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q87_2",
+        "text": "轻松",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q87_3",
+        "text": "随意",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q88",
+    "level": 6,
+    "prompt": "Найдите синоним к «蕴含»:",
+    "answers": [
+      {
+        "id": "hsk6_q88_0",
+        "text": "包含",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q88_1",
+        "text": "排除",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q88_2",
+        "text": "丢弃",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q88_3",
+        "text": "暴露",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q89",
+    "level": 6,
+    "prompt": "Найдите антоним к «罕见»:",
+    "answers": [
+      {
+        "id": "hsk6_q89_0",
+        "text": "常见",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q89_1",
+        "text": "独特",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q89_2",
+        "text": "新鲜",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q89_3",
+        "text": "古老",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q90",
+    "level": 6,
+    "prompt": "Найдите антоним к «渊博»:",
+    "answers": [
+      {
+        "id": "hsk6_q90_0",
+        "text": "浅薄",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q90_1",
+        "text": "深刻",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q90_2",
+        "text": "丰富",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q90_3",
+        "text": "广泛",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q91",
+    "level": 6,
+    "prompt": "Найдите антоним к «匮乏»:",
+    "answers": [
+      {
+        "id": "hsk6_q91_0",
+        "text": "充裕",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q91_1",
+        "text": "贫穷",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q91_2",
+        "text": "困难",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q91_3",
+        "text": "短缺",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q92",
+    "level": 6,
+    "prompt": "Какова разница между «领悟» и «了解»?",
+    "answers": [
+      {
+        "id": "hsk6_q92_0",
+        "text": "领悟 — глубокое постижение; 了解 — поверхностное знание",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q92_1",
+        "text": "Они одинаковые",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q92_2",
+        "text": "了解 глубже",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q92_3",
+        "text": "领悟 поверхностнее",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q93",
+    "level": 6,
+    "prompt": "Какова разница между «严峻» и «严格»?",
+    "answers": [
+      {
+        "id": "hsk6_q93_0",
+        "text": "严峻 — суровый (о ситуации); 严格 — строгий (о требованиях)",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q93_1",
+        "text": "Они одинаковые",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q93_2",
+        "text": "严格 о ситуации",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q93_3",
+        "text": "严峻 о требованиях",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q94",
+    "level": 6,
+    "prompt": "Какова разница между «弥补» и «补充»?",
+    "answers": [
+      {
+        "id": "hsk6_q94_0",
+        "text": "弥补 — восполнить потерю; 补充 — дополнить",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q94_1",
+        "text": "Они одинаковые",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q94_2",
+        "text": "弥补 — дополнить",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q94_3",
+        "text": "补充 — восполнить потерю",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q95",
+    "level": 6,
+    "prompt": "Какова разница между «遏制» и «制止»?",
+    "answers": [
+      {
+        "id": "hsk6_q95_0",
+        "text": "遏制 — сдерживать процесс; 制止 — остановить действие",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q95_1",
+        "text": "Они одинаковые",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q95_2",
+        "text": "遏制 мягче",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q95_3",
+        "text": "制止 о процессе",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q96",
+    "level": 6,
+    "prompt": "Переведите: 潜移默化",
+    "answers": [
+      {
+        "id": "hsk6_q96_0",
+        "text": "Незаметное постепенное влияние",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q96_1",
+        "text": "Быстрое изменение",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q96_2",
+        "text": "Полное разрушение",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q96_3",
+        "text": "Неожиданный результат",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q97",
+    "level": 6,
+    "prompt": "Переведите: 根深蒂固",
+    "answers": [
+      {
+        "id": "hsk6_q97_0",
+        "text": "Глубоко укоренившийся",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q97_1",
+        "text": "Поверхностный",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q97_2",
+        "text": "Временный",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q97_3",
+        "text": "Случайный",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q98",
+    "level": 6,
+    "prompt": "Переведите: 循序渐进",
+    "answers": [
+      {
+        "id": "hsk6_q98_0",
+        "text": "Шаг за шагом / постепенно",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q98_1",
+        "text": "Резко",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q98_2",
+        "text": "Внезапно",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q98_3",
+        "text": "Хаотично",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q99",
+    "level": 6,
+    "prompt": "Переведите: 博大精深",
+    "answers": [
+      {
+        "id": "hsk6_q99_0",
+        "text": "Глубокий и обширный (о культуре)",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q99_1",
+        "text": "Простой и скучный",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q99_2",
+        "text": "Узкий и мелкий",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q99_3",
+        "text": "Быстрый и лёгкий",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk6_q100",
+    "level": 6,
+    "prompt": "Переведите: 源远流长",
+    "answers": [
+      {
+        "id": "hsk6_q100_0",
+        "text": "С глубокими историческими корнями",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk6_q100_1",
+        "text": "Недавний",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q100_2",
+        "text": "Кратковременный",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk6_q100_3",
+        "text": "Забытый",
+        "isCorrect": false
+      }
+    ]
+  }
+]

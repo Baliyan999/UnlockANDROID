@@ -1,0 +1,2702 @@
+[
+  {
+    "id": "hsk5_q1",
+    "level": 5,
+    "prompt": "Переведите: 尤其",
+    "answers": [
+      {
+        "id": "hsk5_q1_0",
+        "text": "Особенно",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q1_1",
+        "text": "Наверняка",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q1_2",
+        "text": "Возможно",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q1_3",
+        "text": "Сначала",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q2",
+    "level": 5,
+    "prompt": "Переведите: 相反",
+    "answers": [
+      {
+        "id": "hsk5_q2_0",
+        "text": "Наоборот",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q2_1",
+        "text": "Сразу",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q2_2",
+        "text": "Поэтому",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q2_3",
+        "text": "В итоге",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q3",
+    "level": 5,
+    "prompt": "Переведите: 彻底",
+    "answers": [
+      {
+        "id": "hsk5_q3_0",
+        "text": "Полностью / основательно",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q3_1",
+        "text": "Слегка",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q3_2",
+        "text": "Частично",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q3_3",
+        "text": "Примерно",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q4",
+    "level": 5,
+    "prompt": "Переведите: 方案",
+    "answers": [
+      {
+        "id": "hsk5_q4_0",
+        "text": "План / вариант решения",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q4_1",
+        "text": "Ошибка",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q4_2",
+        "text": "Условие",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q4_3",
+        "text": "Пример",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q5",
+    "level": 5,
+    "prompt": "Переведите: 投资",
+    "answers": [
+      {
+        "id": "hsk5_q5_0",
+        "text": "Инвестировать",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q5_1",
+        "text": "Сократить",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q5_2",
+        "text": "Попросить",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q5_3",
+        "text": "Проверить",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q6",
+    "level": 5,
+    "prompt": "Переведите: 体会",
+    "answers": [
+      {
+        "id": "hsk5_q6_0",
+        "text": "Прочувствовать / осмыслить",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q6_1",
+        "text": "Позволить",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q6_2",
+        "text": "Изменить",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q6_3",
+        "text": "Рассказать",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q7",
+    "level": 5,
+    "prompt": "Переведите: 思维",
+    "answers": [
+      {
+        "id": "hsk5_q7_0",
+        "text": "Мышление",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q7_1",
+        "text": "Память",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q7_2",
+        "text": "Чувство",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q7_3",
+        "text": "Зрение",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q8",
+    "level": 5,
+    "prompt": "Переведите: 论证",
+    "answers": [
+      {
+        "id": "hsk5_q8_0",
+        "text": "Аргументация / доказательство",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q8_1",
+        "text": "Вопрос",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q8_2",
+        "text": "Ответ",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q8_3",
+        "text": "Ошибка",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q9",
+    "level": 5,
+    "prompt": "Переведите: 现象",
+    "answers": [
+      {
+        "id": "hsk5_q9_0",
+        "text": "Явление / феномен",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q9_1",
+        "text": "Причина",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q9_2",
+        "text": "Метод",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q9_3",
+        "text": "Результат",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q10",
+    "level": 5,
+    "prompt": "Переведите: 分析",
+    "answers": [
+      {
+        "id": "hsk5_q10_0",
+        "text": "Анализировать",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q10_1",
+        "text": "Синтезировать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q10_2",
+        "text": "Забывать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q10_3",
+        "text": "Копировать",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q11",
+    "level": 5,
+    "prompt": "Переведите: 总结",
+    "answers": [
+      {
+        "id": "hsk5_q11_0",
+        "text": "Подводить итог / обобщать",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q11_1",
+        "text": "Начинать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q11_2",
+        "text": "Продолжать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q11_3",
+        "text": "Отменять",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q12",
+    "level": 5,
+    "prompt": "Переведите: 趋势",
+    "answers": [
+      {
+        "id": "hsk5_q12_0",
+        "text": "Тенденция / тренд",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q12_1",
+        "text": "Причина",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q12_2",
+        "text": "Проблема",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q12_3",
+        "text": "Ошибка",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q13",
+    "level": 5,
+    "prompt": "Переведите: 意识",
+    "answers": [
+      {
+        "id": "hsk5_q13_0",
+        "text": "Сознание / осознавать",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q13_1",
+        "text": "Забвение",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q13_2",
+        "text": "Сон",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q13_3",
+        "text": "Привычка",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q14",
+    "level": 5,
+    "prompt": "Переведите: 承担",
+    "answers": [
+      {
+        "id": "hsk5_q14_0",
+        "text": "Брать на себя / нести",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q14_1",
+        "text": "Избегать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q14_2",
+        "text": "Отказывать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q14_3",
+        "text": "Сбрасывать",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q15",
+    "level": 5,
+    "prompt": "Переведите: 贡献",
+    "answers": [
+      {
+        "id": "hsk5_q15_0",
+        "text": "Вклад / вносить вклад",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q15_1",
+        "text": "Разрушение",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q15_2",
+        "text": "Потеря",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q15_3",
+        "text": "Отказ",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q16",
+    "level": 5,
+    "prompt": "Переведите: 启发",
+    "answers": [
+      {
+        "id": "hsk5_q16_0",
+        "text": "Вдохновлять / наводить на мысль",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q16_1",
+        "text": "Разочаровывать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q16_2",
+        "text": "Пугать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q16_3",
+        "text": "Запрещать",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q17",
+    "level": 5,
+    "prompt": "Переведите: 证明",
+    "answers": [
+      {
+        "id": "hsk5_q17_0",
+        "text": "Доказывать / подтверждать",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q17_1",
+        "text": "Отрицать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q17_2",
+        "text": "Сомневаться",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q17_3",
+        "text": "Скрывать",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q18",
+    "level": 5,
+    "prompt": "Переведите: 矛盾",
+    "answers": [
+      {
+        "id": "hsk5_q18_0",
+        "text": "Противоречие",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q18_1",
+        "text": "Согласие",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q18_2",
+        "text": "Гармония",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q18_3",
+        "text": "Единство",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q19",
+    "level": 5,
+    "prompt": "Переведите: 资源",
+    "answers": [
+      {
+        "id": "hsk5_q19_0",
+        "text": "Ресурсы",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q19_1",
+        "text": "Продукты",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q19_2",
+        "text": "Деньги",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q19_3",
+        "text": "Товары",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q20",
+    "level": 5,
+    "prompt": "Переведите: 策略",
+    "answers": [
+      {
+        "id": "hsk5_q20_0",
+        "text": "Стратегия",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q20_1",
+        "text": "Тактика",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q20_2",
+        "text": "Случайность",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q20_3",
+        "text": "Ошибка",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q21",
+    "level": 5,
+    "prompt": "Переведите: 灵活",
+    "answers": [
+      {
+        "id": "hsk5_q21_0",
+        "text": "Гибкий",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q21_1",
+        "text": "Жёсткий",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q21_2",
+        "text": "Тяжёлый",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q21_3",
+        "text": "Медленный",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q22",
+    "level": 5,
+    "prompt": "Переведите: 显著",
+    "answers": [
+      {
+        "id": "hsk5_q22_0",
+        "text": "Заметный / значительный",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q22_1",
+        "text": "Незаметный",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q22_2",
+        "text": "Мелкий",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q22_3",
+        "text": "Случайный",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q23",
+    "level": 5,
+    "prompt": "Переведите: 抽象",
+    "answers": [
+      {
+        "id": "hsk5_q23_0",
+        "text": "Абстрактный",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q23_1",
+        "text": "Конкретный",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q23_2",
+        "text": "Простой",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q23_3",
+        "text": "Красивый",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q24",
+    "level": 5,
+    "prompt": "Переведите: 具体",
+    "answers": [
+      {
+        "id": "hsk5_q24_0",
+        "text": "Конкретный",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q24_1",
+        "text": "Абстрактный",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q24_2",
+        "text": "Общий",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q24_3",
+        "text": "Неясный",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q25",
+    "level": 5,
+    "prompt": "Переведите: 潜力",
+    "answers": [
+      {
+        "id": "hsk5_q25_0",
+        "text": "Потенциал",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q25_1",
+        "text": "Слабость",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q25_2",
+        "text": "Ошибка",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q25_3",
+        "text": "Ограничение",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q26",
+    "level": 5,
+    "prompt": "Переведите: 繁荣",
+    "answers": [
+      {
+        "id": "hsk5_q26_0",
+        "text": "Процветание",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q26_1",
+        "text": "Упадок",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q26_2",
+        "text": "Бедность",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q26_3",
+        "text": "Застой",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q27",
+    "level": 5,
+    "prompt": "Переведите: 衰退",
+    "answers": [
+      {
+        "id": "hsk5_q27_0",
+        "text": "Упадок / спад",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q27_1",
+        "text": "Рост",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q27_2",
+        "text": "Процветание",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q27_3",
+        "text": "Развитие",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q28",
+    "level": 5,
+    "prompt": "Переведите: 创新",
+    "answers": [
+      {
+        "id": "hsk5_q28_0",
+        "text": "Инновация",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q28_1",
+        "text": "Традиция",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q28_2",
+        "text": "Копия",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q28_3",
+        "text": "Повтор",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q29",
+    "level": 5,
+    "prompt": "Переведите: 模仿",
+    "answers": [
+      {
+        "id": "hsk5_q29_0",
+        "text": "Подражать / имитировать",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q29_1",
+        "text": "Создавать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q29_2",
+        "text": "Разрушать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q29_3",
+        "text": "Изобретать",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q30",
+    "level": 5,
+    "prompt": "Переведите: 淘汰",
+    "answers": [
+      {
+        "id": "hsk5_q30_0",
+        "text": "Отсеивать / устаревать",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q30_1",
+        "text": "Сохранять",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q30_2",
+        "text": "Восстанавливать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q30_3",
+        "text": "Улучшать",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q31",
+    "level": 5,
+    "prompt": "Переведите: 权利",
+    "answers": [
+      {
+        "id": "hsk5_q31_0",
+        "text": "Право / права",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q31_1",
+        "text": "Обязанность",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q31_2",
+        "text": "Запрет",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q31_3",
+        "text": "Наказание",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q32",
+    "level": 5,
+    "prompt": "Переведите: 义务",
+    "answers": [
+      {
+        "id": "hsk5_q32_0",
+        "text": "Обязанность / долг",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q32_1",
+        "text": "Право",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q32_2",
+        "text": "Свобода",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q32_3",
+        "text": "Желание",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q33",
+    "level": 5,
+    "prompt": "Переведите: 明确",
+    "answers": [
+      {
+        "id": "hsk5_q33_0",
+        "text": "Чёткий / ясный",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q33_1",
+        "text": "Размытый",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q33_2",
+        "text": "Тёмный",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q33_3",
+        "text": "Странный",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q34",
+    "level": 5,
+    "prompt": "Переведите: 忽视",
+    "answers": [
+      {
+        "id": "hsk5_q34_0",
+        "text": "Игнорировать / пренебрегать",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q34_1",
+        "text": "Замечать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q34_2",
+        "text": "Уважать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q34_3",
+        "text": "Хвалить",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q35",
+    "level": 5,
+    "prompt": "Переведите: 反思",
+    "answers": [
+      {
+        "id": "hsk5_q35_0",
+        "text": "Самоанализ / рефлексия",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q35_1",
+        "text": "Критика",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q35_2",
+        "text": "Похвала",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q35_3",
+        "text": "Сравнение",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q36",
+    "level": 5,
+    "prompt": "Переведите: 只要努力，就一定能成功",
+    "answers": [
+      {
+        "id": "hsk5_q36_0",
+        "text": "Если стараться, обязательно добьёшься успеха",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q36_1",
+        "text": "Удача важнее усилий",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q36_2",
+        "text": "Не стоит стараться",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q36_3",
+        "text": "Успех невозможен",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q37",
+    "level": 5,
+    "prompt": "Переведите: 他善于分析问题",
+    "answers": [
+      {
+        "id": "hsk5_q37_0",
+        "text": "Он хорошо умеет анализировать проблемы",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q37_1",
+        "text": "Он не понимает проблемы",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q37_2",
+        "text": "Он избегает проблем",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q37_3",
+        "text": "Он создаёт проблемы",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q38",
+    "level": 5,
+    "prompt": "Переведите: 这个现象引起了学者们的关注",
+    "answers": [
+      {
+        "id": "hsk5_q38_0",
+        "text": "Это явление привлекло внимание учёных",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q38_1",
+        "text": "Учёные не заметили",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q38_2",
+        "text": "Явление неважно",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q38_3",
+        "text": "Учёные разочарованы",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q39",
+    "level": 5,
+    "prompt": "Переведите: 我们必须承担自己的责任",
+    "answers": [
+      {
+        "id": "hsk5_q39_0",
+        "text": "Мы должны нести свою ответственность",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q39_1",
+        "text": "Мы не ответственны",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q39_2",
+        "text": "Ответственность не важна",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q39_3",
+        "text": "Мы отказываемся",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q40",
+    "level": 5,
+    "prompt": "Переведите: 实践是检验真理的唯一标准",
+    "answers": [
+      {
+        "id": "hsk5_q40_0",
+        "text": "Практика — единственный критерий проверки истины",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q40_1",
+        "text": "Теория важнее практики",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q40_2",
+        "text": "Истина недоступна",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q40_3",
+        "text": "Стандартов не бывает",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q41",
+    "level": 5,
+    "prompt": "Переведите: 他在事业上取得了显著的成就",
+    "answers": [
+      {
+        "id": "hsk5_q41_0",
+        "text": "Он достиг значительных успехов в карьере",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q41_1",
+        "text": "Он провалился",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q41_2",
+        "text": "Он ещё не начал работать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q41_3",
+        "text": "Карьера не важна",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q42",
+    "level": 5,
+    "prompt": "Переведите: 这部作品反映了社会现实",
+    "answers": [
+      {
+        "id": "hsk5_q42_0",
+        "text": "Это произведение отражает социальную действительность",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q42_1",
+        "text": "Произведение о фантазии",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q42_2",
+        "text": "Оно не имеет смысла",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q42_3",
+        "text": "Оно устарело",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q43",
+    "level": 5,
+    "prompt": "Переведите: 环境保护是全球性的问题",
+    "answers": [
+      {
+        "id": "hsk5_q43_0",
+        "text": "Охрана окружающей среды — глобальная проблема",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q43_1",
+        "text": "Экология не важна",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q43_2",
+        "text": "Это местная проблема",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q43_3",
+        "text": "Проблемы нет",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q44",
+    "level": 5,
+    "prompt": "Переведите: 科学研究需要严谨的态度",
+    "answers": [
+      {
+        "id": "hsk5_q44_0",
+        "text": "Научные исследования требуют строгого подхода",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q44_1",
+        "text": "Наука не нужна",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q44_2",
+        "text": "Можно быть небрежным",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q44_3",
+        "text": "Исследования просты",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q45",
+    "level": 5,
+    "prompt": "Переведите: 不同文化之间应该互相包容",
+    "answers": [
+      {
+        "id": "hsk5_q45_0",
+        "text": "Разные культуры должны быть терпимы друг к другу",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q45_1",
+        "text": "Культуры должны быть одинаковыми",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q45_2",
+        "text": "Различия не важны",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q45_3",
+        "text": "Одна культура лучше",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q46",
+    "level": 5,
+    "prompt": "Переведите: 我们不能忽视少数人的意见",
+    "answers": [
+      {
+        "id": "hsk5_q46_0",
+        "text": "Мы не можем игнорировать мнение меньшинства",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q46_1",
+        "text": "Мнение меньшинства не важно",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q46_2",
+        "text": "Большинство всегда право",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q46_3",
+        "text": "Не стоит слушать",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q47",
+    "level": 5,
+    "prompt": "Переведите: 教育的目的是培养独立思考的能力",
+    "answers": [
+      {
+        "id": "hsk5_q47_0",
+        "text": "Цель образования — воспитание способности мыслить самостоятельно",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q47_1",
+        "text": "Образование не важно",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q47_2",
+        "text": "Главное — запоминать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q47_3",
+        "text": "Думать не нужно",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q48",
+    "level": 5,
+    "prompt": "Переведите: 随着年龄的增长，他变得更加成熟",
+    "answers": [
+      {
+        "id": "hsk5_q48_0",
+        "text": "С возрастом он стал более зрелым",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q48_1",
+        "text": "Он стал моложе",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q48_2",
+        "text": "Он не меняется",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q48_3",
+        "text": "Он стал ребёнком",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q49",
+    "level": 5,
+    "prompt": "Переведите: 他对待工作一丝不苟",
+    "answers": [
+      {
+        "id": "hsk5_q49_0",
+        "text": "Он относится к работе очень скрупулёзно",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q49_1",
+        "text": "Он небрежный работник",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q49_2",
+        "text": "Он ленивый",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q49_3",
+        "text": "Он часто опаздывает",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q50",
+    "level": 5,
+    "prompt": "Переведите: 传统文化需要继承和发展",
+    "answers": [
+      {
+        "id": "hsk5_q50_0",
+        "text": "Традиционную культуру нужно наследовать и развивать",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q50_1",
+        "text": "Традиции нужно забыть",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q50_2",
+        "text": "Культура устарела",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q50_3",
+        "text": "Развитие не нужно",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q51",
+    "level": 5,
+    "prompt": "Переведите: 信任是合作的基础",
+    "answers": [
+      {
+        "id": "hsk5_q51_0",
+        "text": "Доверие — основа сотрудничества",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q51_1",
+        "text": "Доверие не важно",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q51_2",
+        "text": "Деньги — основа",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q51_3",
+        "text": "Конкуренция важнее",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q52",
+    "level": 5,
+    "prompt": "Переведите: 他的观点很有说服力",
+    "answers": [
+      {
+        "id": "hsk5_q52_0",
+        "text": "Его точка зрения очень убедительна",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q52_1",
+        "text": "Его мнение слабое",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q52_2",
+        "text": "Он молчит",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q52_3",
+        "text": "Его никто не слушает",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q53",
+    "level": 5,
+    "prompt": "Переведите: 这次改革促进了经济发展",
+    "answers": [
+      {
+        "id": "hsk5_q53_0",
+        "text": "Эта реформа способствовала экономическому развитию",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q53_1",
+        "text": "Реформа провалилась",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q53_2",
+        "text": "Экономика упала",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q53_3",
+        "text": "Ничего не изменилось",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q54",
+    "level": 5,
+    "prompt": "Переведите: 我们应该从失败中汲取教训",
+    "answers": [
+      {
+        "id": "hsk5_q54_0",
+        "text": "Мы должны извлекать уроки из неудач",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q54_1",
+        "text": "Провалы не учат",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q54_2",
+        "text": "Нужно забыть",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q54_3",
+        "text": "Неудачи невозможны",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q55",
+    "level": 5,
+    "prompt": "Переведите: 知识就是力量",
+    "answers": [
+      {
+        "id": "hsk5_q55_0",
+        "text": "Знание — сила",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q55_1",
+        "text": "Деньги — сила",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q55_2",
+        "text": "Удача — сила",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q55_3",
+        "text": "Время — сила",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q56",
+    "level": 5,
+    "prompt": "Что означает «与其A不如B»?",
+    "answers": [
+      {
+        "id": "hsk5_q56_0",
+        "text": "Лучше B, чем A",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q56_1",
+        "text": "И A, и B",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q56_2",
+        "text": "Ни A, ни B",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q56_3",
+        "text": "Или A, или B",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q57",
+    "level": 5,
+    "prompt": "Что означает «非…不可»?",
+    "answers": [
+      {
+        "id": "hsk5_q57_0",
+        "text": "Обязательно надо / непременно",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q57_1",
+        "text": "Не нужно",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q57_2",
+        "text": "Может быть",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q57_3",
+        "text": "Иногда",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q58",
+    "level": 5,
+    "prompt": "Что означает «何况»?",
+    "answers": [
+      {
+        "id": "hsk5_q58_0",
+        "text": "Тем более / не говоря уже о",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q58_1",
+        "text": "Несмотря на",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q58_2",
+        "text": "Хотя",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q58_3",
+        "text": "Если",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q59",
+    "level": 5,
+    "prompt": "Что означает «以免»?",
+    "answers": [
+      {
+        "id": "hsk5_q59_0",
+        "text": "Чтобы избежать / во избежание",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q59_1",
+        "text": "Для того чтобы",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q59_2",
+        "text": "Потому что",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q59_3",
+        "text": "После того как",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q60",
+    "level": 5,
+    "prompt": "Что означает «由于»?",
+    "answers": [
+      {
+        "id": "hsk5_q60_0",
+        "text": "В связи с / из-за",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q60_1",
+        "text": "Несмотря на",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q60_2",
+        "text": "Хотя",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q60_3",
+        "text": "Если",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q61",
+    "level": 5,
+    "prompt": "Что означает «反而»?",
+    "answers": [
+      {
+        "id": "hsk5_q61_0",
+        "text": "Наоборот / вопреки ожиданиям",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q61_1",
+        "text": "Поэтому",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q61_2",
+        "text": "Затем",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q61_3",
+        "text": "Кроме того",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q62",
+    "level": 5,
+    "prompt": "Что означает «毕竟»?",
+    "answers": [
+      {
+        "id": "hsk5_q62_0",
+        "text": "Всё-таки / в конце концов",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q62_1",
+        "text": "Может быть",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q62_2",
+        "text": "Вряд ли",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q62_3",
+        "text": "Случайно",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q63",
+    "level": 5,
+    "prompt": "Вставьте: ___加强学习，___能提高水平。",
+    "answers": [
+      {
+        "id": "hsk5_q63_0",
+        "text": "只有…才",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q63_1",
+        "text": "只要…就",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q63_2",
+        "text": "虽然…但是",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q63_3",
+        "text": "因为…所以",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q64",
+    "level": 5,
+    "prompt": "Разница между «只有…才» и «只要…就»?",
+    "answers": [
+      {
+        "id": "hsk5_q64_0",
+        "text": "只有…才: необходимое условие; 只要…就: достаточное условие",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q64_1",
+        "text": "Они одинаковые",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q64_2",
+        "text": "只有 мягче",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q64_3",
+        "text": "只要 строже",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q65",
+    "level": 5,
+    "prompt": "Что означает «不免»?",
+    "answers": [
+      {
+        "id": "hsk5_q65_0",
+        "text": "Неизбежно / невольно",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q65_1",
+        "text": "Никогда",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q65_2",
+        "text": "Обязательно",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q65_3",
+        "text": "Случайно",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q66",
+    "level": 5,
+    "prompt": "Что означает «未必»?",
+    "answers": [
+      {
+        "id": "hsk5_q66_0",
+        "text": "Не обязательно / не факт",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q66_1",
+        "text": "Обязательно",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q66_2",
+        "text": "Точно",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q66_3",
+        "text": "Конечно",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q67",
+    "level": 5,
+    "prompt": "Что означает «何必»?",
+    "answers": [
+      {
+        "id": "hsk5_q67_0",
+        "text": "Зачем / к чему (незачем)",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q67_1",
+        "text": "Обязательно",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q67_2",
+        "text": "Может быть",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q67_3",
+        "text": "Конечно",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q68",
+    "level": 5,
+    "prompt": "Вставьте: 他___勤奋___聪明。(и… и…)",
+    "answers": [
+      {
+        "id": "hsk5_q68_0",
+        "text": "既…又",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q68_1",
+        "text": "虽然…但是",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q68_2",
+        "text": "或者…或者",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q68_3",
+        "text": "不是…就是",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q69",
+    "level": 5,
+    "prompt": "Вставьте: ___你怎么说，他___不听。",
+    "answers": [
+      {
+        "id": "hsk5_q69_0",
+        "text": "不管…都",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q69_1",
+        "text": "如果…就",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q69_2",
+        "text": "因为…所以",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q69_3",
+        "text": "只要…就",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q70",
+    "level": 5,
+    "prompt": "Что означает «宁可…也不…»?",
+    "answers": [
+      {
+        "id": "hsk5_q70_0",
+        "text": "Лучше… чем… (крайний выбор)",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q70_1",
+        "text": "И… и…",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q70_2",
+        "text": "Ни… ни…",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q70_3",
+        "text": "Или… или…",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q71",
+    "level": 5,
+    "prompt": "Что означает «别说…就是…也…»?",
+    "answers": [
+      {
+        "id": "hsk5_q71_0",
+        "text": "Не говоря уже о… даже… тоже…",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q71_1",
+        "text": "Потому что",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q71_2",
+        "text": "Если",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q71_3",
+        "text": "Хотя",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q72",
+    "level": 5,
+    "prompt": "Что означает «之所以…是因为…»?",
+    "answers": [
+      {
+        "id": "hsk5_q72_0",
+        "text": "Причина в том, что…",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q72_1",
+        "text": "Результат в том, что",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q72_2",
+        "text": "Цель в том, что",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q72_3",
+        "text": "Метод в том, что",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q73",
+    "level": 5,
+    "prompt": "这项___显示，空气质量在改善。(исследование)",
+    "answers": [
+      {
+        "id": "hsk5_q73_0",
+        "text": "研究",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q73_1",
+        "text": "工作",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q73_2",
+        "text": "旅游",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q73_3",
+        "text": "运动",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q74",
+    "level": 5,
+    "prompt": "公司需要___创新能力。(повышать)",
+    "answers": [
+      {
+        "id": "hsk5_q74_0",
+        "text": "提高",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q74_1",
+        "text": "降低",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q74_2",
+        "text": "取消",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q74_3",
+        "text": "忘记",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q75",
+    "level": 5,
+    "prompt": "这个___反映了社会问题。(произведение)",
+    "answers": [
+      {
+        "id": "hsk5_q75_0",
+        "text": "作品",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q75_1",
+        "text": "工作",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q75_2",
+        "text": "问题",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q75_3",
+        "text": "事情",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q76",
+    "level": 5,
+    "prompt": "他的行为___了大家的尊重。(заслужить/получить)",
+    "answers": [
+      {
+        "id": "hsk5_q76_0",
+        "text": "赢得",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q76_1",
+        "text": "失去",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q76_2",
+        "text": "放弃",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q76_3",
+        "text": "忽视",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q77",
+    "level": 5,
+    "prompt": "我们需要___新的发展模式。(исследовать)",
+    "answers": [
+      {
+        "id": "hsk5_q77_0",
+        "text": "探索",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q77_1",
+        "text": "破坏",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q77_2",
+        "text": "放弃",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q77_3",
+        "text": "忽略",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q78",
+    "level": 5,
+    "prompt": "他___了一个大胆的计划。(предложить)",
+    "answers": [
+      {
+        "id": "hsk5_q78_0",
+        "text": "提出",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q78_1",
+        "text": "取消",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q78_2",
+        "text": "忘记",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q78_3",
+        "text": "拒绝",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q79",
+    "level": 5,
+    "prompt": "这件事需要___处理。(должным образом)",
+    "answers": [
+      {
+        "id": "hsk5_q79_0",
+        "text": "妥善",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q79_1",
+        "text": "随便",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q79_2",
+        "text": "草率",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q79_3",
+        "text": "粗暴",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q80",
+    "level": 5,
+    "prompt": "政府___了一系列新政策。(обнародовать)",
+    "answers": [
+      {
+        "id": "hsk5_q80_0",
+        "text": "出台",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q80_1",
+        "text": "取消",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q80_2",
+        "text": "隐藏",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q80_3",
+        "text": "删除",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q81",
+    "level": 5,
+    "prompt": "社会各界___关注此事。(широко)",
+    "answers": [
+      {
+        "id": "hsk5_q81_0",
+        "text": "普遍",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q81_1",
+        "text": "偶尔",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q81_2",
+        "text": "很少",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q81_3",
+        "text": "从不",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q82",
+    "level": 5,
+    "prompt": "这种做法___不可取。(очевидно)",
+    "answers": [
+      {
+        "id": "hsk5_q82_0",
+        "text": "显然",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q82_1",
+        "text": "可能",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q82_2",
+        "text": "偶尔",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q82_3",
+        "text": "勉强",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q83",
+    "level": 5,
+    "prompt": "Что означает «一举两得»?",
+    "answers": [
+      {
+        "id": "hsk5_q83_0",
+        "text": "Одним действием — двойная выгода",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q83_1",
+        "text": "Одно поражение",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q83_2",
+        "text": "Два раза подумать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q83_3",
+        "text": "Одна попытка",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q84",
+    "level": 5,
+    "prompt": "Что означает «半途而废»?",
+    "answers": [
+      {
+        "id": "hsk5_q84_0",
+        "text": "Бросить на полпути",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q84_1",
+        "text": "Довести до конца",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q84_2",
+        "text": "Начать заново",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q84_3",
+        "text": "Удвоить усилия",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q85",
+    "level": 5,
+    "prompt": "Что означает «画蛇添足»?",
+    "answers": [
+      {
+        "id": "hsk5_q85_0",
+        "text": "Делать лишнее / портить излишеством",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q85_1",
+        "text": "Рисовать хорошо",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q85_2",
+        "text": "Делать быстро",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q85_3",
+        "text": "Помогать другим",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q86",
+    "level": 5,
+    "prompt": "Что означает «对牛弹琴»?",
+    "answers": [
+      {
+        "id": "hsk5_q86_0",
+        "text": "Метать бисер перед свиньями",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q86_1",
+        "text": "Играть музыку",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q86_2",
+        "text": "Учить коров",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q86_3",
+        "text": "Работать на ферме",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q87",
+    "level": 5,
+    "prompt": "Что означает «自相矛盾»?",
+    "answers": [
+      {
+        "id": "hsk5_q87_0",
+        "text": "Противоречить самому себе",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q87_1",
+        "text": "Быть честным",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q87_2",
+        "text": "Защищать себя",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q87_3",
+        "text": "Атаковать врага",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q88",
+    "level": 5,
+    "prompt": "Что означает «脚踏实地»?",
+    "answers": [
+      {
+        "id": "hsk5_q88_0",
+        "text": "Стоять твёрдо на земле / быть реалистом",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q88_1",
+        "text": "Летать в облаках",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q88_2",
+        "text": "Бегать быстро",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q88_3",
+        "text": "Танцевать красиво",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q89",
+    "level": 5,
+    "prompt": "Что означает «不可思议»?",
+    "answers": [
+      {
+        "id": "hsk5_q89_0",
+        "text": "Невообразимо / непостижимо",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q89_1",
+        "text": "Очень просто",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q89_2",
+        "text": "Понятно",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q89_3",
+        "text": "Обычно",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q90",
+    "level": 5,
+    "prompt": "Что означает «爱不释手»?",
+    "answers": [
+      {
+        "id": "hsk5_q90_0",
+        "text": "Не выпускать из рук (о чём-то любимом)",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q90_1",
+        "text": "Ненавидеть",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q90_2",
+        "text": "Терять",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q90_3",
+        "text": "Забывать",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q91",
+    "level": 5,
+    "prompt": "Что означает «一目了然»?",
+    "answers": [
+      {
+        "id": "hsk5_q91_0",
+        "text": "Ясно с первого взгляда",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q91_1",
+        "text": "Непонятно",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q91_2",
+        "text": "Нужно время",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q91_3",
+        "text": "Сложно",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q92",
+    "level": 5,
+    "prompt": "Что означает «举一反三»?",
+    "answers": [
+      {
+        "id": "hsk5_q92_0",
+        "text": "По одному примеру понять три / делать выводы",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q92_1",
+        "text": "Повторить три раза",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q92_2",
+        "text": "Одна ошибка",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q92_3",
+        "text": "Три попытки",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q93",
+    "level": 5,
+    "prompt": "Найдите синоним к «启发»:",
+    "answers": [
+      {
+        "id": "hsk5_q93_0",
+        "text": "启示",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q93_1",
+        "text": "阻止",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q93_2",
+        "text": "限制",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q93_3",
+        "text": "批评",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q94",
+    "level": 5,
+    "prompt": "Найдите синоним к «显著»:",
+    "answers": [
+      {
+        "id": "hsk5_q94_0",
+        "text": "明显",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q94_1",
+        "text": "微小",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q94_2",
+        "text": "普通",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q94_3",
+        "text": "随意",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q95",
+    "level": 5,
+    "prompt": "Найдите антоним к «繁荣»:",
+    "answers": [
+      {
+        "id": "hsk5_q95_0",
+        "text": "衰落",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q95_1",
+        "text": "发展",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q95_2",
+        "text": "进步",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q95_3",
+        "text": "改善",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q96",
+    "level": 5,
+    "prompt": "Найдите антоним к «灵活»:",
+    "answers": [
+      {
+        "id": "hsk5_q96_0",
+        "text": "僵化",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q96_1",
+        "text": "聪明",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q96_2",
+        "text": "快速",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q96_3",
+        "text": "简单",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q97",
+    "level": 5,
+    "prompt": "Найдите антоним к «创新»:",
+    "answers": [
+      {
+        "id": "hsk5_q97_0",
+        "text": "守旧",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q97_1",
+        "text": "改变",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q97_2",
+        "text": "发展",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q97_3",
+        "text": "学习",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q98",
+    "level": 5,
+    "prompt": "Переведите: 践行",
+    "answers": [
+      {
+        "id": "hsk5_q98_0",
+        "text": "Претворять в жизнь",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q98_1",
+        "text": "Забывать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q98_2",
+        "text": "Откладывать",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q98_3",
+        "text": "Избегать",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q99",
+    "level": 5,
+    "prompt": "Переведите: 素质",
+    "answers": [
+      {
+        "id": "hsk5_q99_0",
+        "text": "Качество / культурный уровень",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q99_1",
+        "text": "Количество",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q99_2",
+        "text": "Внешность",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q99_3",
+        "text": "Скорость",
+        "isCorrect": false
+      }
+    ]
+  },
+  {
+    "id": "hsk5_q100",
+    "level": 5,
+    "prompt": "Переведите: 客观",
+    "answers": [
+      {
+        "id": "hsk5_q100_0",
+        "text": "Объективный",
+        "isCorrect": true
+      },
+      {
+        "id": "hsk5_q100_1",
+        "text": "Субъективный",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q100_2",
+        "text": "Эмоциональный",
+        "isCorrect": false
+      },
+      {
+        "id": "hsk5_q100_3",
+        "text": "Случайный",
+        "isCorrect": false
+      }
+    ]
+  }
+]
