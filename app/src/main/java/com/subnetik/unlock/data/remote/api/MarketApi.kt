@@ -1,5 +1,9 @@
 package com.subnetik.unlock.data.remote.api
 
+import com.subnetik.unlock.data.remote.dto.admin.CouponValidateRequest
+import com.subnetik.unlock.data.remote.dto.admin.CouponValidateResponse
+import com.subnetik.unlock.data.remote.dto.admin.CouponRedeemRequest
+import com.subnetik.unlock.data.remote.dto.admin.CouponRedeemResponse
 import com.subnetik.unlock.data.remote.dto.market.MarketItemResponse
 import com.subnetik.unlock.data.remote.dto.market.MarketPurchaseRequest
 import com.subnetik.unlock.data.remote.dto.market.MarketPurchaseResponse
@@ -18,4 +22,11 @@ interface MarketApi {
 
     @POST("homework/market/purchase")
     suspend fun buyItem(@Body request: MarketPurchaseRequest): MarketPurchaseResponse
+
+    // Coupon endpoints
+    @POST("promocodes/validate")
+    suspend fun validateCoupon(@Body request: CouponValidateRequest): CouponValidateResponse
+
+    @POST("promocodes/redeem")
+    suspend fun redeemCoupon(@Body request: CouponRedeemRequest): CouponRedeemResponse
 }

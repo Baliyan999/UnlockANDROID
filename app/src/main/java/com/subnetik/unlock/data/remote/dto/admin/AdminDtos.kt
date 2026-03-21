@@ -90,12 +90,74 @@ data class AdminPromocode(
     val status: String = "",
     @SerialName("expires_at") val expiresAt: String? = null,
     @SerialName("created_at") val createdAt: String? = null,
+    // Universal coupon fields
+    @SerialName("coupon_type") val couponType: String? = null,
+    @SerialName("token_amount") val tokenAmount: Int? = null,
+    @SerialName("free_lessons_count") val freeLessonsCount: Int? = null,
+    @SerialName("market_item_code") val marketItemCode: String? = null,
+    val contexts: List<String>? = null,
+    @SerialName("per_user_limit") val perUserLimit: Int? = null,
+    @SerialName("min_purchase") val minPurchase: Int? = null,
+    @SerialName("target_role") val targetRole: String? = null,
+    @SerialName("target_group_id") val targetGroupId: Int? = null,
+    val description: String? = null,
 )
 
 @Serializable
 data class AdminPromocodeUpdateRequest(
     @SerialName("is_active") val isActive: Boolean? = null,
     val status: String? = null,
+    // Universal coupon fields
+    @SerialName("coupon_type") val couponType: String? = null,
+    @SerialName("discount_percent") val discountPercent: Int? = null,
+    @SerialName("discount_amount") val discountAmount: Int? = null,
+    @SerialName("token_amount") val tokenAmount: Int? = null,
+    @SerialName("free_lessons_count") val freeLessonsCount: Int? = null,
+    @SerialName("market_item_code") val marketItemCode: String? = null,
+    val contexts: List<String>? = null,
+    @SerialName("per_user_limit") val perUserLimit: Int? = null,
+    @SerialName("min_purchase") val minPurchase: Int? = null,
+    @SerialName("target_role") val targetRole: String? = null,
+    val description: String? = null,
+    @SerialName("usage_limit") val usageLimit: Int? = null,
+    @SerialName("expires_at") val expiresAt: String? = null,
+)
+
+@Serializable
+data class CouponValidateRequest(
+    val code: String,
+    val context: String = "wallet",
+    @SerialName("purchase_amount") val purchaseAmount: Int? = null,
+)
+
+@Serializable
+data class CouponValidateResponse(
+    val valid: Boolean,
+    val code: String = "",
+    @SerialName("coupon_type") val couponType: String = "",
+    @SerialName("bonus_description") val bonusDescription: String = "",
+    @SerialName("discount_percent") val discountPercent: Int? = null,
+    @SerialName("discount_amount") val discountAmount: Int? = null,
+    @SerialName("token_amount") val tokenAmount: Int? = null,
+    @SerialName("free_lessons_count") val freeLessonsCount: Int? = null,
+    @SerialName("market_item_code") val marketItemCode: String? = null,
+    val message: String? = null,
+)
+
+@Serializable
+data class CouponRedeemRequest(
+    val code: String,
+    val context: String = "wallet",
+    @SerialName("purchase_amount") val purchaseAmount: Int? = null,
+)
+
+@Serializable
+data class CouponRedeemResponse(
+    val success: Boolean,
+    val message: String = "",
+    @SerialName("bonus_applied") val bonusApplied: String? = null,
+    @SerialName("tokens_added") val tokensAdded: Int? = null,
+    @SerialName("new_balance") val newBalance: Int? = null,
 )
 
 // ─── Support ─────────────────────────────────────────────────
@@ -396,6 +458,16 @@ data class AdminPromocodeCreateRequest(
     @SerialName("discount_amount") val discountAmount: Int? = null,
     @SerialName("usage_limit") val usageLimit: Int? = null,
     @SerialName("expires_at") val expiresAt: String? = null,
+    // Universal coupon fields
+    @SerialName("coupon_type") val couponType: String? = null,
+    @SerialName("token_amount") val tokenAmount: Int? = null,
+    @SerialName("free_lessons_count") val freeLessonsCount: Int? = null,
+    @SerialName("market_item_code") val marketItemCode: String? = null,
+    val contexts: List<String>? = null,
+    @SerialName("per_user_limit") val perUserLimit: Int? = null,
+    @SerialName("min_purchase") val minPurchase: Int? = null,
+    @SerialName("target_role") val targetRole: String? = null,
+    val description: String? = null,
 )
 
 @Serializable

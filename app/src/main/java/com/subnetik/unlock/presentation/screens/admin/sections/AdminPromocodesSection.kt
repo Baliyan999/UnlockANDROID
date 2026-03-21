@@ -43,10 +43,19 @@ class AdminPromocodesViewModel @Inject constructor(
         val error: String? = null,
         val showCreateDialog: Boolean = false,
         val createCode: String = "",
+        val createCouponType: String = "discount_percent",
         val createDiscountPercent: String = "",
         val createDiscountAmount: String = "",
+        val createTokenAmount: String = "",
+        val createFreeLessonsCount: String = "",
+        val createMarketItemCode: String = "",
         val createUsageLimit: String = "",
         val createExpiresAt: String = "",
+        val createDescription: String = "",
+        val createPerUserLimit: String = "",
+        val createMinPurchase: String = "",
+        val createTargetRole: String = "",
+        val createContexts: Set<String> = emptySet(),
     ) {
         val filtered: List<AdminPromocode>
             get() = when (selectedFilter) {
@@ -76,13 +85,22 @@ class AdminPromocodesViewModel @Inject constructor(
 
     fun selectFilter(f: String) { _uiState.update { it.copy(selectedFilter = f) } }
 
-    fun showCreateDialog() { _uiState.update { it.copy(showCreateDialog = true, createCode = "", createDiscountPercent = "", createDiscountAmount = "", createUsageLimit = "", createExpiresAt = "") } }
+    fun showCreateDialog() { _uiState.update { it.copy(showCreateDialog = true, createCode = "", createCouponType = "discount_percent", createDiscountPercent = "", createDiscountAmount = "", createTokenAmount = "", createFreeLessonsCount = "", createMarketItemCode = "", createUsageLimit = "", createExpiresAt = "", createDescription = "", createPerUserLimit = "", createMinPurchase = "", createTargetRole = "", createContexts = emptySet()) } }
     fun dismissCreateDialog() { _uiState.update { it.copy(showCreateDialog = false) } }
     fun updateCreateCode(v: String) { _uiState.update { it.copy(createCode = v) } }
     fun updateCreateDiscountPercent(v: String) { _uiState.update { it.copy(createDiscountPercent = v) } }
     fun updateCreateDiscountAmount(v: String) { _uiState.update { it.copy(createDiscountAmount = v) } }
     fun updateCreateUsageLimit(v: String) { _uiState.update { it.copy(createUsageLimit = v) } }
     fun updateCreateExpiresAt(v: String) { _uiState.update { it.copy(createExpiresAt = v) } }
+    fun updateCreateCouponType(v: String) { _uiState.update { it.copy(createCouponType = v) } }
+    fun updateCreateTokenAmount(v: String) { _uiState.update { it.copy(createTokenAmount = v) } }
+    fun updateCreateFreeLessonsCount(v: String) { _uiState.update { it.copy(createFreeLessonsCount = v) } }
+    fun updateCreateMarketItemCode(v: String) { _uiState.update { it.copy(createMarketItemCode = v) } }
+    fun updateCreateDescription(v: String) { _uiState.update { it.copy(createDescription = v) } }
+    fun updateCreatePerUserLimit(v: String) { _uiState.update { it.copy(createPerUserLimit = v) } }
+    fun updateCreateMinPurchase(v: String) { _uiState.update { it.copy(createMinPurchase = v) } }
+    fun updateCreateTargetRole(v: String) { _uiState.update { it.copy(createTargetRole = v) } }
+    fun toggleCreateContext(ctx: String) { _uiState.update { s -> s.copy(createContexts = if (ctx in s.createContexts) s.createContexts - ctx else s.createContexts + ctx) } }
 
     fun createPromocode() {
         val state = _uiState.value
@@ -90,11 +108,20 @@ class AdminPromocodesViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 adminApi.createPromocode(AdminPromocodeCreateRequest(
-                    code = state.createCode.trim(),
-                    discountPercent = state.createDiscountPercent.toIntOrNull(),
-                    discountAmount = state.createDiscountAmount.toIntOrNull(),
+                    code = state.createCode.trim().uppercase(),
+                    couponType = state.createCouponType,
+                    discountPercent = if (state.createCouponType == "discount_percent") state.createDiscountPercent.toIntOrNull() else null,
+                    discountAmount = if (state.createCouponType == "discount_amount") state.createDiscountAmount.toIntOrNull() else null,
+                    tokenAmount = if (state.createCouponType == "tokens") state.createTokenAmount.toIntOrNull() else null,
+                    freeLessonsCount = if (state.createCouponType == "free_lesson") state.createFreeLessonsCount.toIntOrNull() else null,
+                    marketItemCode = if (state.createCouponType == "market_item") state.createMarketItemCode.takeIf { it.isNotBlank() } else null,
                     usageLimit = state.createUsageLimit.toIntOrNull(),
                     expiresAt = state.createExpiresAt.takeIf { it.isNotBlank() },
+                    description = state.createDescription.takeIf { it.isNotBlank() },
+                    perUserLimit = state.createPerUserLimit.toIntOrNull(),
+                    minPurchase = state.createMinPurchase.toIntOrNull(),
+                    targetRole = state.createTargetRole.takeIf { it.isNotBlank() },
+                    contexts = state.createContexts.toList().takeIf { it.isNotEmpty() },
                 ))
                 _uiState.update { it.copy(showCreateDialog = false) }
                 loadData()
@@ -134,11 +161,58 @@ fun AdminPromocodesSection(isDark: Boolean, viewModel: AdminPromocodesViewModel 
             Column(Modifier.fillMaxWidth().padding(horizontal = 20.dp).padding(bottom = 32.dp), verticalArrangement = Arrangement.spacedBy(Brand.Spacing.md)) {
                 Text("Новый промокод", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold, color = textColor)
                 OutlinedTextField(uiState.createCode, { viewModel.updateCreateCode(it) }, Modifier.fillMaxWidth(), label = { Text("Код промокода") }, shape = RoundedCornerShape(12.dp), singleLine = true)
-                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Brand.Spacing.sm)) {
-                    OutlinedTextField(uiState.createDiscountPercent, { viewModel.updateCreateDiscountPercent(it) }, Modifier.weight(1f), label = { Text("Скидка %") }, shape = RoundedCornerShape(12.dp), singleLine = true, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number))
-                    OutlinedTextField(uiState.createDiscountAmount, { viewModel.updateCreateDiscountAmount(it) }, Modifier.weight(1f), label = { Text("Скидка сум") }, shape = RoundedCornerShape(12.dp), singleLine = true, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number))
+
+                // Coupon type selector
+                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Text("Тип купона", style = MaterialTheme.typography.labelMedium, color = subtextColor)
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                        listOf("discount_percent" to "%", "discount_amount" to "Сум", "tokens" to "Токены", "free_lesson" to "Урок", "market_item" to "Товар").forEach { (type, label) ->
+                            FilterChip(
+                                selected = uiState.createCouponType == type,
+                                onClick = { viewModel.updateCreateCouponType(type) },
+                                label = { Text(label, style = MaterialTheme.typography.labelSmall) },
+                                shape = RoundedCornerShape(8.dp),
+                                modifier = Modifier.height(32.dp),
+                            )
+                        }
+                    }
                 }
-                OutlinedTextField(uiState.createUsageLimit, { viewModel.updateCreateUsageLimit(it) }, Modifier.fillMaxWidth(), label = { Text("Лимит использования") }, shape = RoundedCornerShape(12.dp), singleLine = true, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number))
+
+                // Dynamic value field based on coupon type
+                when (uiState.createCouponType) {
+                    "discount_percent" -> OutlinedTextField(uiState.createDiscountPercent, { viewModel.updateCreateDiscountPercent(it) }, Modifier.fillMaxWidth(), label = { Text("Процент скидки") }, shape = RoundedCornerShape(12.dp), singleLine = true, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number))
+                    "discount_amount" -> OutlinedTextField(uiState.createDiscountAmount, { viewModel.updateCreateDiscountAmount(it) }, Modifier.fillMaxWidth(), label = { Text("Сумма скидки") }, shape = RoundedCornerShape(12.dp), singleLine = true, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number))
+                    "tokens" -> OutlinedTextField(uiState.createTokenAmount, { viewModel.updateCreateTokenAmount(it) }, Modifier.fillMaxWidth(), label = { Text("Количество токенов") }, shape = RoundedCornerShape(12.dp), singleLine = true, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number))
+                    "free_lesson" -> OutlinedTextField(uiState.createFreeLessonsCount, { viewModel.updateCreateFreeLessonsCount(it) }, Modifier.fillMaxWidth(), label = { Text("Количество уроков") }, shape = RoundedCornerShape(12.dp), singleLine = true, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number))
+                    "market_item" -> OutlinedTextField(uiState.createMarketItemCode, { viewModel.updateCreateMarketItemCode(it) }, Modifier.fillMaxWidth(), label = { Text("Код товара") }, shape = RoundedCornerShape(12.dp), singleLine = true)
+                }
+
+                // Contexts checkboxes
+                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Text("Контексты использования", style = MaterialTheme.typography.labelMedium, color = subtextColor)
+                    val allContexts = listOf("lead" to "Заявка", "registration" to "Регистрация", "payment" to "Оплата", "wallet" to "Кошелёк", "market" to "Маркет")
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                        allContexts.forEach { (ctx, label) ->
+                            FilterChip(
+                                selected = ctx in uiState.createContexts,
+                                onClick = { viewModel.toggleCreateContext(ctx) },
+                                label = { Text(label, style = MaterialTheme.typography.labelSmall) },
+                                shape = RoundedCornerShape(8.dp),
+                                modifier = Modifier.height(32.dp),
+                            )
+                        }
+                    }
+                }
+
+                OutlinedTextField(uiState.createDescription, { viewModel.updateCreateDescription(it) }, Modifier.fillMaxWidth(), label = { Text("Описание") }, shape = RoundedCornerShape(12.dp), singleLine = true)
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Brand.Spacing.sm)) {
+                    OutlinedTextField(uiState.createUsageLimit, { viewModel.updateCreateUsageLimit(it) }, Modifier.weight(1f), label = { Text("Лимит") }, shape = RoundedCornerShape(12.dp), singleLine = true, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number))
+                    OutlinedTextField(uiState.createPerUserLimit, { viewModel.updateCreatePerUserLimit(it) }, Modifier.weight(1f), label = { Text("На польз.") }, shape = RoundedCornerShape(12.dp), singleLine = true, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number))
+                }
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Brand.Spacing.sm)) {
+                    OutlinedTextField(uiState.createMinPurchase, { viewModel.updateCreateMinPurchase(it) }, Modifier.weight(1f), label = { Text("Мин. сумма") }, shape = RoundedCornerShape(12.dp), singleLine = true, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number))
+                    OutlinedTextField(uiState.createTargetRole, { viewModel.updateCreateTargetRole(it) }, Modifier.weight(1f), label = { Text("Роль") }, shape = RoundedCornerShape(12.dp), singleLine = true)
+                }
                 OutlinedTextField(uiState.createExpiresAt, { viewModel.updateCreateExpiresAt(it) }, Modifier.fillMaxWidth(), label = { Text("Действует до (ГГГГ-ММ-ДД)") }, shape = RoundedCornerShape(12.dp), singleLine = true)
                 Button({ viewModel.createPromocode() }, Modifier.fillMaxWidth().height(44.dp), shape = RoundedCornerShape(12.dp), enabled = uiState.createCode.isNotBlank()) { Text("Создать", fontWeight = FontWeight.SemiBold) }
             }
@@ -197,13 +271,35 @@ fun AdminPromocodesSection(isDark: Boolean, viewModel: AdminPromocodesViewModel 
                             Text(code.code, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = textColor)
                             AdminStatusTag(if (code.status.lowercase() == "deleted") "Удалён" else if (code.isActive) "Активен" else "Неактивен", if (code.status.lowercase() == "deleted") BrandCoral else if (code.isActive) BrandTeal else BrandCoral)
                         }
-                        val discount = when {
-                            code.discountPercent != null -> "${code.discountPercent}%"
-                            code.discountAmount != null -> "${code.discountAmount} сум"
-                            else -> "—"
+                        // Coupon type badge
+                        val (typeLabel, typeBadge, typeBadgeColor) = when (code.couponType) {
+                            "tokens" -> Triple("Токены: ${code.tokenAmount ?: 0}", "Токены", Color(0xFF8B5CF6))
+                            "free_lesson" -> Triple("Бесплатных уроков: ${code.freeLessonsCount ?: 0}", "Урок", Color(0xFF06B6D4))
+                            "market_item" -> Triple("Товар: ${code.marketItemCode ?: "—"}", "Товар", Color(0xFFF59E0B))
+                            "discount_amount" -> Triple("Скидка: ${code.discountAmount ?: 0} сум", "Сумма", Color(0xFFEC4899))
+                            else -> Triple("Скидка: ${code.discountPercent ?: 0}%", "%", BrandBlue)
                         }
-                        Text("Скидка: $discount", style = MaterialTheme.typography.bodySmall, color = subtextColor)
+                        Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
+                            Surface(shape = RoundedCornerShape(6.dp), color = typeBadgeColor.copy(alpha = 0.15f)) {
+                                Text(typeBadge, Modifier.padding(horizontal = 8.dp, vertical = 2.dp), style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.SemiBold, color = typeBadgeColor)
+                            }
+                            Text(typeLabel, style = MaterialTheme.typography.bodySmall, color = subtextColor)
+                        }
+                        // Contexts
+                        if (!code.contexts.isNullOrEmpty()) {
+                            val ctxLabels = mapOf("lead" to "Заявка", "registration" to "Регистрация", "payment" to "Оплата", "wallet" to "Кошелёк", "market" to "Маркет")
+                            Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                                code.contexts.forEach { ctx ->
+                                    Surface(shape = RoundedCornerShape(4.dp), color = if (isDark) Color.White.copy(alpha = 0.08f) else Color.Black.copy(alpha = 0.06f)) {
+                                        Text(ctxLabels[ctx] ?: ctx, Modifier.padding(horizontal = 6.dp, vertical = 1.dp), style = MaterialTheme.typography.labelSmall, color = subtextColor)
+                                    }
+                                }
+                            }
+                        }
+                        code.description?.let { Text(it, style = MaterialTheme.typography.labelSmall, color = subtextColor.copy(alpha = 0.8f)) }
                         Text("Использовано: ${code.usageCount}${code.usageLimit?.let { " / $it" } ?: ""}", style = MaterialTheme.typography.bodySmall, color = subtextColor)
+                        code.perUserLimit?.let { Text("На пользователя: $it", style = MaterialTheme.typography.labelSmall, color = subtextColor) }
+                        code.minPurchase?.let { Text("Мин. сумма: $it", style = MaterialTheme.typography.labelSmall, color = subtextColor) }
                         code.expiresAt?.let { Text("Действует до: ${it.take(10)}", style = MaterialTheme.typography.labelSmall, color = subtextColor) }
                         // Actions
                         HorizontalDivider(color = if (isDark) Color.White.copy(alpha = 0.06f) else Color.Black.copy(alpha = 0.04f))
