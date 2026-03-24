@@ -23,6 +23,12 @@ data class StudentPaymentInfoResponse(
     @SerialName("lessons_this_month") val lessonsThisMonth: Int = 12,
     val payments: List<PaymentEntryDto> = emptyList(),
     @SerialName("pending_receipts") val pendingReceipts: List<ReceiptDto> = emptyList(),
+    @SerialName("original_price") val originalPrice: Int? = null,
+    @SerialName("discount_percent") val discountPercent: Int? = null,
+    @SerialName("discount_amount") val discountAmount: Int? = null,
+    @SerialName("discount_descriptions") val discountDescriptions: List<String>? = null,
+    @SerialName("upcoming_discount_descriptions") val upcomingDiscountDescriptions: List<String>? = null,
+    @SerialName("teacher_name") val teacherName: String? = null,
 )
 
 @Serializable

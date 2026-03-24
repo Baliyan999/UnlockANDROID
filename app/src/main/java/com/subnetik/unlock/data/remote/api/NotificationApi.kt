@@ -8,7 +8,7 @@ interface NotificationApi {
     suspend fun getNotifications(
         @Query("limit") limit: Int = 50,
         @Query("offset") offset: Int = 0,
-    ): List<InboxNotification>
+    ): NotificationsListResponse
 
     @GET("notifications/my/unread-count")
     suspend fun getUnreadCount(): UnreadCountResponse

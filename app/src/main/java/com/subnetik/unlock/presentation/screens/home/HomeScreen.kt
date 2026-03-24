@@ -35,8 +35,10 @@ fun HomeScreen(
     onNavigateToTests: () -> Unit,
     onNavigateToNotifications: () -> Unit,
     onNavigateToSchedule: () -> Unit = {},
+    onNavigateToSupportBooking: () -> Unit = {},
     onNavigateToPayment: () -> Unit = {},
     onNavigateToMarket: () -> Unit = {},
+    onNavigateToReferral: () -> Unit = {},
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -136,8 +138,8 @@ fun HomeScreen(
                             )
                         }
 
-                        // Token balance
-                        if (uiState.tokenBalance > 0) {
+                        // Token balance (always show)
+                        run {
                             Surface(
                                 shape = Brand.Shapes.full,
                                 color = BrandGold.copy(alpha = 0.15f),
@@ -191,6 +193,20 @@ fun HomeScreen(
             }
 
             Spacer(Modifier.height(Brand.Spacing.xl))
+
+            // ─── Calendar Events ──────────────────────────────
+            if (uiState.calendarEvents.isNotEmpty()) {
+                val todayStr = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US).format(java.util.Date())
+                val futureEvents = uiState.calendarEvents.filter { it.date >= todayStr }
+                if (futureEvents.isNotEmpty()) {
+                    com.subnetik.unlock.presentation.screens.calendar.CalendarEventsWidget(
+                        events = futureEvents,
+                        isDark = isDark,
+                        modifier = Modifier.padding(horizontal = Brand.Spacing.lg),
+                    )
+                    Spacer(Modifier.height(Brand.Spacing.xl))
+                }
+            }
 
             // ─── Учебный кабинет ──────────────────────────────
             Text(
@@ -269,20 +285,20 @@ fun HomeScreen(
                     strokeColor = strokeColor,
                     primaryText = primaryText,
                     secondaryText = secondaryText,
-                    onClick = { /* TODO */ },
+                    onClick = onNavigateToSupportBooking,
                 )
 
                 StudentMenuItem(
                     icon = Icons.Default.CardGiftcard,
                     iconBg = BrandGold,
                     title = "Пригласить друга",
-                    subtitle = "Получай токены за приглашённых.",
+                    subtitle = "Получай токены за приглашённых друзей.",
                     isDark = isDark,
                     cardColor = cardColor,
                     strokeColor = strokeColor,
                     primaryText = primaryText,
                     secondaryText = secondaryText,
-                    onClick = { /* TODO */ },
+                    onClick = onNavigateToReferral,
                 )
             }
 

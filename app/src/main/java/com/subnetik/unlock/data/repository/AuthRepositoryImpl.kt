@@ -60,6 +60,9 @@ class AuthRepositoryImpl @Inject constructor(
                         displayName = profile.displayName
                     )
                     profile.avatar?.let { authDataStore.saveAvatar(it) }
+                    // Sync terms acceptance from server
+                    authDataStore.saveTermsAccepted(profile.termsAcceptedAt != null)
+                    authDataStore.saveTeacherTermsAccepted(profile.teacherTermsAcceptedAt != null)
                 } catch (_: Exception) { }
             }
             Resource.Success(response)

@@ -17,14 +17,11 @@ import androidx.compose.runtime.*
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.subnetik.unlock.data.local.datastore.SettingsDataStore
 import com.subnetik.unlock.presentation.screens.admin.components.AdminBackground
 import com.subnetik.unlock.presentation.theme.*
 
@@ -57,6 +54,11 @@ fun VocabularyScreen(
     val secondaryText = if (isDark) Color.White.copy(alpha = 0.5f) else MaterialTheme.colorScheme.onSurfaceVariant
     val cardColor = if (isDark) Color.White.copy(alpha = 0.06f) else Color.White.copy(alpha = 0.85f)
     val strokeColor = if (isDark) Color.White.copy(alpha = 0.08f) else Color.Black.copy(alpha = 0.06f)
+
+    // Load progress from local + server on appear
+    LaunchedEffect(Unit) {
+        viewModel.loadAllLevelProgress()
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         AdminBackground(isDark = isDark)
@@ -102,6 +104,9 @@ fun VocabularyScreen(
                 verticalArrangement = Arrangement.spacedBy(Brand.Spacing.md),
             ) {
                 items(hskLevels) { info ->
+                    val knownCount = uiState.levelProgress[info.level] ?: 0
+                    val progress = if (info.wordCount > 0) knownCount.toFloat() / info.wordCount else 0f
+
                     Surface(
                         onClick = { onNavigateToLevel(info.level) },
                         shape = RoundedCornerShape(18.dp),
@@ -118,12 +123,12 @@ fun VocabularyScreen(
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
                                 Text("HSK ${info.level}", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, color = info.color)
-                                Text("0/${formatCount(info.wordCount)}", style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold, color = info.color)
+                                Text("$knownCount/${formatCount(info.wordCount)}", style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold, color = info.color)
                             }
                             Text(info.subtitle, style = MaterialTheme.typography.bodySmall, color = secondaryText, fontSize = 11.sp, maxLines = 2)
                             // Progress bar
                             LinearProgressIndicator(
-                                progress = { 0f },
+                                progress = { progress.coerceIn(0f, 1f) },
                                 modifier = Modifier.fillMaxWidth().height(4.dp),
                                 color = info.color,
                                 trackColor = info.color.copy(alpha = 0.15f),

@@ -126,9 +126,76 @@ private fun ObligationCard(info: StudentPaymentInfoResponse, isDark: Boolean, pr
 
             // Prices
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                PriceColumn("К оплате", formatSum(if (info.expectedPrice > 0) info.expectedPrice else info.monthlyPrice), BrandBlue, secondaryText)
+                val amountDue = if (info.currentMonthPaid) info.remainingBalance else if (info.expectedPrice > 0) info.expectedPrice else info.monthlyPrice
+                val dueColor = if (amountDue <= 0) BrandGreen else BrandBlue
+                PriceColumn("К оплате", formatSum(amountDue), dueColor, secondaryText)
                 PriceColumn("За урок", formatSum(info.pricePerLesson), BrandTeal, secondaryText)
                 PriceColumn("Уроков/мес", "${info.lessonsThisMonth}", BrandIndigo, secondaryText)
+            }
+
+            // ── Current discount (green) ──
+            if (info.originalPrice != null && info.originalPrice > 0) {
+                Spacer(Modifier.height(10.dp))
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    color = BrandGreen.copy(alpha = 0.08f),
+                ) {
+                    Column(modifier = Modifier.padding(12.dp)) {
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                            Icon(Icons.Default.LocalOffer, contentDescription = null, modifier = Modifier.size(12.dp), tint = BrandGreen)
+                            Text("Скидка по промокоду", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold, color = BrandGreen)
+                        }
+                        Spacer(Modifier.height(6.dp))
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Text(formatSum(info.originalPrice), style = MaterialTheme.typography.bodySmall, color = secondaryText, fontWeight = FontWeight.Normal)
+                            Text("→", style = MaterialTheme.typography.bodySmall, color = secondaryText)
+                            Text(formatSum(info.expectedPrice), style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold, color = BrandGreen)
+                            if (info.discountPercent != null && info.discountPercent > 0) {
+                                Surface(shape = RoundedCornerShape(50), color = BrandGreen) {
+                                    Text("-${info.discountPercent}%", modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp), style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold, color = Color.White, fontSize = 11.sp)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // ── Upcoming discounts (gold/yellow) ──
+            if (!info.upcomingDiscountDescriptions.isNullOrEmpty()) {
+                Spacer(Modifier.height(10.dp))
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    color = BrandGold.copy(alpha = 0.08f),
+                ) {
+                    Column(modifier = Modifier.padding(12.dp)) {
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                            Icon(Icons.Default.LocalOffer, contentDescription = null, modifier = Modifier.size(12.dp), tint = BrandGold)
+                            Text("Скидка по промокоду", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold, color = BrandGold)
+                        }
+                        Spacer(Modifier.height(6.dp))
+                        info.upcomingDiscountDescriptions.forEach { desc ->
+                            Text(desc, style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold, color = BrandGold)
+                            Spacer(Modifier.height(2.dp))
+                        }
+                    }
+                }
+            }
+
+            // ── Payment status banner ──
+            if (info.currentMonthPaid && info.totalPaidCurrentMonth > 0) {
+                Spacer(Modifier.height(10.dp))
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    color = BrandGreen.copy(alpha = 0.08f),
+                ) {
+                    Row(modifier = Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Icon(Icons.Default.Verified, contentDescription = null, modifier = Modifier.size(18.dp), tint = BrandGreen)
+                        Text("Оплачено за текущий месяц: ${formatSum(info.totalPaidCurrentMonth)}", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold, color = BrandGreen)
+                    }
+                }
             }
 
             // First month note

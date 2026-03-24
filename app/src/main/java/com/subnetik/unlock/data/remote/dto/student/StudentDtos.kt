@@ -37,3 +37,48 @@ data class StudentSupportBooking(
     @SerialName("created_at") val createdAt: String = "",
     @SerialName("updated_at") val updatedAt: String? = null,
 )
+
+@Serializable
+data class HomeworkAssignmentStudent(
+    val id: Int,
+    val title: String = "",
+    val description: String? = null,
+    @SerialName("due_date") val dueDate: String? = null,
+    @SerialName("group_id") val groupId: Int = 0,
+    @SerialName("group_name") val groupName: String = "",
+    @SerialName("created_by") val createdBy: HomeworkUserShort? = null,
+    @SerialName("my_submission") val mySubmission: HomeworkSubmissionStudent? = null,
+    @SerialName("created_at") val createdAt: String = "",
+    @SerialName("updated_at") val updatedAt: String? = null,
+)
+
+@Serializable
+data class HomeworkSubmissionStudent(
+    val id: Int,
+    @SerialName("assignment_id") val assignmentId: Int = 0,
+    val student: HomeworkUserShort? = null,
+    @SerialName("file_url") val fileUrl: String = "",
+    @SerialName("original_filename") val originalFilename: String = "",
+    @SerialName("mime_type") val mimeType: String = "",
+    @SerialName("submitted_at") val submittedAt: String = "",
+    @SerialName("updated_at") val updatedAt: String? = null,
+    val grade: Int? = null,
+    @SerialName("teacher_comment") val teacherComment: String? = null,
+    @SerialName("graded_by") val gradedBy: HomeworkUserShort? = null,
+    @SerialName("graded_at") val gradedAt: String? = null,
+)
+
+@Serializable
+data class SupportBookingCreateRequest(
+    @SerialName("support_teacher") val supportTeacher: String,
+    @SerialName("booking_date") val bookingDate: String,
+    @SerialName("booking_time") val bookingTime: String,
+    val comment: String,
+)
+
+@Serializable
+data class BusySlotsResponse(
+    val teacher: String = "",
+    val date: String = "",
+    @SerialName("busy_slots") val busySlots: List<String> = emptyList(),
+)

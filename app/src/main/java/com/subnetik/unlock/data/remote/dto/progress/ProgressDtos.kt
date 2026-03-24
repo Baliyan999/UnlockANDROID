@@ -23,9 +23,11 @@ data class TestProgressSyncItem(
 
 @Serializable
 data class TestAttemptDetail(
-    @SerialName("question_id") val questionId: String,
-    @SerialName("selected_answer") val selectedAnswer: String,
-    val correct: Boolean,
+    @SerialName("question_id") val questionId: String? = null,
+    val prompt: String? = null,
+    @SerialName("selected_answer") val selectedAnswer: String? = null,
+    val correct: Boolean? = null,
+    @SerialName("correct_answer") val correctAnswer: String? = null,
 )
 
 @Serializable
@@ -34,6 +36,8 @@ data class VocabProgressSyncItem(
     @SerialName("total_words") val totalWords: Int,
     @SerialName("known_count") val knownCount: Int,
     @SerialName("review_count") val reviewCount: Int,
+    @SerialName("known_word_ids") val knownWordIds: List<String>? = null,
+    @SerialName("review_word_ids") val reviewWordIds: List<String>? = null,
     @SerialName("last_studied_at") val lastStudiedAt: String? = null,
 )
 

@@ -91,6 +91,9 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
 
+    // QR Code
+    implementation("com.google.zxing:core:3.5.3")
+
     // Firebase (закомментировано до получения google-services.json)
     // implementation(platform(libs.firebase.bom))
     // implementation(libs.firebase.messaging)

@@ -24,6 +24,7 @@ class MainActivity : ComponentActivity() {
     @Inject lateinit var authDataStore: AuthDataStore
     @Inject lateinit var settingsDataStore: SettingsDataStore
     @Inject lateinit var authRepository: AuthRepository
+    @Inject lateinit var authApi: com.subnetik.unlock.data.remote.api.AuthApi
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,19 +34,50 @@ class MainActivity : ComponentActivity() {
             val hasSeenOnboarding by settingsDataStore.hasSeenOnboarding.collectAsStateWithLifecycle(initialValue = true)
             val userRoleStr by authDataStore.userRole.collectAsStateWithLifecycle(initialValue = null)
             val userRole = AppUserRole.resolve(isLoggedIn, userRoleStr)
+            val termsAccepted by authDataStore.termsAccepted.collectAsStateWithLifecycle(initialValue = true)
+            val teacherTermsAccepted by authDataStore.teacherTermsAccepted.collectAsStateWithLifecycle(initialValue = true)
             val scope = rememberCoroutineScope()
             val themePreference by settingsDataStore.isDarkTheme.collectAsStateWithLifecycle(initialValue = null)
             val systemDark = isSystemInDarkTheme()
             val isDark = themePreference ?: systemDark
 
+            // Check if terms need to be shown
+            val needsStudentTerms = isLoggedIn && userRole == AppUserRole.STUDENT && !termsAccepted
+            val needsTeacherGeneralTerms = isLoggedIn && userRole == AppUserRole.TEACHER && !termsAccepted
+            val needsTeacherWorkTerms = isLoggedIn && userRole == AppUserRole.TEACHER && termsAccepted && !teacherTermsAccepted
+
             UnlockTheme(darkTheme = isDark) {
-                AppNavigation(
-                    isLoggedIn = isLoggedIn,
-                    hasSeenOnboarding = hasSeenOnboarding,
-                    userRole = userRole,
-                    onLogout = { scope.launch { authRepository.logout() } },
-                    settingsDataStore = settingsDataStore,
-                )
+                when {
+                    needsStudentTerms || needsTeacherGeneralTerms -> {
+                        com.subnetik.unlock.presentation.screens.terms.StudentTermsScreen(
+                            onAccept = {
+                                scope.launch {
+                                    authDataStore.saveTermsAccepted(true)
+                                    try { authApi.acceptTerms() } catch (_: Exception) {}
+                                }
+                            },
+                        )
+                    }
+                    needsTeacherWorkTerms -> {
+                        com.subnetik.unlock.presentation.screens.terms.TeacherTermsScreen(
+                            onAccept = {
+                                scope.launch {
+                                    authDataStore.saveTeacherTermsAccepted(true)
+                                    try { authApi.acceptTeacherTerms() } catch (_: Exception) {}
+                                }
+                            },
+                        )
+                    }
+                    else -> {
+                        AppNavigation(
+                            isLoggedIn = isLoggedIn,
+                            hasSeenOnboarding = hasSeenOnboarding,
+                            userRole = userRole,
+                            onLogout = { scope.launch { authRepository.logout() } },
+                            settingsDataStore = settingsDataStore,
+                        )
+                    }
+                }
             }
         }
     }

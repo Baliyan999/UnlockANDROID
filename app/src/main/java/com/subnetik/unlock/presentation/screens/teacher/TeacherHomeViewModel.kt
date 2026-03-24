@@ -86,7 +86,7 @@ class TeacherHomeViewModel @Inject constructor(
             _uiState.update { it.copy(isLoading = true, error = null) }
             try {
                 val groupsD = async { runCatching { adminApi.getGroups() }.getOrDefault(emptyList()) }
-                val unreadD = async { runCatching { notificationApi.getUnreadCount().count }.getOrDefault(0) }
+                val unreadD = async { runCatching { notificationApi.getUnreadCount().unreadCount }.getOrDefault(0) }
 
                 val groups = groupsD.await()
                 val todayToken = todayToken()

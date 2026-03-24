@@ -18,6 +18,10 @@ class AuthInterceptor @Inject constructor(
             }
             addHeader("Accept", "application/json")
         }.build()
-        return chain.proceed(request)
+        val response = chain.proceed(request)
+        if (response.code != 200) {
+            android.util.Log.w("AuthInterceptor", "${request.method} ${request.url} -> ${response.code} (hasToken=${!token.isNullOrEmpty()})")
+        }
+        return response
     }
 }

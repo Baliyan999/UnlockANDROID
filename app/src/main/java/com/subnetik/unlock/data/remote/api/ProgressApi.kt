@@ -8,6 +8,9 @@ interface ProgressApi {
     @POST("progress/sync")
     suspend fun syncProgress(@Body request: ProgressSyncRequest)
 
+    @GET("progress/me")
+    suspend fun getMyProgress(): StudentFullProgressResponse
+
     @GET("progress/student/{userId}")
     suspend fun getStudentProgress(@Path("userId") userId: Int): StudentFullProgressResponse
 }

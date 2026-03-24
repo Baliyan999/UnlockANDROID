@@ -36,4 +36,10 @@ interface AuthApi {
 
     @DELETE("users/me/avatar")
     suspend fun deleteAvatar()
+
+    @POST("auth/me/accept-terms")
+    suspend fun acceptTerms(): ApiMessageResponse
+
+    @POST("auth/me/accept-teacher-terms")
+    suspend fun acceptTeacherTerms(): ApiMessageResponse
 }

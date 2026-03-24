@@ -160,6 +160,30 @@ data class CouponRedeemResponse(
     @SerialName("new_balance") val newBalance: Int? = null,
 )
 
+@Serializable
+data class PromocodeRedemptionsWrapper(
+    val redemptions: List<PromocodeRedemptionResponse> = emptyList(),
+    val total: Int = 0,
+)
+
+@Serializable
+data class PromocodeRedemptionResponse(
+    val id: Int,
+    val code: String = "",
+    @SerialName("coupon_type") val couponType: String? = null,
+    val description: String? = null,
+    @SerialName("bonus_description") val bonusDescription: String? = null,
+    @SerialName("discount_month") val discountMonth: Int? = null,
+    @SerialName("discount_year") val discountYear: Int? = null,
+    @SerialName("created_at") val createdAt: String? = null,
+    @SerialName("redeemed_at") val redeemedAt: String? = null,
+    @SerialName("is_pending") val isPending: Boolean = false,
+    @SerialName("promocode_id") val promocodeId: Int? = null,
+) {
+    val effectiveDescription: String get() = bonusDescription ?: description ?: ""
+    val effectiveDate: String? get() = createdAt ?: redeemedAt
+}
+
 // ─── Support ─────────────────────────────────────────────────
 
 @Serializable

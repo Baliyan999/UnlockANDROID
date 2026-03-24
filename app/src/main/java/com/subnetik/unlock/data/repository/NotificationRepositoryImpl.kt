@@ -13,8 +13,8 @@ class NotificationRepositoryImpl @Inject constructor(
 
     override suspend fun getNotifications(limit: Int, offset: Int): Resource<List<InboxNotification>> {
         return try {
-            val result = notificationApi.getNotifications(limit, offset)
-            Resource.Success(result)
+            val response = notificationApi.getNotifications(limit, offset)
+            Resource.Success(response.items)
         } catch (e: Exception) {
             Resource.Error(e.message ?: "Failed to load notifications")
         }
@@ -23,7 +23,7 @@ class NotificationRepositoryImpl @Inject constructor(
     override suspend fun getUnreadCount(): Resource<Int> {
         return try {
             val result = notificationApi.getUnreadCount()
-            Resource.Success(result.count)
+            Resource.Success(result.unreadCount)
         } catch (e: Exception) {
             Resource.Error(e.message ?: "Failed to get unread count")
         }

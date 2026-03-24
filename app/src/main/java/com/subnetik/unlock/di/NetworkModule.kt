@@ -5,6 +5,7 @@ import com.subnetik.unlock.data.remote.api.AdminApi
 import com.subnetik.unlock.data.remote.api.StudentApi
 import com.subnetik.unlock.data.remote.api.AiApi
 import com.subnetik.unlock.data.remote.api.AuthApi
+import com.subnetik.unlock.data.remote.api.CalendarApi
 import com.subnetik.unlock.data.remote.api.MarketApi
 import com.subnetik.unlock.data.remote.api.NotificationApi
 import com.subnetik.unlock.data.remote.api.PaymentApi
@@ -105,4 +106,9 @@ object NetworkModule {
     @Singleton
     fun provideMarketApi(retrofit: Retrofit): MarketApi =
         retrofit.create(MarketApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideCalendarApi(retrofit: Retrofit): CalendarApi =
+        retrofit.create(CalendarApi::class.java)
 }

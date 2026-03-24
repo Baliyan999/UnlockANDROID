@@ -3,8 +3,12 @@ package com.subnetik.unlock.presentation.screens.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.subnetik.unlock.data.local.datastore.SettingsDataStore
+import com.subnetik.unlock.data.remote.api.CalendarApi
 import com.subnetik.unlock.data.remote.api.StudentApi
+import com.subnetik.unlock.data.remote.dto.calendar.CalendarEventResponse
 import com.subnetik.unlock.data.remote.dto.student.StudentScheduleData
+import java.text.SimpleDateFormat
+import java.util.*
 import com.subnetik.unlock.domain.model.Resource
 import com.subnetik.unlock.domain.repository.AuthRepository
 import com.subnetik.unlock.domain.repository.NotificationRepository
@@ -22,6 +26,7 @@ data class HomeUiState(
     val tokenBalance: Int = 0,
     val isDarkTheme: Boolean? = null,
     val schedule: StudentScheduleData? = null,
+    val calendarEvents: List<CalendarEventResponse> = emptyList(),
 )
 
 @HiltViewModel
@@ -29,6 +34,7 @@ class HomeViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val notificationRepository: NotificationRepository,
     private val studentApi: StudentApi,
+    private val calendarApi: CalendarApi,
     private val settingsDataStore: SettingsDataStore,
 ) : ViewModel() {
 
@@ -49,6 +55,7 @@ class HomeViewModel @Inject constructor(
         loadUnreadCount()
         loadWallet()
         loadSchedule()
+        loadCalendarEvents()
     }
 
     private fun loadUnreadCount() {
@@ -64,8 +71,11 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val wallet = studentApi.getWallet()
+                android.util.Log.d("HomeVM", "Wallet loaded: balance=${wallet.balance}")
                 _uiState.update { it.copy(tokenBalance = wallet.balance) }
-            } catch (_: Exception) {}
+            } catch (e: Exception) {
+                android.util.Log.e("HomeVM", "Wallet FAIL: ${e::class.simpleName}: ${e.message}")
+            }
         }
     }
 
@@ -73,11 +83,27 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val schedule = studentApi.getSchedule()
-                android.util.Log.d("HomeVM", "Schedule OK: group=${schedule.groupName}, days=${schedule.scheduleDays}, time=${schedule.scheduleTime}, dur=${schedule.lessonDurationMinutes}")
+                android.util.Log.d("HomeVM", "Schedule OK: group=${schedule.groupName}")
                 _uiState.update { it.copy(schedule = schedule) }
             } catch (e: Exception) {
-                android.util.Log.e("HomeVM", "Schedule FAIL: ${e::class.simpleName}: ${e.message}")
+                android.util.Log.e("HomeVM", "Schedule FAIL: ${e::class.simpleName}: ${e.message}", e)
             }
+        }
+    }
+
+    private fun loadCalendarEvents() {
+        viewModelScope.launch {
+            try {
+                val df = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+                val cal = Calendar.getInstance()
+                // Load from Monday of current week
+                val dayOfWeek = cal.get(Calendar.DAY_OF_WEEK)
+                val mondayOffset = if (dayOfWeek == Calendar.SUNDAY) -6 else (Calendar.MONDAY - dayOfWeek)
+                cal.add(Calendar.DAY_OF_MONTH, mondayOffset)
+                val fromDate = df.format(cal.time)
+                val events = calendarApi.getEvents(fromDate = fromDate)
+                _uiState.update { it.copy(calendarEvents = events) }
+            } catch (_: Exception) {}
         }
     }
 }

@@ -4,6 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.subnetik.unlock.data.local.datastore.SettingsDataStore
 import com.subnetik.unlock.data.local.db.entity.TestProgressEntity
+import com.subnetik.unlock.data.remote.api.ProgressApi
+import com.subnetik.unlock.data.remote.dto.progress.ProgressSyncRequest
+import com.subnetik.unlock.data.remote.dto.progress.TestProgressSyncItem
 import com.subnetik.unlock.domain.model.TestQuestion
 import com.subnetik.unlock.domain.repository.AuthRepository
 import com.subnetik.unlock.domain.repository.TestRepository
@@ -39,6 +42,7 @@ class TestViewModel @Inject constructor(
     private val testRepository: TestRepository,
     private val authRepository: AuthRepository,
     private val settingsDataStore: SettingsDataStore,
+    private val progressApi: ProgressApi,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(TestUiState())
@@ -63,14 +67,59 @@ class TestViewModel @Inject constructor(
     private fun loadAllProgress() {
         viewModelScope.launch {
             val email = authRepository.getUserEmail().first() ?: return@launch
-            val progress = testRepository.getAllProgress(email)
+
+            // Load local first for instant UI
+            val localProgress = testRepository.getAllProgress(email)
             val map = mutableMapOf<Int, TestProgressEntity>()
-            progress.forEach { entity ->
+            localProgress.forEach { entity ->
                 val levelStr = entity.key.removePrefix("${email}_")
                 val level = levelStr.toIntOrNull() ?: return@forEach
                 map[level] = entity
             }
             _uiState.update { it.copy(levelProgress = map) }
+
+            // Then fetch from server and merge (server is truth)
+            try {
+                val serverResponse = progressApi.getMyProgress()
+                var hasLocalOnly = false
+
+                for (item in serverResponse.tests) {
+                    // Server uses "hsk1", "hsk2" format; also handle plain "1", "2"
+                    val level = item.levelId.removePrefix("hsk").toIntOrNull() ?: continue
+                    val local = map[level]
+
+                    // Merge: take best from server and local
+                    val mergedBestPercent = maxOf(item.bestPercent, local?.bestPercent ?: 0)
+                    val mergedBestScore = maxOf(item.bestScore, local?.bestScore ?: 0)
+                    val mergedAttempts = maxOf(item.attempts, local?.attempts ?: 0)
+                    val mergedPassed = item.passed || local?.passed == true
+
+                    if (local != null && (local.bestPercent > item.bestPercent || local.attempts > item.attempts)) {
+                        hasLocalOnly = true
+                    }
+
+                    val entity = TestProgressEntity(
+                        key = "${email}_$level",
+                        bestPercent = mergedBestPercent,
+                        bestScore = mergedBestScore,
+                        totalQuestions = item.totalQuestions,
+                        attempts = mergedAttempts,
+                        passed = mergedPassed,
+                        lastAttemptAt = item.lastAttemptAt ?: local?.lastAttemptAt,
+                    )
+                    testRepository.saveProgress(entity)
+                    map[level] = entity
+                }
+
+                _uiState.update { it.copy(levelProgress = map) }
+
+                // Sync back if local had better data
+                if (hasLocalOnly) {
+                    syncAllToServer(email, map)
+                }
+            } catch (e: Exception) {
+                android.util.Log.w("TestVM", "Server fetch failed: ${e.message}")
+            }
         }
     }
 
@@ -163,6 +212,34 @@ class TestViewModel @Inject constructor(
                 lastAttemptAt = Instant.now().toString(),
             )
             testRepository.saveProgress(entity)
+
+            // Update UI
+            val map = _uiState.value.levelProgress.toMutableMap()
+            map[level] = entity
+            _uiState.update { it.copy(levelProgress = map) }
+
+            // Sync to server
+            syncAllToServer(email, map)
+        }
+    }
+
+    private suspend fun syncAllToServer(email: String, map: Map<Int, TestProgressEntity>) {
+        try {
+            val testItems = map.map { (level, entity) ->
+                TestProgressSyncItem(
+                    levelId = "hsk$level",
+                    bestPercent = entity.bestPercent,
+                    bestScore = entity.bestScore,
+                    totalQuestions = entity.totalQuestions,
+                    attempts = entity.attempts,
+                    passed = entity.passed,
+                    lastAttemptAt = entity.lastAttemptAt,
+                )
+            }
+            progressApi.syncProgress(ProgressSyncRequest(tests = testItems, vocabulary = emptyList()))
+            android.util.Log.d("TestVM", "Test progress synced to server: ${testItems.size} levels")
+        } catch (e: Exception) {
+            android.util.Log.w("TestVM", "Test sync failed: ${e.message}")
         }
     }
 

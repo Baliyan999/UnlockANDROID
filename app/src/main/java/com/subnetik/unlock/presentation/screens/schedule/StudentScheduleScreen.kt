@@ -28,6 +28,7 @@ import com.subnetik.unlock.presentation.screens.admin.components.AdminBackground
 import com.subnetik.unlock.presentation.theme.*
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.Locale
 
 @Composable
 fun StudentScheduleScreen(
@@ -158,6 +159,18 @@ fun StudentScheduleScreen(
                         }
                     }
 
+                    // ─── Calendar Events ─────────────────────────────
+                    run {
+                        val todayStr = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(Date())
+                        val futureEvents = uiState.calendarEvents.filter { it.date >= todayStr }
+                        if (futureEvents.isNotEmpty()) {
+                            com.subnetik.unlock.presentation.screens.calendar.CalendarEventsWidget(
+                                events = futureEvents,
+                                isDark = isDark,
+                            )
+                        }
+                    }
+
                     // ─── Week Calendar ─────────────────────────────
                     if (schedule != null && schedule.scheduleDays != null) {
                         Surface(
@@ -177,6 +190,12 @@ fun StudentScheduleScreen(
                                 val (startTime, _) = parseTimeRange(schedule.scheduleTime)
                                 val today = Calendar.getInstance()
                                 val todayDayOfMonth = today.get(Calendar.DAY_OF_MONTH)
+                                val holidayDates = remember(uiState.calendarEvents) {
+                                    uiState.calendarEvents
+                                        .filter { it.eventType == "holiday" && it.cancelsLessons }
+                                        .map { it.date }
+                                        .toSet()
+                                }
 
                                 Row(
                                     modifier = Modifier.fillMaxWidth(),
@@ -186,33 +205,38 @@ fun StudentScheduleScreen(
                                         val isActive = day.token in activeDayTokens
                                         val isToday = day.dayOfMonth == todayDayOfMonth
                                         val isPast = day.dayOfMonth < todayDayOfMonth
+                                        val isHoliday = day.dateString in holidayDates
 
                                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                             Text(
                                                 day.label,
                                                 style = MaterialTheme.typography.labelSmall,
                                                 color = when {
+                                                    isHoliday -> BrandCoral
                                                     isToday -> primaryText
                                                     isActive -> primaryText
                                                     else -> secondaryText.copy(alpha = 0.5f)
                                                 },
-                                                fontWeight = if (isToday || isActive) FontWeight.Bold else FontWeight.Normal,
+                                                fontWeight = if (isToday || isActive || isHoliday) FontWeight.Bold else FontWeight.Normal,
                                             )
                                             Spacer(Modifier.height(6.dp))
 
                                             // iOS: past+active=green✓, today=dark+gray ring, future+active=blue+blue ring, others=dark gray
                                             val bgColor = when {
+                                                isHoliday -> BrandCoral.copy(alpha = 0.15f)
                                                 isPast && isActive -> BrandGreen
                                                 isToday -> if (isDark) Color.White.copy(alpha = 0.10f) else Color.Black.copy(alpha = 0.08f)
                                                 !isPast && isActive -> BrandBlue
                                                 else -> if (isDark) Color.White.copy(alpha = 0.06f) else Color.Black.copy(alpha = 0.06f)
                                             }
                                             val borderC = when {
+                                                isHoliday -> BrandCoral.copy(alpha = 0.3f)
                                                 isToday -> if (isDark) Color.White.copy(alpha = 0.15f) else Color.Black.copy(alpha = 0.15f)
                                                 !isPast && isActive -> BrandBlue.copy(alpha = 0.5f)
                                                 else -> Color.Transparent
                                             }
                                             val textColor = when {
+                                                isHoliday -> BrandCoral
                                                 isPast && isActive -> Color.White
                                                 isToday -> primaryText
                                                 !isPast && isActive -> Color.White
@@ -229,7 +253,9 @@ fun StudentScheduleScreen(
                                                     .background(bgColor, CircleShape),
                                                 contentAlignment = Alignment.Center,
                                             ) {
-                                                if (isPast && isActive) {
+                                                if (isHoliday) {
+                                                    Icon(Icons.Default.WbSunny, contentDescription = null, tint = BrandCoral, modifier = Modifier.size(16.dp))
+                                                } else if (isPast && isActive) {
                                                     Icon(Icons.Default.Check, contentDescription = null, tint = Color.White, modifier = Modifier.size(20.dp))
                                                 } else {
                                                     Text("${day.dayOfMonth}", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = textColor)
@@ -371,7 +397,7 @@ fun StudentScheduleScreen(
 
 private data class NextLessonInfo(val dayName: String, val time: String)
 
-private data class WeekDay(val label: String, val token: String, val dayOfMonth: Int)
+private data class WeekDay(val label: String, val token: String, val dayOfMonth: Int, val dateString: String = "")
 
 private fun findNextLesson(scheduleDays: String, scheduleTime: String?): NextLessonInfo? {
     val dayMap = mapOf("пн" to Calendar.MONDAY, "вт" to Calendar.TUESDAY, "ср" to Calendar.WEDNESDAY, "чт" to Calendar.THURSDAY, "пт" to Calendar.FRIDAY, "сб" to Calendar.SATURDAY, "вс" to Calendar.SUNDAY)
@@ -414,10 +440,11 @@ private fun getWeekDays(): List<WeekDay> {
     val daysFromMonday = if (dow == Calendar.SUNDAY) 6 else dow - Calendar.MONDAY
     cal.add(Calendar.DAY_OF_YEAR, -daysFromMonday)
 
+    val df = SimpleDateFormat("yyyy-MM-dd", Locale.US)
     return labels.indices.map { i ->
         val c = cal.clone() as Calendar
         c.add(Calendar.DAY_OF_YEAR, i)
-        WeekDay(labels[i], tokens[i], c.get(Calendar.DAY_OF_MONTH))
+        WeekDay(labels[i], tokens[i], c.get(Calendar.DAY_OF_MONTH), df.format(c.time))
     }
 }
 

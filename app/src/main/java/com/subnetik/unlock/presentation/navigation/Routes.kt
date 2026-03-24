@@ -39,7 +39,10 @@ sealed class Routes(val route: String) {
 
     // Student screens
     data object Schedule : Routes("schedule")
+    data object SupportBooking : Routes("support_booking")
     data object Payment : Routes("payment")
     data object StudentPayments : Routes("student_payments")
     data object Market : Routes("market")
+    data object Promocodes : Routes("promocodes")
+    data object Referral : Routes("referral")
 }

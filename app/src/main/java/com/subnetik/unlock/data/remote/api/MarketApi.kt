@@ -4,6 +4,7 @@ import com.subnetik.unlock.data.remote.dto.admin.CouponValidateRequest
 import com.subnetik.unlock.data.remote.dto.admin.CouponValidateResponse
 import com.subnetik.unlock.data.remote.dto.admin.CouponRedeemRequest
 import com.subnetik.unlock.data.remote.dto.admin.CouponRedeemResponse
+import com.subnetik.unlock.data.remote.dto.admin.PromocodeRedemptionsWrapper
 import com.subnetik.unlock.data.remote.dto.market.MarketItemResponse
 import com.subnetik.unlock.data.remote.dto.market.MarketPurchaseRequest
 import com.subnetik.unlock.data.remote.dto.market.MarketPurchaseResponse
@@ -29,4 +30,7 @@ interface MarketApi {
 
     @POST("promocodes/redeem")
     suspend fun redeemCoupon(@Body request: CouponRedeemRequest): CouponRedeemResponse
+
+    @GET("promocodes/my-redemptions")
+    suspend fun getMyRedemptions(): PromocodeRedemptionsWrapper
 }

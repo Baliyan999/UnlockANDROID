@@ -356,7 +356,7 @@ private fun TestLevelCard(
                         )
                         Spacer(Modifier.height(4.dp))
                         Text(
-                            "${bestPercent}% · $attempts попытк${if (attempts == 1) "а" else if (attempts in 2..4) "и" else ""}",
+                            "${bestPercent}% · $attempts ${if (attempts == 1) "попытка" else if (attempts in 2..4) "попытки" else "попыток"}",
                             style = MaterialTheme.typography.labelSmall,
                             fontSize = 10.sp,
                             color = Color.White.copy(alpha = 0.8f),

@@ -23,6 +23,8 @@ class AuthDataStore @Inject constructor(
         private val REMEMBER_ME = booleanPreferencesKey("auth_remember_me")
         private val LAST_ACTIVE = longPreferencesKey("auth_last_active")
         private val AVATAR_URL = stringPreferencesKey("profile_avatar")
+        private val TERMS_ACCEPTED = booleanPreferencesKey("terms_accepted")
+        private val TEACHER_TERMS_ACCEPTED = booleanPreferencesKey("teacher_terms_accepted")
     }
 
     val accessToken: Flow<String?> = context.authDataStore.data.map { it[ACCESS_TOKEN] }
@@ -32,6 +34,8 @@ class AuthDataStore @Inject constructor(
     val displayName: Flow<String?> = context.authDataStore.data.map { it[DISPLAY_NAME] }
     val rememberMe: Flow<Boolean> = context.authDataStore.data.map { it[REMEMBER_ME] ?: false }
     val avatarUrl: Flow<String?> = context.authDataStore.data.map { it[AVATAR_URL] }
+    val termsAccepted: Flow<Boolean> = context.authDataStore.data.map { it[TERMS_ACCEPTED] ?: false }
+    val teacherTermsAccepted: Flow<Boolean> = context.authDataStore.data.map { it[TEACHER_TERMS_ACCEPTED] ?: false }
 
     suspend fun saveSession(token: String?, role: String?, email: String?, displayName: String?) {
         context.authDataStore.edit { prefs ->
@@ -58,6 +62,14 @@ class AuthDataStore @Inject constructor(
 
     suspend fun updateLastActive() {
         context.authDataStore.edit { it[LAST_ACTIVE] = System.currentTimeMillis() }
+    }
+
+    suspend fun saveTermsAccepted(accepted: Boolean) {
+        context.authDataStore.edit { it[TERMS_ACCEPTED] = accepted }
+    }
+
+    suspend fun saveTeacherTermsAccepted(accepted: Boolean) {
+        context.authDataStore.edit { it[TEACHER_TERMS_ACCEPTED] = accepted }
     }
 
     suspend fun clearAll() {

@@ -59,6 +59,8 @@ class ProgressRepositoryImpl @Inject constructor(
                         totalWords = knownIds.size + reviewIds.size,
                         knownCount = knownIds.size,
                         reviewCount = reviewIds.size,
+                        knownWordIds = knownIds,
+                        reviewWordIds = reviewIds,
                         lastStudiedAt = entity.lastStudiedAt
                     )
                 }

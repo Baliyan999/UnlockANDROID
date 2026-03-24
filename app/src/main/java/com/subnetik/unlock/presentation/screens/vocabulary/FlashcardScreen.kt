@@ -1,10 +1,12 @@
 package com.subnetik.unlock.presentation.screens.vocabulary
 
+import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,13 +21,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.subnetik.unlock.presentation.screens.admin.components.AdminBackground
 import com.subnetik.unlock.presentation.theme.*
+import kotlinx.coroutines.launch
+import kotlin.math.abs
+import kotlin.math.roundToInt
 
 @Composable
 fun FlashcardScreen(
@@ -63,9 +70,6 @@ fun FlashcardScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center,
                 ) {
-                    val score = if (uiState.totalCount > 0) uiState.knownCount.toFloat() / uiState.totalCount else 0f
-                    val scoreColor = if (score >= 0.7f) BrandGreen else BrandCoral
-
                     Text("✅", fontSize = 48.sp)
                     Spacer(Modifier.height(Brand.Spacing.lg))
                     Text("Готово!", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold, color = primaryText)
@@ -89,6 +93,19 @@ fun FlashcardScreen(
                     animationSpec = tween(400),
                     label = "flip",
                 )
+
+                // Swipe state
+                val scope = rememberCoroutineScope()
+                val offsetX = remember(word.id) { Animatable(0f) }
+                val swipeThreshold = 150f
+
+                // Swipe direction indicator color
+                val swipeProgress = (offsetX.value / swipeThreshold).coerceIn(-1f, 1f)
+                val swipeBorderColor = when {
+                    swipeProgress > 0.3f -> BrandGreen.copy(alpha = swipeProgress)
+                    swipeProgress < -0.3f -> BrandCoral.copy(alpha = -swipeProgress)
+                    else -> color.copy(alpha = 0.15f)
+                }
 
                 // ─── Progress header ────────────────────
                 Row(
@@ -121,55 +138,102 @@ fun FlashcardScreen(
 
                 Spacer(Modifier.weight(1f))
 
-                // ─── Flashcard ──────────────────────────
-                Surface(
+                // ─── Swipeable Flashcard ──────────────────────
+                Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = Brand.Spacing.lg)
-                        .height(320.dp)
-                        .graphicsLayer {
-                            rotationY = rotation
-                            cameraDistance = 12f * density
-                        }
-                        .clickable { isFlipped = !isFlipped },
-                    shape = RoundedCornerShape(24.dp),
-                    color = cardColor,
-                    border = BorderStroke(1.dp, color.copy(alpha = 0.15f)),
-                    shadowElevation = 8.dp,
+                        .height(320.dp),
+                    contentAlignment = Alignment.Center,
                 ) {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        // Watermark
+                    // Swipe label overlays
+                    if (abs(swipeProgress) > 0.3f) {
                         Text(
-                            word.character,
-                            fontSize = 120.sp,
+                            text = if (swipeProgress > 0) "Знаю ✓" else "Повторить ↻",
+                            fontSize = 24.sp,
                             fontWeight = FontWeight.Bold,
-                            color = if (isDark) Color.White.copy(alpha = 0.04f) else Color.Black.copy(alpha = 0.03f),
-                            modifier = Modifier.align(Alignment.TopEnd).padding(end = 10.dp),
+                            color = if (swipeProgress > 0) BrandGreen else BrandCoral,
+                            modifier = Modifier
+                                .align(if (swipeProgress > 0) Alignment.TopEnd else Alignment.TopStart)
+                                .padding(Brand.Spacing.lg)
+                                .graphicsLayer { alpha = abs(swipeProgress) },
                         )
+                    }
 
-                        if (rotation <= 90f) {
-                            // Front
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Text(word.character, fontSize = 72.sp, fontWeight = FontWeight.Bold, color = primaryText)
-                                Spacer(Modifier.height(Brand.Spacing.md))
-                                Text("Нажми, чтобы перевернуть", style = MaterialTheme.typography.bodySmall, color = secondaryText)
+                    Surface(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .offset { IntOffset(offsetX.value.roundToInt(), 0) }
+                            .graphicsLayer {
+                                rotationY = rotation
+                                rotationZ = offsetX.value / 30f // Slight tilt
+                                cameraDistance = 12f * density
                             }
-                        } else {
-                            // Back (mirrored)
-                            Column(
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                modifier = Modifier.graphicsLayer { rotationY = 180f },
-                            ) {
-                                Text(word.pinyin, fontSize = 22.sp, fontWeight = FontWeight.Bold, color = color)
-                                Spacer(Modifier.height(Brand.Spacing.sm))
-                                Text(word.character, fontSize = 48.sp, fontWeight = FontWeight.Bold, color = primaryText)
-                                Spacer(Modifier.height(Brand.Spacing.md))
-                                HorizontalDivider(modifier = Modifier.padding(horizontal = 40.dp), color = secondaryText.copy(alpha = 0.2f))
-                                Spacer(Modifier.height(Brand.Spacing.md))
-                                Text(word.translation, fontSize = 20.sp, textAlign = TextAlign.Center, color = primaryText.copy(alpha = 0.9f))
+                            .pointerInput(word.id) {
+                                detectHorizontalDragGestures(
+                                    onDragEnd = {
+                                        scope.launch {
+                                            if (offsetX.value > swipeThreshold) {
+                                                // Swipe right → Known
+                                                offsetX.animateTo(1000f, tween(200))
+                                                viewModel.markKnown()
+                                            } else if (offsetX.value < -swipeThreshold) {
+                                                // Swipe left → Review
+                                                offsetX.animateTo(-1000f, tween(200))
+                                                viewModel.markReview()
+                                            } else {
+                                                // Snap back
+                                                offsetX.animateTo(0f, tween(300))
+                                            }
+                                        }
+                                    },
+                                    onDragCancel = {
+                                        scope.launch { offsetX.animateTo(0f, tween(300)) }
+                                    },
+                                ) { _, dragAmount ->
+                                    scope.launch { offsetX.snapTo(offsetX.value + dragAmount) }
+                                }
+                            }
+                            .clickable { isFlipped = !isFlipped },
+                        shape = RoundedCornerShape(24.dp),
+                        color = cardColor,
+                        border = BorderStroke(2.dp, swipeBorderColor),
+                        shadowElevation = 8.dp,
+                    ) {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            // Watermark
+                            Text(
+                                word.character,
+                                fontSize = 120.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = if (isDark) Color.White.copy(alpha = 0.04f) else Color.Black.copy(alpha = 0.03f),
+                                modifier = Modifier.align(Alignment.TopEnd).padding(end = 10.dp),
+                            )
+
+                            if (rotation <= 90f) {
+                                // Front
+                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                    Text(word.character, fontSize = 72.sp, fontWeight = FontWeight.Bold, color = primaryText)
+                                    Spacer(Modifier.height(Brand.Spacing.md))
+                                    Text("Нажми, чтобы перевернуть", style = MaterialTheme.typography.bodySmall, color = secondaryText)
+                                }
+                            } else {
+                                // Back (mirrored)
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    modifier = Modifier.graphicsLayer { rotationY = 180f },
+                                ) {
+                                    Text(word.pinyin, fontSize = 22.sp, fontWeight = FontWeight.Bold, color = color)
+                                    Spacer(Modifier.height(Brand.Spacing.sm))
+                                    Text(word.character, fontSize = 48.sp, fontWeight = FontWeight.Bold, color = primaryText)
+                                    Spacer(Modifier.height(Brand.Spacing.md))
+                                    HorizontalDivider(modifier = Modifier.padding(horizontal = 40.dp), color = secondaryText.copy(alpha = 0.2f))
+                                    Spacer(Modifier.height(Brand.Spacing.md))
+                                    Text(word.translation, fontSize = 20.sp, textAlign = TextAlign.Center, color = primaryText.copy(alpha = 0.9f))
+                                }
                             }
                         }
                     }

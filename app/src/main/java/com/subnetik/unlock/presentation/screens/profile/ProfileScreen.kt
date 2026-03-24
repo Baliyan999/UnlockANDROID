@@ -51,6 +51,7 @@ fun ProfileScreen(
     onNavigateToContact: () -> Unit,
     onNavigateToShiFu: () -> Unit = {},
     onNavigateToPayment: () -> Unit = {},
+    onNavigateToPromocodes: () -> Unit = {},
     onLogout: () -> Unit,
     viewModel: ProfileViewModel = hiltViewModel(),
 ) {
@@ -106,8 +107,8 @@ fun ProfileScreen(
                             // Fallback: letter avatar
                             Box(
                                 modifier = Modifier
-                                    .size(76.dp)
-                                    .background(BrandBlue.copy(alpha = 0.15f), RoundedCornerShape(20.dp)),
+                                    .size(90.dp)
+                                    .background(BrandBlue.copy(alpha = 0.15f), CircleShape),
                                 contentAlignment = Alignment.Center,
                             ) {
                                 Text(
@@ -127,8 +128,8 @@ fun ProfileScreen(
                                 contentScale = ContentScale.Crop,
                                 onError = { isError = true },
                                 modifier = Modifier
-                                    .size(76.dp)
-                                    .clip(RoundedCornerShape(20.dp)),
+                                    .size(90.dp)
+                                    .clip(CircleShape),
                             )
                         }
                     } else {
@@ -241,8 +242,28 @@ fun ProfileScreen(
                             ) {
                                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                     Icon(Icons.Default.CreditCard, contentDescription = null, modifier = Modifier.size(18.dp))
-                                    Text("Оплата через Paynet", fontWeight = FontWeight.SemiBold)
+                                    Text("Оплата", fontWeight = FontWeight.SemiBold)
                                 }
+                            }
+                        }
+                    }
+
+                    // Promo code button (only for students and users)
+                    if (uiState.role?.lowercase() in listOf("student", "user")) {
+                        Button(
+                            onClick = onNavigateToPromocodes,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(44.dp),
+                            shape = RoundedCornerShape(12.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = BrandGold,
+                                contentColor = Color.White,
+                            ),
+                        ) {
+                            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                Icon(Icons.Default.ConfirmationNumber, contentDescription = null, modifier = Modifier.size(18.dp))
+                                Text("Промокод", fontWeight = FontWeight.SemiBold)
                             }
                         }
                     }

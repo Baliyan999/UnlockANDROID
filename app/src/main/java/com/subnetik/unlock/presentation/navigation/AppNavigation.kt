@@ -87,11 +87,12 @@ fun AppNavigation(
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             val currentRoute = navBackStackEntry?.destination?.route
 
-            if (isLoggedIn && currentRoute in mainTabRoutes) {
+            val baseRoute = currentRoute?.substringBefore("?")
+            if (isLoggedIn && baseRoute in mainTabRoutes) {
                 val items = getBottomNavItems(userRole)
                 UnlockBottomBar(
                     items = items,
-                    currentRoute = currentRoute,
+                    currentRoute = baseRoute,
                     onItemClick = { route ->
                         navController.navigate(route) {
                             popUpTo(navController.graph.findStartDestination().id) {
@@ -166,17 +167,30 @@ fun AppNavigation(
                         onNavigateToTests = { navController.navigate(Routes.Test.route) },
                         onNavigateToNotifications = { navController.navigate(Routes.Notifications.route) },
                         onNavigateToSchedule = { navController.navigate(Routes.Schedule.route) },
+                        onNavigateToSupportBooking = {
+                            navController.navigate("${Routes.Homework.route}?tab=support") {
+                                popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+                                launchSingleTop = true
+                            }
+                        },
                         onNavigateToPayment = { navController.navigate(Routes.StudentPayments.route) },
                         onNavigateToMarket = { navController.navigate(Routes.Market.route) },
+                        onNavigateToReferral = { navController.navigate(Routes.Referral.route) },
                     )
                 }
             }
 
-            composable(Routes.Homework.route) {
+            composable(
+                route = "${Routes.Homework.route}?tab={tab}",
+                arguments = listOf(navArgument("tab") { defaultValue = ""; type = NavType.StringType }),
+            ) { backStackEntry ->
+                val tab = backStackEntry.arguments?.getString("tab") ?: ""
                 when (userRole) {
                     AppUserRole.ADMIN -> AdminPanelScreen()
                     AppUserRole.TEACHER -> TeacherGroupsScreen()
-                    else -> PlaceholderScreen("Учебный кабинет")
+                    else -> com.subnetik.unlock.presentation.screens.homework.StudentHomeworkScreen(
+                        initialTab = tab,
+                    )
                 }
             }
 
@@ -195,6 +209,7 @@ fun AppNavigation(
                     onNavigateToContact = { navController.navigate(Routes.Contact.route) },
                     onNavigateToShiFu = { navController.navigate(Routes.ShiFuChat.route) },
                     onNavigateToPayment = { navController.navigate(Routes.Payment.route) },
+                    onNavigateToPromocodes = { navController.navigate(Routes.Promocodes.route) },
                     onLogout = onLogout,
                 )
             }
@@ -301,6 +316,11 @@ fun AppNavigation(
             composable(Routes.Schedule.route) {
                 StudentScheduleScreen(onBack = { navController.popBackStack() })
             }
+            composable(Routes.SupportBooking.route) {
+                com.subnetik.unlock.presentation.screens.schedule.SupportBookingScreen(
+                    onBack = { navController.popBackStack() },
+                )
+            }
             composable(Routes.Payment.route) {
                 PaymentScreen(
                     onBack = { navController.popBackStack() },
@@ -312,6 +332,16 @@ fun AppNavigation(
             }
             composable(Routes.Market.route) {
                 MarketScreen(onBack = { navController.popBackStack() })
+            }
+            composable(Routes.Promocodes.route) {
+                com.subnetik.unlock.presentation.screens.promocode.PromocodesScreen(
+                    onBack = { navController.popBackStack() },
+                )
+            }
+            composable(Routes.Referral.route) {
+                com.subnetik.unlock.presentation.screens.referral.ReferralScreen(
+                    onBack = { navController.popBackStack() },
+                )
             }
         }
     }

@@ -129,6 +129,8 @@ fun VocabularyLevelScreen(
             ) {
                 items(uiState.filteredWords, key = { it.id }) { word ->
                     val isExpanded = expandedWordId == word.id
+                    val isKnown = word.id in uiState.knownWordIds
+                    val isReview = word.id in uiState.reviewWordIds
                     Surface(
                         modifier = Modifier.fillMaxWidth().clickable { expandedWordId = if (isExpanded) null else word.id },
                         shape = RoundedCornerShape(16.dp),
@@ -147,6 +149,21 @@ fun VocabularyLevelScreen(
                                 Column(modifier = Modifier.weight(1f)) {
                                     Text(word.pinyin, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = color)
                                     Text(word.translation, style = MaterialTheme.typography.bodySmall, color = secondaryText)
+                                }
+                                if (isKnown) {
+                                    Icon(
+                                        Icons.Default.CheckCircle,
+                                        contentDescription = "Выучено",
+                                        modifier = Modifier.size(24.dp),
+                                        tint = BrandGreen,
+                                    )
+                                } else if (isReview) {
+                                    Icon(
+                                        Icons.Default.Refresh,
+                                        contentDescription = "Повторить",
+                                        modifier = Modifier.size(24.dp),
+                                        tint = BrandCoral,
+                                    )
                                 }
                             }
 
