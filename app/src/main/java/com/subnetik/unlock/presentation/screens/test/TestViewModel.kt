@@ -33,8 +33,9 @@ data class TestUiState(
     val testComplete: Boolean = false,
     val remainingSeconds: Int = 600,
     val levelProgress: Map<Int, TestProgressEntity> = emptyMap(),
-    val isDarkTheme: Boolean? = null,
+    val isDarkTheme: Boolean? = true,
     val showTrialButton: Boolean = false,
+    val isLoggedIn: Boolean = false,
 )
 
 @HiltViewModel
@@ -58,7 +59,16 @@ class TestViewModel @Inject constructor(
         }
         viewModelScope.launch {
             authRepository.getUserRole().collect { role ->
-                _uiState.update { it.copy(showTrialButton = role == com.subnetik.unlock.domain.model.AppUserRole.USER || role == com.subnetik.unlock.domain.model.AppUserRole.GUEST) }
+                _uiState.update {
+                    it.copy(
+                        showTrialButton = role == com.subnetik.unlock.domain.model.AppUserRole.USER || role == com.subnetik.unlock.domain.model.AppUserRole.GUEST,
+                    )
+                }
+            }
+        }
+        viewModelScope.launch {
+            authRepository.isLoggedIn().collect { loggedIn ->
+                _uiState.update { it.copy(isLoggedIn = loggedIn) }
             }
         }
         loadAllProgress()

@@ -1,5 +1,6 @@
 package com.subnetik.unlock.presentation.screens.profile
 
+import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -732,7 +733,7 @@ private fun SettingsSheetContent(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                "Настройки",
+                "Настройки аккаунта",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 color = textColor,
@@ -1160,6 +1161,165 @@ private fun SettingsSheetContent(
                         } // end if (isAdmin) for language
                     }
                 }
+            }
+        }
+
+        // ─── Documents Card (hidden for plain users) ─────────────────────────────────
+        val isUserRole = uiState.role?.lowercase() == "user" || uiState.role == null
+        val isTeacherOrAdmin = uiState.role?.lowercase() in listOf("teacher", "admin")
+        if (!isUserRole) {
+        val studentDocs = com.subnetik.unlock.presentation.screens.terms.getStudentDocuments()
+        val teacherDocs = com.subnetik.unlock.presentation.screens.terms.getTeacherDocuments()
+        var activeViewerDoc by remember { mutableStateOf<com.subnetik.unlock.presentation.screens.terms.TermsDocument?>(null) }
+
+        GlassCard(isDark = isDark) {
+            Column(
+                modifier = Modifier.padding(Brand.Spacing.lg),
+                verticalArrangement = Arrangement.spacedBy(Brand.Spacing.sm),
+            ) {
+                // General documents section
+                Text(
+                    if (isTeacherOrAdmin) "Общие документы" else "Документы",
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = textColor,
+                )
+
+                studentDocs.forEach { doc ->
+                    Surface(
+                        onClick = { activeViewerDoc = doc },
+                        color = fieldBg,
+                        shape = RoundedCornerShape(12.dp),
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(12.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Icon(
+                                doc.icon,
+                                contentDescription = null,
+                                modifier = Modifier.size(18.dp),
+                                tint = doc.tint,
+                            )
+                            Spacer(Modifier.width(10.dp))
+                            Text(
+                                doc.title,
+                                modifier = Modifier.weight(1f),
+                                style = MaterialTheme.typography.bodySmall,
+                                fontWeight = FontWeight.Medium,
+                                color = textColor,
+                            )
+                            Icon(
+                                Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                                contentDescription = null,
+                                modifier = Modifier.size(16.dp),
+                                tint = subtextColor,
+                            )
+                        }
+                    }
+                }
+
+                // Teacher/Admin: employment documents section
+                if (isTeacherOrAdmin) {
+                    Spacer(Modifier.height(8.dp))
+                    Text(
+                        "Трудовые документы",
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = textColor,
+                    )
+
+                    teacherDocs.forEach { doc ->
+                        Surface(
+                            onClick = { activeViewerDoc = doc },
+                            color = fieldBg,
+                            shape = RoundedCornerShape(12.dp),
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(12.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                Icon(
+                                    doc.icon,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(18.dp),
+                                    tint = doc.tint,
+                                )
+                                Spacer(Modifier.width(10.dp))
+                                Text(
+                                    doc.title,
+                                    modifier = Modifier.weight(1f),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    fontWeight = FontWeight.Medium,
+                                    color = textColor,
+                                )
+                                Icon(
+                                    Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(16.dp),
+                                    tint = subtextColor,
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Read-only document viewer dialog
+        activeViewerDoc?.let { doc ->
+            com.subnetik.unlock.presentation.screens.terms.ReadOnlyDocumentViewer(
+                doc = doc,
+                onDismiss = { activeViewerDoc = null },
+            )
+        }
+
+        } // end if (!isUserRole) documents
+
+        // ─── Danger Zone ────────────────────────────────────
+        GlassCard(isDark = isDark) {
+            Column(
+                modifier = Modifier.padding(Brand.Spacing.lg),
+                verticalArrangement = Arrangement.spacedBy(Brand.Spacing.sm),
+            ) {
+                Text(
+                    "Опасная зона",
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = BrandCoral,
+                )
+
+                var showDeleteConfirm by remember { mutableStateOf(false) }
+
+                Button(
+                    onClick = { showDeleteConfirm = !showDeleteConfirm },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(44.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = BrandCoral.copy(alpha = 0.12f),
+                        contentColor = BrandCoral,
+                    ),
+                ) {
+                    Icon(
+                        Icons.Default.DeleteForever,
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp),
+                    )
+                    Spacer(Modifier.width(8.dp))
+                    Text("Удалить аккаунт", fontWeight = FontWeight.SemiBold)
+                }
+
+                Text(
+                    "Аккаунт и все связанные данные будут удалены навсегда.",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = subtextColor,
+                )
             }
         }
     }

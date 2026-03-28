@@ -5,7 +5,10 @@ import androidx.lifecycle.viewModelScope
 import com.subnetik.unlock.data.local.datastore.SettingsDataStore
 import com.subnetik.unlock.data.remote.api.AdminApi
 import com.subnetik.unlock.data.remote.dto.admin.*
+import com.subnetik.unlock.domain.model.Resource
 import com.subnetik.unlock.domain.repository.AuthRepository
+import com.subnetik.unlock.domain.repository.NotificationRepository
+import com.subnetik.unlock.service.NotificationHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,19 +22,23 @@ import javax.inject.Inject
 data class AdminHomeUiState(
     val displayName: String? = null,
     val isLoading: Boolean = true,
+    val unreadCount: Int = 0,
     val groups: List<AdminGroup> = emptyList(),
     val leads: List<AdminLead> = emptyList(),
     val users: List<AdminUser> = emptyList(),
     val leadStats: AdminLeadStats? = null,
     val promocodeStats: AdminPromocodeStats? = null,
-    val isDarkTheme: Boolean? = null,
+    val pendingSupportCount: Int = 0,
+    val isDarkTheme: Boolean? = true,
 )
 
 @HiltViewModel
 class AdminHomeViewModel @Inject constructor(
     private val adminApi: AdminApi,
     private val authRepository: AuthRepository,
+    private val notificationRepository: NotificationRepository,
     private val settingsDataStore: SettingsDataStore,
+    private val notificationHelper: NotificationHelper,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AdminHomeUiState())
@@ -49,6 +56,19 @@ class AdminHomeViewModel @Inject constructor(
             }
         }
         loadData()
+        loadUnreadCount()
+    }
+
+    private fun loadUnreadCount() {
+        viewModelScope.launch {
+            when (val result = notificationRepository.getUnreadCount()) {
+                is Resource.Success -> {
+                    _uiState.update { it.copy(unreadCount = result.data) }
+                    notificationHelper.updateBadge(result.data)
+                }
+                else -> {}
+            }
+        }
     }
 
     fun loadData() {
@@ -60,6 +80,7 @@ class AdminHomeViewModel @Inject constructor(
                 val usersD = async { runCatching { adminApi.getUsers() }.getOrDefault(emptyList()) }
                 val leadStatsD = async { runCatching { adminApi.getLeadStats() }.getOrNull() }
                 val promoStatsD = async { runCatching { adminApi.getPromocodeStats() }.getOrNull() }
+                val supportD = async { runCatching { adminApi.getSupportBookings() }.getOrDefault(emptyList()) }
 
                 _uiState.update {
                     it.copy(
@@ -69,6 +90,7 @@ class AdminHomeViewModel @Inject constructor(
                         users = usersD.await(),
                         leadStats = leadStatsD.await(),
                         promocodeStats = promoStatsD.await(),
+                        pendingSupportCount = supportD.await().count { b -> b.status == "pending" },
                     )
                 }
             } catch (e: Exception) {

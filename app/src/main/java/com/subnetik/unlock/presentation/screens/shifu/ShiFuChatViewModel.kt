@@ -3,6 +3,7 @@ package com.subnetik.unlock.presentation.screens.shifu
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.subnetik.unlock.data.remote.dto.ai.AiConversationListItem
+import com.subnetik.unlock.data.local.datastore.SettingsDataStore
 import com.subnetik.unlock.domain.repository.AiRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -10,6 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import com.subnetik.unlock.util.ErrorMapper
 import javax.inject.Inject
 
 enum class ShiFuMood(val drawableSuffix: String) {
@@ -47,11 +49,13 @@ data class ShiFuUiState(
     val isLoadingConversations: Boolean = false,
     val isLoadingMessages: Boolean = false,
     val error: String? = null,
+    val isDarkTheme: Boolean? = true,
 )
 
 @HiltViewModel
 class ShiFuChatViewModel @Inject constructor(
     private val aiRepository: AiRepository,
+    private val settingsDataStore: SettingsDataStore,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ShiFuUiState())
@@ -59,6 +63,11 @@ class ShiFuChatViewModel @Inject constructor(
 
     init {
         loadConversations()
+        viewModelScope.launch {
+            settingsDataStore.isDarkTheme.collect { isDark ->
+                _uiState.update { it.copy(isDarkTheme = isDark) }
+            }
+        }
     }
 
     fun sendMessage(text: String) {
@@ -105,7 +114,7 @@ class ShiFuChatViewModel @Inject constructor(
             } catch (e: Exception) {
                 _uiState.update {
                     it.copy(
-                        error = "Ошибка: ${e.localizedMessage ?: "Неизвестная ошибка"}",
+                        error = ErrorMapper.map(e),
                         isSending = false,
                     )
                 }

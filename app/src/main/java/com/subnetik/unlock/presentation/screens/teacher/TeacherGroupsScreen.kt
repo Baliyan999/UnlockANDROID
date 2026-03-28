@@ -1,7 +1,13 @@
 package com.subnetik.unlock.presentation.screens.teacher
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
@@ -14,6 +20,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -22,8 +29,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -32,6 +41,9 @@ import com.subnetik.unlock.data.remote.dto.admin.AdminGroup
 import com.subnetik.unlock.data.remote.dto.admin.AdminHomeworkAssignment
 import com.subnetik.unlock.data.remote.dto.admin.HomeworkStudentGroupOverview
 import com.subnetik.unlock.data.remote.dto.admin.HomeworkStudentRatingEntry
+import com.subnetik.unlock.data.remote.dto.progress.TestAttemptDetail
+import com.subnetik.unlock.data.remote.dto.progress.TestProgressSyncItem
+import com.subnetik.unlock.data.remote.dto.progress.VocabProgressSyncItem
 import com.subnetik.unlock.presentation.screens.admin.components.AdminBackground
 import com.subnetik.unlock.presentation.theme.*
 import java.text.SimpleDateFormat
@@ -44,14 +56,14 @@ fun TeacherGroupsScreen(
     val uiState by viewModel.uiState.collectAsState()
     val isDark = uiState.isDarkTheme ?: isSystemInDarkTheme()
 
-    // Full-screen overlays from group detail
-    if (uiState.selectedGroup != null) {
-        TeacherGroupsDetailScreen(viewModel = viewModel, isDark = isDark)
+    // Full-screen overlays — homework creation takes priority
+    if (uiState.showNewHomework) {
+        TeacherGroupsNewHomeworkScreen(viewModel = viewModel, isDark = isDark)
         return
     }
 
-    if (uiState.showNewHomework) {
-        TeacherGroupsNewHomeworkScreen(viewModel = viewModel, isDark = isDark)
+    if (uiState.selectedGroup != null) {
+        TeacherGroupsDetailScreen(viewModel = viewModel, isDark = isDark)
         return
     }
 
@@ -773,6 +785,12 @@ fun TeacherGroupsDetailScreen(viewModel: TeacherGroupsViewModel, isDark: Boolean
     val uiState by viewModel.uiState.collectAsState()
     val group = uiState.selectedGroup ?: return
 
+    // Homework creation overlay takes priority
+    if (uiState.showNewHomework) {
+        TeacherGroupsNewHomeworkScreen(viewModel = viewModel, isDark = isDark)
+        return
+    }
+
     if (uiState.showAttendance && uiState.selectedStudent != null) {
         TeacherGroupsAttendanceScreen(viewModel = viewModel, isDark = isDark)
         return
@@ -1007,6 +1025,8 @@ fun TeacherGroupsProgressScreen(viewModel: TeacherGroupsViewModel, isDark: Boole
     val cardColor = if (isDark) Color.White.copy(alpha = 0.06f) else Color.White.copy(alpha = 0.9f)
     val strokeColor = if (isDark) Color.White.copy(alpha = 0.08f) else Color.Black.copy(alpha = 0.06f)
 
+    var expandedTestLevel by remember { mutableStateOf<String?>(null) }
+
     Box(modifier = Modifier.fillMaxSize()) {
         AdminBackground(isDark = isDark)
         Column(modifier = Modifier.fillMaxSize()) {
@@ -1041,8 +1061,14 @@ fun TeacherGroupsProgressScreen(viewModel: TeacherGroupsViewModel, isDark: Boole
                     }
                 } else {
                     val progress = uiState.studentProgress
+                    val testResults = progress?.tests ?: emptyList()
+
                     // HSK Tests
-                    Row(verticalAlignment = Alignment.CenterVertically) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
                         Icon(Icons.Default.CheckCircle, contentDescription = null, tint = BrandBlue, modifier = Modifier.size(20.dp))
                         Spacer(Modifier.width(Brand.Spacing.sm))
                         Text("Тесты HSK", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, color = primaryText)
@@ -1050,60 +1076,484 @@ fun TeacherGroupsProgressScreen(viewModel: TeacherGroupsViewModel, isDark: Boole
                     Spacer(Modifier.height(Brand.Spacing.md))
 
                     for (level in 1..6) {
-                        val testItem = progress?.tests?.find { it.levelId == "$level" || it.levelId == "hsk$level" }
-                        val isLocked = level > 1 && (progress?.tests?.find { it.levelId == "${level - 1}" || it.levelId == "hsk${level - 1}" }?.bestScore ?: 0) == 0
-                        Surface(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp), shape = RoundedCornerShape(14.dp), color = cardColor, border = BorderStroke(1.dp, strokeColor)) {
-                            Row(modifier = Modifier.padding(Brand.Spacing.md), verticalAlignment = Alignment.CenterVertically) {
-                                Box(modifier = Modifier.size(36.dp).background(Brush.linearGradient(hskLevelGradient(level)), RoundedCornerShape(10.dp)), contentAlignment = Alignment.Center) {
-                                    Text("$level", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Color.White)
-                                }
-                                Spacer(Modifier.width(Brand.Spacing.md))
-                                Column(modifier = Modifier.weight(1f)) {
-                                    Text("HSK $level", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = primaryText)
-                                    Text(
-                                        when {
-                                            isLocked -> "Пройдите HSK ${level - 1}"
-                                            testItem?.bestScore != null && testItem.bestScore > 0 -> "Лучший: ${testItem.bestScore}/${testItem.totalQuestions ?: "?"}"
-                                            else -> "Не начат"
-                                        },
-                                        style = MaterialTheme.typography.bodySmall, color = secondaryText,
-                                    )
-                                }
-                                if (isLocked) {
-                                    Icon(Icons.Default.Lock, contentDescription = null, modifier = Modifier.size(18.dp), tint = secondaryText)
-                                }
-                            }
-                        }
+                        val testResult = testResults.find { it.levelId == "$level" || it.levelId == "hsk$level" }
+                        val prevTest = if (level > 1) testResults.find {
+                            it.levelId == "${level - 1}" || it.levelId == "hsk${level - 1}"
+                        } else null
+                        val isLocked = level > 1 && (prevTest == null || prevTest.bestScore < 8)
+
+                        GroupsTestLevelCard(
+                            level = level,
+                            testResult = testResult,
+                            isLocked = isLocked,
+                            isDark = isDark,
+                            cardColor = cardColor,
+                            strokeColor = strokeColor,
+                            primaryText = primaryText,
+                            secondaryText = secondaryText,
+                            isExpanded = expandedTestLevel == (testResult?.levelId ?: ""),
+                            onToggleExpand = {
+                                val id = testResult?.levelId ?: ""
+                                expandedTestLevel = if (expandedTestLevel == id) null else id
+                            },
+                        )
+                        Spacer(Modifier.height(Brand.Spacing.sm))
                     }
 
                     Spacer(Modifier.height(Brand.Spacing.xl))
 
                     // Vocabulary
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text("📚", fontSize = 18.sp)
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Icon(Icons.AutoMirrored.Filled.MenuBook, contentDescription = null, modifier = Modifier.size(20.dp), tint = BrandTeal)
                         Spacer(Modifier.width(Brand.Spacing.sm))
                         Text("Словарь", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, color = primaryText)
                     }
                     Spacer(Modifier.height(Brand.Spacing.md))
 
-                    if (progress?.vocabulary.isNullOrEmpty()) {
-                        Text("Ученик ещё не изучал словарь", style = MaterialTheme.typography.bodyMedium, color = secondaryText)
+                    val vocabItems = progress?.vocabulary ?: emptyList()
+                    if (vocabItems.isEmpty()) {
+                        Text(
+                            "Ученик ещё не изучал словарь",
+                            modifier = Modifier.fillMaxWidth(),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = secondaryText,
+                            textAlign = TextAlign.Center,
+                        )
                     } else {
-                        progress?.vocabulary?.forEach { vocab ->
-                            Surface(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp), shape = RoundedCornerShape(14.dp), color = cardColor, border = BorderStroke(1.dp, strokeColor)) {
-                                Row(modifier = Modifier.padding(Brand.Spacing.md), verticalAlignment = Alignment.CenterVertically) {
-                                    Text("HSK ${vocab.level}", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = primaryText)
-                                    Spacer(Modifier.weight(1f))
-                                    Text("${vocab.knownCount}/${vocab.totalWords}", style = MaterialTheme.typography.bodySmall, color = secondaryText)
+                        vocabItems.forEach { vocab ->
+                            GroupsVocabLevelCard(
+                                vocab = vocab,
+                                isDark = isDark,
+                                cardColor = cardColor,
+                                strokeColor = strokeColor,
+                                primaryText = primaryText,
+                                secondaryText = secondaryText,
+                            )
+                            Spacer(Modifier.height(Brand.Spacing.sm))
+                        }
+                    }
+
+                    Spacer(Modifier.height(Brand.Spacing.xxxl))
+                }
+            }
+        }
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// Groups Test Level Card (with expandable answers)
+// ═══════════════════════════════════════════════════════════════
+
+@Composable
+private fun GroupsTestLevelCard(
+    level: Int,
+    testResult: TestProgressSyncItem?,
+    isLocked: Boolean,
+    isDark: Boolean,
+    cardColor: Color,
+    strokeColor: Color,
+    primaryText: Color,
+    secondaryText: Color,
+    isExpanded: Boolean,
+    onToggleExpand: () -> Unit,
+) {
+    val isCompleted = testResult != null && testResult.bestScore > 0
+    val bg = if (isDark) Color(0xFF162033) else Color(0xFFF0F2F5)
+    val lockedBg = if (isDark) Color(0xFF1B2640) else Color(0xFFE8EBF0)
+    val border = if (isDark) Color(0xFF2A3B5A) else Color(0xFFD1D5DB)
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .graphicsLayer { alpha = if (isLocked) 0.55f else 1f }
+            .background(if (isLocked) lockedBg else bg, RoundedCornerShape(14.dp))
+            .border(1.dp, border, RoundedCornerShape(14.dp))
+            .clip(RoundedCornerShape(14.dp))
+            .padding(12.dp),
+    ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Box(
+                    modifier = Modifier
+                        .size(32.dp)
+                        .background(
+                            BrandBlue.copy(alpha = if (isLocked) 0.08f else 0.18f),
+                            RoundedCornerShape(8.dp),
+                        ),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(
+                        "$level",
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = if (isLocked) secondaryText else BrandBlue,
+                    )
+                }
+
+                Spacer(Modifier.width(Brand.Spacing.md))
+
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        "HSK $level",
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = if (isLocked) secondaryText else primaryText,
+                    )
+                    Text(
+                        when {
+                            isCompleted -> {
+                                val attemptsText = groupsRussianPlural(
+                                    testResult!!.attempts,
+                                    "попытка", "попытки", "попыток",
+                                )
+                                "${testResult.bestScore}/${testResult.totalQuestions} (${testResult.bestPercent}%) \u2022 ${testResult.attempts} $attemptsText"
+                            }
+                            isLocked -> "Пройдите HSK ${level - 1}"
+                            else -> "Не начат"
+                        },
+                        style = MaterialTheme.typography.bodySmall,
+                        color = secondaryText,
+                    )
+                }
+
+                if (isLocked) {
+                    Icon(
+                        Icons.Default.Lock,
+                        contentDescription = null,
+                        modifier = Modifier.size(14.dp),
+                        tint = secondaryText.copy(alpha = 0.5f),
+                    )
+                } else if (testResult != null && testResult.bestScore > 0) {
+                    Surface(
+                        shape = RoundedCornerShape(50),
+                        color = if (testResult.bestScore >= 8) BrandTeal else BrandCoral,
+                    ) {
+                        Text(
+                            if (testResult.bestScore >= 8) "Пройден" else "Не сдан",
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White,
+                            fontSize = 10.sp,
+                        )
+                    }
+                }
+            }
+
+            // Expandable answers section
+            if (testResult != null && !testResult.bestAttemptDetails.isNullOrEmpty() && !isLocked) {
+                Spacer(Modifier.height(8.dp))
+
+                Row(
+                    modifier = Modifier
+                        .clickable(onClick = onToggleExpand)
+                        .background(BrandBlue.copy(alpha = 0.08f), RoundedCornerShape(50))
+                        .padding(horizontal = 12.dp, vertical = 6.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                ) {
+                    Icon(
+                        if (isExpanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                        contentDescription = null,
+                        modifier = Modifier.size(14.dp),
+                        tint = BrandBlue,
+                    )
+                    Text(
+                        if (isExpanded) "Скрыть ответы" else "Показать ответы",
+                        style = MaterialTheme.typography.labelSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = BrandBlue,
+                        fontSize = 11.sp,
+                    )
+                }
+
+                AnimatedVisibility(
+                    visible = isExpanded,
+                    enter = expandVertically() + fadeIn(),
+                    exit = shrinkVertically() + fadeOut(),
+                ) {
+                    Column(modifier = Modifier.padding(top = 8.dp)) {
+                        val details = testResult.bestAttemptDetails!!
+                        val correctCount = details.count { it.isCorrect == true }
+                        val wrongCount = details.size - correctCount
+
+                        Row(
+                            modifier = Modifier.padding(vertical = 4.dp),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(8.dp)
+                                        .background(BrandTeal, CircleShape),
+                                )
+                                Text(
+                                    "Верно: $correctCount",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    fontWeight = FontWeight.Bold,
+                                    color = BrandTeal,
+                                    fontSize = 11.sp,
+                                )
+                            }
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(8.dp)
+                                        .background(BrandCoral, CircleShape),
+                                )
+                                Text(
+                                    "Ошибки: $wrongCount",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    fontWeight = FontWeight.Bold,
+                                    color = BrandCoral,
+                                    fontSize = 11.sp,
+                                )
+                            }
+                        }
+
+                        Spacer(Modifier.height(4.dp))
+
+                        val divColor = if (isDark) Color(0xFF2A3B5A) else Color(0xFFD1D5DB)
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .border(1.dp, divColor, RoundedCornerShape(12.dp))
+                                .clip(RoundedCornerShape(12.dp)),
+                        ) {
+                            details.forEachIndexed { idx, detail ->
+                                GroupsQuestionDetailRow(
+                                    index = idx + 1,
+                                    detail = detail,
+                                    isDark = isDark,
+                                    primaryText = primaryText,
+                                )
+                                if (idx < details.lastIndex) {
+                                    HorizontalDivider(color = divColor)
                                 }
                             }
                         }
                     }
+                }
+            }
+    }
+}
 
-                    Spacer(Modifier.height(Brand.Spacing.xl))
+@Composable
+private fun GroupsQuestionDetailRow(
+    index: Int,
+    detail: TestAttemptDetail,
+    isDark: Boolean,
+    primaryText: Color,
+) {
+    val isCorrect = detail.isCorrect == true
+    val accentColor = if (isCorrect) BrandTeal else BrandCoral
+    val bgColor = if (isDark) {
+        if (isCorrect) Color(0xFF0D2620) else Color(0xFF2A1215)
+    } else {
+        accentColor.copy(alpha = 0.04f)
+    }
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(bgColor)
+            .padding(horizontal = 12.dp, vertical = 10.dp),
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
+    ) {
+        Box(
+            modifier = Modifier
+                .size(26.dp)
+                .background(accentColor.copy(alpha = 0.15f), CircleShape),
+            contentAlignment = Alignment.Center,
+        ) {
+            Text("$index", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = accentColor)
+        }
+
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                detail.prompt ?: "",
+                style = MaterialTheme.typography.bodySmall,
+                fontWeight = FontWeight.Bold,
+                color = primaryText,
+                fontSize = 12.sp,
+            )
+            Spacer(Modifier.height(4.dp))
+            if (isCorrect) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(5.dp),
+                ) {
+                    Icon(Icons.Default.Check, contentDescription = null, modifier = Modifier.size(12.dp), tint = BrandTeal)
+                    Text(detail.correctAnswer ?: "", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold, color = BrandTeal, fontSize = 11.sp)
+                }
+            } else {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(5.dp),
+                ) {
+                    Icon(Icons.Default.Close, contentDescription = null, modifier = Modifier.size(12.dp), tint = BrandCoral)
+                    Text(
+                        detail.selectedAnswer ?: "",
+                        style = MaterialTheme.typography.bodySmall.copy(textDecoration = TextDecoration.LineThrough),
+                        color = BrandCoral,
+                        fontSize = 11.sp,
+                    )
+                }
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(5.dp),
+                ) {
+                    Icon(Icons.Default.Check, contentDescription = null, modifier = Modifier.size(12.dp), tint = BrandTeal)
+                    Text(detail.correctAnswer ?: "", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold, color = BrandTeal, fontSize = 11.sp)
                 }
             }
         }
+
+        Icon(
+            if (isCorrect) Icons.Default.CheckCircle else Icons.Default.Cancel,
+            contentDescription = null,
+            modifier = Modifier.size(16.dp),
+            tint = accentColor,
+        )
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// Groups Vocab Level Card (with detailed breakdown)
+// ═══════════════════════════════════════════════════════════════
+
+@Composable
+private fun GroupsVocabLevelCard(
+    vocab: VocabProgressSyncItem,
+    isDark: Boolean,
+    cardColor: Color,
+    strokeColor: Color,
+    primaryText: Color,
+    secondaryText: Color,
+) {
+    val notStudied = maxOf(0, vocab.totalWords - vocab.knownCount - vocab.reviewCount)
+    val barFraction = if (vocab.totalWords > 0) vocab.knownCount.toFloat() / vocab.totalWords else 0f
+    val bg = if (isDark) Color(0xFF162033) else Color(0xFFF0F2F5)
+    val brd = if (isDark) Color(0xFF2A3B5A) else Color(0xFFD1D5DB)
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(bg, RoundedCornerShape(14.dp))
+            .border(1.dp, brd, RoundedCornerShape(14.dp))
+            .clip(RoundedCornerShape(14.dp))
+            .padding(12.dp),
+    ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    "HSK ${vocab.level}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = primaryText,
+                )
+                Text(
+                    "${vocab.percent.toInt()}%",
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = BrandTeal,
+                )
+            }
+
+            Spacer(Modifier.height(8.dp))
+
+            LinearProgressIndicator(
+                progress = { barFraction },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(6.dp)
+                    .clip(RoundedCornerShape(3.dp)),
+                color = BrandTeal,
+                trackColor = if (isDark) Color.White.copy(alpha = 0.08f)
+                else Color.Black.copy(alpha = 0.06f),
+            )
+
+            Spacer(Modifier.height(10.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+            ) {
+                GroupsVocabStatPill(
+                    label = "Выучено",
+                    count = vocab.knownCount,
+                    color = BrandTeal,
+                    secondaryText = secondaryText,
+                    modifier = Modifier.weight(1f),
+                )
+                GroupsVocabStatPill(
+                    label = "Повторить",
+                    count = vocab.reviewCount,
+                    color = BrandCoral,
+                    secondaryText = secondaryText,
+                    modifier = Modifier.weight(1f),
+                )
+                GroupsVocabStatPill(
+                    label = "Не изучено",
+                    count = notStudied,
+                    color = secondaryText,
+                    secondaryText = secondaryText,
+                    modifier = Modifier.weight(1f),
+                )
+            }
+        }
+}
+
+@Composable
+private fun GroupsVocabStatPill(
+    label: String,
+    count: Int,
+    color: Color,
+    secondaryText: Color,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier
+            .background(color.copy(alpha = 0.08f), RoundedCornerShape(8.dp))
+            .padding(vertical = 6.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Text(
+            "$count",
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.Bold,
+            color = color,
+            fontSize = 14.sp,
+        )
+        Text(
+            label,
+            style = MaterialTheme.typography.labelSmall,
+            color = secondaryText,
+            fontSize = 9.sp,
+        )
+    }
+}
+
+private fun groupsRussianPlural(count: Int, one: String, few: String, many: String): String {
+    val mod100 = count % 100
+    val mod10 = count % 10
+    return when {
+        mod100 in 11..19 -> many
+        mod10 == 1 -> one
+        mod10 in 2..4 -> few
+        else -> many
     }
 }
 
@@ -1231,6 +1681,50 @@ fun TeacherGroupsNewHomeworkScreen(viewModel: TeacherGroupsViewModel, isDark: Bo
                         headline = null,
                         showModeToggle = false,
                     )
+
+                    // Time picker row
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text("Время", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.SemiBold, color = primaryText)
+                        var showTimePicker by remember { mutableStateOf(false) }
+                        Surface(
+                            onClick = { showTimePicker = true },
+                            shape = RoundedCornerShape(10.dp),
+                            color = if (isDark) Color.White.copy(alpha = 0.08f) else Color.Black.copy(alpha = 0.06f),
+                        ) {
+                            Text(
+                                "%02d:%02d".format(uiState.homeworkDueHour, uiState.homeworkDueMinute),
+                                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                                style = MaterialTheme.typography.bodyLarge,
+                                fontWeight = FontWeight.Bold,
+                                color = primaryText,
+                            )
+                        }
+
+                        if (showTimePicker) {
+                            val timePickerState = rememberTimePickerState(
+                                initialHour = uiState.homeworkDueHour,
+                                initialMinute = uiState.homeworkDueMinute,
+                                is24Hour = true,
+                            )
+                            AlertDialog(
+                                onDismissRequest = { showTimePicker = false },
+                                confirmButton = {
+                                    TextButton(onClick = {
+                                        viewModel.updateHomeworkDueTime(timePickerState.hour, timePickerState.minute)
+                                        showTimePicker = false
+                                    }) { Text("OK") }
+                                },
+                                dismissButton = {
+                                    TextButton(onClick = { showTimePicker = false }) { Text("Отмена") }
+                                },
+                                text = { TimePicker(state = timePickerState) },
+                            )
+                        }
+                    }
                 }
 
                 Spacer(Modifier.height(Brand.Spacing.xl))

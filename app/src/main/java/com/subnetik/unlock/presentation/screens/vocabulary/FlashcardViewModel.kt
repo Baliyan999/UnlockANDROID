@@ -28,7 +28,7 @@ data class FlashcardUiState(
     val previouslyKnown: Int = 0,
     val isComplete: Boolean = false,
     val progress: Float = 0f,
-    val isDarkTheme: Boolean? = null,
+    val isDarkTheme: Boolean? = true,
 )
 
 @HiltViewModel

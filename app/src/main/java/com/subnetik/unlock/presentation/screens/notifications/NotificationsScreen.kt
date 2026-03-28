@@ -2,6 +2,7 @@ package com.subnetik.unlock.presentation.screens.notifications
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -23,18 +24,15 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.subnetik.unlock.data.remote.dto.notification.InboxNotification
 import com.subnetik.unlock.presentation.components.EmptyState
+import com.subnetik.unlock.presentation.screens.admin.components.AdminBackground
 import com.subnetik.unlock.presentation.theme.Brand
 import com.subnetik.unlock.presentation.theme.BrandBlue
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
-
-private val NotifIconBg = Color(0xFF2A3A5C)
-private val NotifCardBgUnread = Color(0xFF1E2D4A)
-private val NotifCardBgRead = Color(0xFF162030)
-private val NotifBlue = Color(0xFF4A90E2)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,74 +41,103 @@ fun NotificationsScreen(
     viewModel: NotificationViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val themePreference by viewModel.isDarkTheme.collectAsStateWithLifecycle(initialValue = null)
+    val isDark = themePreference ?: isSystemInDarkTheme()
     var selectedNotification by remember { mutableStateOf<InboxNotification?>(null) }
 
-    Scaffold(
-        topBar = {
+    val primaryText = if (isDark) Color.White else MaterialTheme.colorScheme.onSurface
+    val secondaryText = if (isDark) Color.White.copy(alpha = 0.5f) else MaterialTheme.colorScheme.onSurfaceVariant
+    val notifIconBg = if (isDark) Color(0xFF2A3A5C) else BrandBlue.copy(alpha = 0.12f)
+    val notifCardBgUnread = if (isDark) Color.White.copy(alpha = 0.06f) else Color.White.copy(alpha = 0.9f)
+    val notifCardBgRead = if (isDark) Color.White.copy(alpha = 0.03f) else Color.White.copy(alpha = 0.7f)
+    val notifAccent = BrandBlue
+    val strokeColor = if (isDark) Color.White.copy(alpha = 0.08f) else Color.Black.copy(alpha = 0.06f)
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        AdminBackground(isDark = isDark)
+
+        Column(modifier = Modifier.fillMaxSize()) {
             TopAppBar(
-                title = { Text("Уведомления", fontWeight = FontWeight.Bold) },
+                title = {
+                    Text(
+                        "Уведомления",
+                        fontWeight = FontWeight.Bold,
+                        color = primaryText,
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Назад")
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Назад",
+                            tint = primaryText,
+                        )
                     }
                 },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.Transparent,
+                ),
             )
-        }
-    ) { padding ->
-        when {
-            uiState.isLoading -> {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(padding),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    CircularProgressIndicator()
+
+            when {
+                uiState.isLoading -> {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        CircularProgressIndicator(color = notifAccent)
+                    }
                 }
-            }
-            uiState.notifications.isEmpty() -> {
-                EmptyState(
-                    icon = Icons.Default.Notifications,
-                    title = "Нет уведомлений",
-                    subtitle = "Здесь будут ваши уведомления",
-                    modifier = Modifier.padding(padding),
-                )
-            }
-            else -> {
-                LazyColumn(
-                    modifier = Modifier.padding(padding),
-                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-                    verticalArrangement = Arrangement.spacedBy(10.dp),
-                ) {
-                    // "Прочитать все" button
-                    if (uiState.notifications.any { !it.isRead }) {
-                        item {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.End,
-                            ) {
-                                TextButton(onClick = { viewModel.markAllRead() }) {
-                                    Icon(
-                                        Icons.Default.CheckCircleOutline,
-                                        contentDescription = null,
-                                        modifier = Modifier.size(18.dp),
-                                        tint = NotifBlue,
-                                    )
-                                    Spacer(Modifier.width(4.dp))
-                                    Text("Прочитать все", color = NotifBlue, fontSize = 14.sp)
+                uiState.notifications.isEmpty() -> {
+                    EmptyState(
+                        icon = Icons.Default.Notifications,
+                        title = "Нет уведомлений",
+                        subtitle = "Здесь будут ваши уведомления",
+                    )
+                }
+                else -> {
+                    LazyColumn(
+                        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+                        verticalArrangement = Arrangement.spacedBy(10.dp),
+                    ) {
+                        // "Прочитать все" button
+                        if (uiState.notifications.any { !it.isRead }) {
+                            item {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.End,
+                                ) {
+                                    TextButton(onClick = { viewModel.markAllRead() }) {
+                                        Icon(
+                                            Icons.Default.CheckCircleOutline,
+                                            contentDescription = null,
+                                            modifier = Modifier.size(18.dp),
+                                            tint = notifAccent,
+                                        )
+                                        Spacer(Modifier.width(4.dp))
+                                        Text("Прочитать все", color = notifAccent, fontSize = 14.sp)
+                                    }
                                 }
                             }
                         }
-                    }
 
-                    items(uiState.notifications, key = { it.id }) { notification ->
-                        NotificationItem(
-                            notification = notification,
-                            onClick = {
-                                selectedNotification = notification
-                                if (!notification.isRead) viewModel.markRead(notification.id)
-                            },
-                        )
+                        items(uiState.notifications, key = { it.id }) { notification ->
+                            NotificationItem(
+                                notification = notification,
+                                isDark = isDark,
+                                primaryText = primaryText,
+                                secondaryText = secondaryText,
+                                notifIconBg = notifIconBg,
+                                notifCardBgUnread = notifCardBgUnread,
+                                notifCardBgRead = notifCardBgRead,
+                                notifAccent = notifAccent,
+                                strokeColor = strokeColor,
+                                onClick = {
+                                    selectedNotification = notification
+                                    if (!notification.isRead) viewModel.markRead(notification.id)
+                                },
+                            )
+                        }
                     }
                 }
             }
@@ -119,12 +146,18 @@ fun NotificationsScreen(
 
     // Detail sheet
     selectedNotification?.let { notif ->
+        val sheetContainerColor = if (isDark) Color(0xFF1A2540) else Color.White
         ModalBottomSheet(
             onDismissRequest = { selectedNotification = null },
-            containerColor = Color(0xFF1A2540),
+            containerColor = sheetContainerColor,
         ) {
             NotificationDetailContent(
                 notification = notif,
+                isDark = isDark,
+                primaryText = primaryText,
+                secondaryText = secondaryText,
+                notifIconBg = notifIconBg,
+                notifAccent = notifAccent,
                 onClose = { selectedNotification = null },
             )
         }
@@ -134,6 +167,14 @@ fun NotificationsScreen(
 @Composable
 private fun NotificationItem(
     notification: InboxNotification,
+    isDark: Boolean,
+    primaryText: Color,
+    secondaryText: Color,
+    notifIconBg: Color,
+    notifCardBgUnread: Color,
+    notifCardBgRead: Color,
+    notifAccent: Color,
+    strokeColor: Color,
     onClick: () -> Unit,
 ) {
     Card(
@@ -141,8 +182,9 @@ private fun NotificationItem(
         modifier = Modifier.fillMaxWidth(),
         shape = Brand.Shapes.large,
         colors = CardDefaults.cardColors(
-            containerColor = if (notification.isRead) NotifCardBgRead else NotifCardBgUnread,
+            containerColor = if (notification.isRead) notifCardBgRead else notifCardBgUnread,
         ),
+        border = androidx.compose.foundation.BorderStroke(1.dp, strokeColor),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
     ) {
         Row(
@@ -156,7 +198,7 @@ private fun NotificationItem(
                 modifier = Modifier
                     .size(42.dp)
                     .clip(CircleShape)
-                    .background(NotifIconBg),
+                    .background(notifIconBg),
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
@@ -166,7 +208,7 @@ private fun NotificationItem(
                         Icons.Default.NotificationsActive,
                     contentDescription = null,
                     modifier = Modifier.size(22.dp),
-                    tint = NotifBlue,
+                    tint = notifAccent,
                 )
             }
 
@@ -178,7 +220,7 @@ private fun NotificationItem(
                     text = notification.title,
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = if (notification.isRead) FontWeight.Normal else FontWeight.Bold,
-                    color = Color.White,
+                    color = primaryText,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -186,7 +228,7 @@ private fun NotificationItem(
                 Text(
                     text = notification.message,
                     style = MaterialTheme.typography.bodySmall,
-                    color = Color.White.copy(alpha = 0.7f),
+                    color = secondaryText,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -198,13 +240,13 @@ private fun NotificationItem(
                     Text(
                         text = notification.sender?.displayName ?: "",
                         style = MaterialTheme.typography.bodySmall,
-                        color = Color.White.copy(alpha = 0.5f),
+                        color = secondaryText.copy(alpha = 0.7f),
                         fontSize = 12.sp,
                     )
                     Text(
                         text = formatNotifDate(notification.createdAt),
                         style = MaterialTheme.typography.bodySmall,
-                        color = Color.White.copy(alpha = 0.5f),
+                        color = secondaryText.copy(alpha = 0.7f),
                         fontSize = 12.sp,
                     )
                 }
@@ -218,7 +260,7 @@ private fun NotificationItem(
                         .padding(top = 4.dp)
                         .size(8.dp)
                         .clip(CircleShape)
-                        .background(NotifBlue)
+                        .background(notifAccent)
                 )
             }
         }
@@ -228,8 +270,15 @@ private fun NotificationItem(
 @Composable
 private fun NotificationDetailContent(
     notification: InboxNotification,
+    isDark: Boolean,
+    primaryText: Color,
+    secondaryText: Color,
+    notifIconBg: Color,
+    notifAccent: Color,
     onClose: () -> Unit,
 ) {
+    val detailCardColor = if (isDark) Color.White.copy(alpha = 0.1f) else Color.Black.copy(alpha = 0.04f)
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -242,7 +291,7 @@ private fun NotificationDetailContent(
             horizontalArrangement = Arrangement.End,
         ) {
             IconButton(onClick = onClose) {
-                Icon(Icons.Default.Close, contentDescription = "Закрыть", tint = Color.White.copy(alpha = 0.6f))
+                Icon(Icons.Default.Close, contentDescription = "Закрыть", tint = secondaryText)
             }
         }
 
@@ -251,14 +300,14 @@ private fun NotificationDetailContent(
             modifier = Modifier
                 .size(60.dp)
                 .clip(CircleShape)
-                .background(NotifIconBg),
+                .background(notifIconBg),
             contentAlignment = Alignment.Center,
         ) {
             Icon(
                 Icons.Default.Notifications,
                 contentDescription = null,
                 modifier = Modifier.size(30.dp),
-                tint = NotifBlue,
+                tint = notifAccent,
             )
         }
 
@@ -268,12 +317,12 @@ private fun NotificationDetailContent(
         notification.sender?.displayName?.let { sender ->
             Surface(
                 shape = Brand.Shapes.full,
-                color = NotifBlue.copy(alpha = 0.2f),
+                color = notifAccent.copy(alpha = 0.2f),
             ) {
                 Text(
                     text = sender,
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp),
-                    color = NotifBlue,
+                    color = notifAccent,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Medium,
                 )
@@ -285,7 +334,7 @@ private fun NotificationDetailContent(
         // Date
         Text(
             text = formatNotifDate(notification.createdAt),
-            color = Color.White.copy(alpha = 0.5f),
+            color = secondaryText,
             fontSize = 13.sp,
         )
 
@@ -295,7 +344,7 @@ private fun NotificationDetailContent(
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = Brand.Shapes.large,
-            colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.1f)),
+            colors = CardDefaults.cardColors(containerColor = detailCardColor),
             elevation = CardDefaults.cardElevation(0.dp),
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
@@ -303,15 +352,15 @@ private fun NotificationDetailContent(
                     text = notification.title,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    color = Color.White,
+                    color = primaryText,
                 )
                 Spacer(Modifier.height(4.dp))
-                Divider(color = NotifBlue, thickness = 2.dp)
+                HorizontalDivider(color = notifAccent, thickness = 2.dp)
                 Spacer(Modifier.height(8.dp))
                 Text(
                     text = notification.message,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Color.White.copy(alpha = 0.8f),
+                    color = if (isDark) Color.White.copy(alpha = 0.8f) else primaryText,
                 )
             }
         }

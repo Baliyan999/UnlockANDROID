@@ -53,8 +53,8 @@ fun StudentHomeworkScreen(
     }
 
     val bgColor = if (isDark) DarkNavy else Color(0xFFF5F6FA)
-    val cardColor = if (isDark) Color(0xFF1A2151) else Color.White
-    val strokeColor = if (isDark) Color.White.copy(alpha = 0.08f) else Color.Black.copy(alpha = 0.06f)
+    val cardColor = if (isDark) Color.White.copy(alpha = 0.06f) else Color.White
+    val strokeColor = if (isDark) Color.White.copy(alpha = 0.10f) else Color.Black.copy(alpha = 0.06f)
     val primaryText = if (isDark) Color.White else Color(0xFF1A1A2E)
     val secondaryText = if (isDark) Color.White.copy(alpha = 0.6f) else Color(0xFF6B7280)
 
@@ -130,8 +130,8 @@ private fun StatsHeader(
             modifier = Modifier.background(
                 Brush.linearGradient(
                     listOf(
-                        Color(0xFF1A2151).copy(alpha = if (isDark) 1f else 0.1f),
-                        Color(0xFF0F1429).copy(alpha = if (isDark) 1f else 0.1f),
+                        Color(0xFF1A2151).copy(alpha = if (isDark) 0.5f else 0.1f),
+                        Color(0xFF0F1429).copy(alpha = if (isDark) 0.5f else 0.1f),
                     )
                 )
             ).padding(16.dp),

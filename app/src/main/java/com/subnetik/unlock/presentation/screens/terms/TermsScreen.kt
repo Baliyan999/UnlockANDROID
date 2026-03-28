@@ -238,12 +238,30 @@ private fun DocumentCard(
     }
 }
 
+/**
+ * Read-only document viewer dialog - for viewing documents in Settings.
+ */
+@Composable
+fun ReadOnlyDocumentViewer(
+    doc: TermsDocument,
+    onDismiss: () -> Unit,
+) {
+    DocumentViewerDialog(
+        doc = doc,
+        isAgreed = false,
+        onAgreeToggle = {},
+        onDismiss = onDismiss,
+        isReadOnly = true,
+    )
+}
+
 @Composable
 private fun DocumentViewerDialog(
     doc: TermsDocument,
     isAgreed: Boolean,
     onAgreeToggle: (Boolean) -> Unit,
     onDismiss: () -> Unit,
+    isReadOnly: Boolean = false,
 ) {
     val isDark = MaterialTheme.colorScheme.surface.luminance() < 0.5f
     val primaryText = MaterialTheme.colorScheme.onSurface
@@ -270,35 +288,37 @@ private fun DocumentViewerDialog(
                 ) {
                     Text(doc.text, fontSize = 14.sp, lineHeight = 22.sp, color = primaryText)
                 }
-                Spacer(Modifier.height(12.dp))
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable(enabled = hasReachedBottom) {
-                            onAgreeToggle(!isAgreed)
-                            if (!isAgreed) onDismiss()
-                        }
-                        .background(
-                            if (isAgreed) BrandGreen.copy(alpha = 0.1f) else Color.Transparent,
-                            RoundedCornerShape(14.dp),
+                if (!isReadOnly) {
+                    Spacer(Modifier.height(12.dp))
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable(enabled = hasReachedBottom) {
+                                onAgreeToggle(!isAgreed)
+                                if (!isAgreed) onDismiss()
+                            }
+                            .background(
+                                if (isAgreed) BrandGreen.copy(alpha = 0.1f) else Color.Transparent,
+                                RoundedCornerShape(14.dp),
+                            )
+                            .padding(14.dp),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Icon(
+                            if (isAgreed) Icons.Default.CheckBox else Icons.Default.CheckBoxOutlineBlank,
+                            contentDescription = null,
+                            tint = if (isAgreed) BrandGreen else if (hasReachedBottom) primaryText else secondaryText.copy(alpha = 0.3f),
                         )
-                        .padding(14.dp),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Icon(
-                        if (isAgreed) Icons.Default.CheckBox else Icons.Default.CheckBoxOutlineBlank,
-                        contentDescription = null,
-                        tint = if (isAgreed) BrandGreen else if (hasReachedBottom) primaryText else secondaryText.copy(alpha = 0.3f),
-                    )
-                    Text(
-                        "Ознакомлен(а) и согласен(на)",
-                        fontWeight = FontWeight.SemiBold,
-                        color = if (hasReachedBottom) primaryText else secondaryText.copy(alpha = 0.4f),
-                    )
-                }
-                if (!hasReachedBottom) {
-                    Text("Прокрутите документ до конца", fontSize = 11.sp, color = secondaryText, modifier = Modifier.align(Alignment.CenterHorizontally))
+                        Text(
+                            "Ознакомлен(а) и согласен(на)",
+                            fontWeight = FontWeight.SemiBold,
+                            color = if (hasReachedBottom) primaryText else secondaryText.copy(alpha = 0.4f),
+                        )
+                    }
+                    if (!hasReachedBottom) {
+                        Text("Прокрутите документ до конца", fontSize = 11.sp, color = secondaryText, modifier = Modifier.align(Alignment.CenterHorizontally))
+                    }
                 }
             }
         },
@@ -307,3 +327,33 @@ private fun DocumentViewerDialog(
         },
     )
 }
+
+/** All student (general) documents for use in Settings. */
+fun getStudentDocuments(): List<TermsDocument> = listOf(
+    TermsDocument("contract", "Договор учащегося", "Условия обучения, права и обязанности", Icons.Default.Draw, BrandBlue,
+        "ДОГОВОР УЧАЩЕГОСЯ\n\nШкола китайского языка Unlock Language Studio\nг. Ташкент, Узбекистан\n\n1. ПРЕДМЕТ ДОГОВОРА\n\n1.1. Школа обязуется предоставить Учащемуся образовательные услуги по обучению китайскому языку.\n1.2. Учащийся обязуется своевременно посещать занятия и оплачивать обучение.\n\n2. ПРАВА И ОБЯЗАННОСТИ СТОРОН\n\n2.1. Школа обязуется обеспечить качественное проведение занятий.\n2.2. Учащийся обязуется посещать занятия и выполнять домашние задания.\n\nДокумент является заглушкой и будет заменён на полную версию."),
+    TermsDocument("offer", "Публичная оферта", "Условия предоставления услуг", Icons.Default.Description, BrandIndigo,
+        "ПУБЛИЧНАЯ ОФЕРТА\n\nна оказание образовательных услуг\nUnlock Language Studio\n\n1. ОБЩИЕ ПОЛОЖЕНИЯ\n\n1.1. Настоящий документ является официальной публичной офертой.\n1.2. Акцептом является принятие условий в мобильном приложении.\n\nДокумент является заглушкой и будет заменён на полную версию."),
+    TermsDocument("privacy", "Политика конфиденциальности", "Обработка и защита данных", Icons.Default.Shield, BrandTeal,
+        "ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ\n\nUnlock Language Studio\n\n1. СБОР ИНФОРМАЦИИ\n\nМы собираем имя, контактные данные, данные об успеваемости и устройстве.\n\n2. ИСПОЛЬЗОВАНИЕ\n\nДля предоставления образовательных услуг и улучшения качества.\n\nДокумент является заглушкой и будет заменён на полную версию."),
+    TermsDocument("personalData", "Согласие на обработку данных", "Персональные данные", Icons.Default.Person, BrandCoral,
+        "СОГЛАСИЕ НА ОБРАБОТКУ ПЕРСОНАЛЬНЫХ ДАННЫХ\n\nВ соответствии с Законом РУз «О персональных данных».\n\nНастоящее согласие распространяется на ФИО, email, телефон, данные об успеваемости.\n\nДокумент является заглушкой и будет заменён на полную версию."),
+    TermsDocument("termsOfUse", "Правила пользования приложением", "Условия использования Unlock", Icons.Default.PhoneAndroid, BrandGold,
+        "ПРАВИЛА ПОЛЬЗОВАНИЯ ПРИЛОЖЕНИЕМ UNLOCK\n\n1. Для доступа необходима регистрация.\n2. Одна учётная запись — один пользователь.\n3. Токены не являются деньгами.\n\nДокумент является заглушкой и будет заменён на полную версию."),
+)
+
+/** All teacher (employment) documents for use in Settings. */
+fun getTeacherDocuments(): List<TermsDocument> = listOf(
+    TermsDocument("employment", "Трудовой договор", "Условия работы и оплата труда", Icons.Default.Draw, BrandBlue,
+        "ТРУДОВОЙ ДОГОВОР\n\nИП «Unlock Language Studio»\nг. Ташкент\n\n1. ПРЕДМЕТ ДОГОВОРА\n\nРаботодатель принимает Работника на должность преподавателя.\n\n2. УСЛОВИЯ ТРУДА\n\nМесто работы: г. Ташкент / дистанционно.\n\nДокумент является заглушкой и будет заменён на полную версию."),
+    TermsDocument("jobDesc", "Должностная инструкция", "Обязанности преподавателя", Icons.Default.Checklist, BrandIndigo,
+        "ДОЛЖНОСТНАЯ ИНСТРУКЦИЯ\n\nПреподаватель китайского языка\n\n1. Проведение занятий по расписанию.\n2. Проверка домашних заданий.\n3. Ведение учёта посещаемости.\n\nДокумент является заглушкой и будет заменён на полную версию."),
+    TermsDocument("nda", "Соглашение о неразглашении (NDA)", "Конфиденциальность данных", Icons.Default.Lock, BrandCoral,
+        "СОГЛАШЕНИЕ О НЕРАЗГЛАШЕНИИ (NDA)\n\n1. Работник обязуется не разглашать конфиденциальную информацию.\n2. К конфиденциальной относятся: методики, данные учащихся, финансы.\n3. Срок: 2 года после увольнения.\n\nДокумент является заглушкой и будет заменён на полную версию."),
+    TermsDocument("internalRules", "Внутренний трудовой распорядок", "Правила и дисциплина", Icons.Default.Business, BrandTeal,
+        "ПОЛОЖЕНИЕ О ВНУТРЕННЕМ ТРУДОВОМ РАСПОРЯДКЕ\n\n1. Преподаватель обязан быть на рабочем месте за 10 минут до занятия.\n2. Проверять ДЗ в течение 48 часов.\n\nДокумент является заглушкой и будет заменён на полную версию."),
+    TermsDocument("imageConsent", "Согласие на использование изображения", "Фото и видео", Icons.Default.CameraAlt, BrandGold,
+        "СОГЛАСИЕ НА ИСПОЛЬЗОВАНИЕ ИЗОБРАЖЕНИЯ\n\nДля размещения на сайте, в приложении и соцсетях школы.\nМожет быть отозвано письменным заявлением.\n\nДокумент является заглушкой и будет заменён на полную версию."),
+    TermsDocument("staffAppRules", "Правила для сотрудников", "Доступ к данным учеников", Icons.Default.PhoneAndroid, BrandGreen,
+        "ПРАВИЛА ПОЛЬЗОВАНИЯ ПРИЛОЖЕНИЕМ (для сотрудников)\n\n1. Не передавать логин и пароль.\n2. Доступ только к данным своих учащихся.\n3. Запрещается экспортировать данные.\n\nДокумент является заглушкой и будет заменён на полную версию."),
+)

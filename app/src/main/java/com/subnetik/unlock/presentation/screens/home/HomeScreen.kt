@@ -89,21 +89,26 @@ fun HomeScreen(
                         color = primaryText,
                         letterSpacing = 2.sp,
                     )
-                    BadgedBox(
-                        badge = {
-                            if (uiState.unreadCount > 0) {
-                                Badge(containerColor = BrandCoral) {
-                                    Text("${uiState.unreadCount}", color = Color.White, fontSize = 10.sp)
-                                }
-                            }
-                        }
-                    ) {
+                    Box(contentAlignment = Alignment.TopEnd) {
                         IconButton(onClick = onNavigateToNotifications) {
                             Icon(
                                 Icons.Default.Notifications,
                                 contentDescription = "Уведомления",
-                                tint = if (isDark) Color.White.copy(alpha = 0.7f) else MaterialTheme.colorScheme.onSurfaceVariant,
+                                tint = if (uiState.unreadCount > 0) BrandCoral else if (isDark) Color.White.copy(alpha = 0.7f) else MaterialTheme.colorScheme.onSurfaceVariant,
                             )
+                        }
+                        if (uiState.unreadCount > 0) {
+                            Badge(
+                                containerColor = BrandCoral,
+                                modifier = Modifier.offset(x = (-4).dp, y = 4.dp),
+                            ) {
+                                Text(
+                                    "${minOf(uiState.unreadCount, 99)}",
+                                    color = Color.White,
+                                    fontSize = 10.sp,
+                                    fontWeight = FontWeight.Bold,
+                                )
+                            }
                         }
                     }
                 }
@@ -125,17 +130,31 @@ fun HomeScreen(
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         // Role badge
-                        Surface(
-                            shape = Brand.Shapes.full,
-                            color = BrandGreen.copy(alpha = 0.2f),
-                        ) {
-                            Text(
-                                text = "Учащийся",
-                                modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
-                                style = MaterialTheme.typography.labelSmall,
-                                fontWeight = FontWeight.Bold,
-                                color = BrandGreen,
-                            )
+                        run {
+                            val roleLabel = when (uiState.role?.lowercase()) {
+                                "student" -> "Учащийся"
+                                "teacher" -> "Преподаватель"
+                                "admin", "manager" -> "Администратор"
+                                else -> "Пользователь"
+                            }
+                            val roleBadgeColor = when (uiState.role?.lowercase()) {
+                                "student" -> BrandGreen
+                                "teacher" -> BrandGold
+                                "admin", "manager" -> BrandCoral
+                                else -> BrandBlue
+                            }
+                            Surface(
+                                shape = Brand.Shapes.full,
+                                color = roleBadgeColor.copy(alpha = 0.2f),
+                            ) {
+                                Text(
+                                    text = roleLabel,
+                                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
+                                    style = MaterialTheme.typography.labelSmall,
+                                    fontWeight = FontWeight.Bold,
+                                    color = roleBadgeColor,
+                                )
+                            }
                         }
 
                         // Token balance (always show)

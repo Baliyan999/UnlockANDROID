@@ -26,7 +26,7 @@ data class VocabularyUiState(
     val reviewCount: Int = 0,
     val knownWordIds: Set<String> = emptySet(),
     val reviewWordIds: Set<String> = emptySet(),
-    val isDarkTheme: Boolean? = null,
+    val isDarkTheme: Boolean? = true,
     val levelProgress: Map<Int, Int> = emptyMap(), // level -> knownCount
 )
 

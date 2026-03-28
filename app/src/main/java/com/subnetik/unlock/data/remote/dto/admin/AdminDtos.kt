@@ -256,20 +256,30 @@ data class AdminTokenStudent(
     val id: Int,
     @SerialName("display_name") val displayName: String = "",
     val email: String = "",
-    val balance: Int = 0,
-    @SerialName("total_earned") val totalEarned: Int = 0,
-    @SerialName("total_spent") val totalSpent: Int = 0,
+    val role: String = "",
+    @SerialName("token_balance") val tokenBalance: Int = 0,
+    @SerialName("avatar_url") val avatarUrl: String? = null,
+    @SerialName("referral_code") val referralCode: String? = null,
+    @SerialName("created_at") val createdAt: String? = null,
+)
+
+@Serializable
+data class AdminTokenTransactionUser(
+    val id: Int = 0,
+    @SerialName("display_name") val displayName: String = "",
+    val email: String = "",
+    val role: String = "",
 )
 
 @Serializable
 data class AdminTokenTransaction(
     val id: Int,
-    @SerialName("user_id") val userId: Int = 0,
-    @SerialName("user_name") val userName: String = "",
+    val student: AdminTokenTransactionUser? = null,
     val amount: Int = 0,
-    val type: String = "",
-    val reason: String = "",
+    @SerialName("transaction_type") val transactionType: String = "",
+    val category: String? = null,
     val description: String? = null,
+    @SerialName("created_by") val createdBy: AdminTokenTransactionUser? = null,
     @SerialName("created_at") val createdAt: String? = null,
 )
 

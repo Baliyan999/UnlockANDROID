@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 data class StudentPaymentsUiState(
     val isLoading: Boolean = true,
-    val isDarkTheme: Boolean? = null,
+    val isDarkTheme: Boolean? = true,
     val paymentInfo: StudentPaymentInfoResponse? = null,
     val error: String? = null,
 )

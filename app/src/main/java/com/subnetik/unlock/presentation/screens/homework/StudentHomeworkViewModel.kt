@@ -20,12 +20,13 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.text.SimpleDateFormat
 import java.util.*
+import com.subnetik.unlock.util.ErrorMapper
 import javax.inject.Inject
 
 enum class HomeworkTab { HOMEWORK, SUPPORT }
 
 data class StudentHomeworkUiState(
-    val isDarkTheme: Boolean? = null,
+    val isDarkTheme: Boolean? = true,
     val selectedTab: HomeworkTab = HomeworkTab.HOMEWORK,
     val isLoading: Boolean = true,
     val assignments: List<HomeworkAssignmentStudent> = emptyList(),
@@ -106,7 +107,7 @@ class StudentHomeworkViewModel @Inject constructor(
                 }
                 loadData()
             } catch (e: Exception) {
-                _uiState.update { it.copy(uploadingAssignmentId = null, errorMessage = e.message ?: "Ошибка при отправке") }
+                _uiState.update { it.copy(uploadingAssignmentId = null, errorMessage = ErrorMapper.map(e, ErrorMapper.ErrorContext.HOMEWORK)) }
             }
         }
     }
@@ -158,7 +159,7 @@ class StudentHomeworkViewModel @Inject constructor(
                 loadData()
                 loadBusySlots()
             } catch (e: Exception) {
-                _uiState.update { it.copy(isSubmittingBooking = false, errorMessage = e.message ?: "Ошибка при создании записи") }
+                _uiState.update { it.copy(isSubmittingBooking = false, errorMessage = ErrorMapper.map(e)) }
             }
         }
     }

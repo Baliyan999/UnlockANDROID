@@ -45,17 +45,17 @@ fun TeacherHomeScreen(
     val uiState by viewModel.uiState.collectAsState()
     val isDark = uiState.isDarkTheme ?: isSystemInDarkTheme()
 
-    // Full-screen overlays
-    if (uiState.selectedGroup != null) {
-        TeacherGroupDetailScreen(
+    // Full-screen overlays — homework creation takes priority
+    if (uiState.showNewHomework) {
+        TeacherNewHomeworkScreen(
             viewModel = viewModel,
             isDark = isDark,
         )
         return
     }
 
-    if (uiState.showNewHomework) {
-        TeacherNewHomeworkScreen(
+    if (uiState.selectedGroup != null) {
+        TeacherGroupDetailScreen(
             viewModel = viewModel,
             isDark = isDark,
         )

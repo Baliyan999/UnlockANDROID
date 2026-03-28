@@ -11,10 +11,11 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import com.subnetik.unlock.util.ErrorMapper
 import javax.inject.Inject
 
 data class ReferralUiState(
-    val isDarkTheme: Boolean? = null,
+    val isDarkTheme: Boolean? = true,
     val isLoading: Boolean = true,
     val referralInfo: ReferralInfoResponse? = null,
     val errorMessage: String? = null,
@@ -45,7 +46,7 @@ class ReferralViewModel @Inject constructor(
                 val info = authApi.getReferralInfo()
                 _uiState.update { it.copy(isLoading = false, referralInfo = info) }
             } catch (e: Exception) {
-                _uiState.update { it.copy(isLoading = false, errorMessage = e.message ?: "Ошибка загрузки") }
+                _uiState.update { it.copy(isLoading = false, errorMessage = ErrorMapper.map(e)) }
             }
         }
     }

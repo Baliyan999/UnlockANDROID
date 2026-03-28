@@ -21,7 +21,7 @@ class SettingsDataStore @Inject constructor(
     }
 
     val languageCode: Flow<String> = context.settingsDataStore.data.map { it[LANGUAGE_CODE] ?: "ru" }
-    val isDarkTheme: Flow<Boolean?> = context.settingsDataStore.data.map { it[IS_DARK_THEME] }
+    val isDarkTheme: Flow<Boolean?> = context.settingsDataStore.data.map { it[IS_DARK_THEME] ?: true }
     val hasSeenOnboarding: Flow<Boolean> = context.settingsDataStore.data.map { it[HAS_SEEN_ONBOARDING] ?: false }
 
     suspend fun setLanguage(code: String) {

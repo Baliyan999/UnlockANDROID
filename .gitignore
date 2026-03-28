@@ -16,3 +16,7 @@
 .cxx
 local.properties
 .kotlin/
+
+# Keystore & signing credentials — NEVER commit these
+keystore.properties
+keystore/

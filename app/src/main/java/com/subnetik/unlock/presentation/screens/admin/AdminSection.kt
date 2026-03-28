@@ -8,6 +8,7 @@ import androidx.compose.material.icons.filled.LocalOffer
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.RateReview
+import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Receipt
 import androidx.compose.material.icons.filled.Storefront
 import androidx.compose.material.icons.filled.SupportAgent
@@ -32,4 +33,5 @@ enum class AdminSection(
     HOMEWORK("Дом.задания", Icons.AutoMirrored.Filled.Assignment),
     NOTIFICATIONS("Уведомления", Icons.Default.Notifications),
     RECEIPTS("Квитанции", Icons.Default.Receipt),
+    CALENDAR("Календарь", Icons.Default.CalendarMonth),
 }

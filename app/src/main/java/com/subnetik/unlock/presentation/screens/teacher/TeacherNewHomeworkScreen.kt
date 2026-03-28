@@ -190,7 +190,6 @@ fun TeacherNewHomeworkScreen(
                 if (uiState.homeworkHasDeadline) {
                     Spacer(Modifier.height(Brand.Spacing.md))
 
-                    // DatePicker
                     val datePickerState = rememberDatePickerState(
                         initialSelectedDateMillis = uiState.homeworkDueDate ?: System.currentTimeMillis(),
                     )
@@ -201,13 +200,75 @@ fun TeacherNewHomeworkScreen(
                         }
                     }
 
-                    DatePicker(
-                        state = datePickerState,
-                        modifier = Modifier.fillMaxWidth(),
-                        showModeToggle = false,
-                        title = null,
-                        headline = null,
-                    )
+                    // Styled date picker card
+                    Surface(
+                        shape = RoundedCornerShape(16.dp),
+                        color = if (isDark) Color(0xFF1A2540) else Color.White,
+                        border = BorderStroke(1.dp, if (isDark) Color(0xFF2A3B5A) else Color(0xFFD1D5DB)),
+                    ) {
+                        DatePicker(
+                            state = datePickerState,
+                            modifier = Modifier.fillMaxWidth(),
+                            showModeToggle = false,
+                            title = null,
+                            headline = null,
+                        )
+                    }
+
+                    Spacer(Modifier.height(Brand.Spacing.md))
+
+                    // Time picker row
+                    var showTimePicker by remember { mutableStateOf(false) }
+                    Surface(
+                        shape = RoundedCornerShape(14.dp),
+                        color = if (isDark) Color(0xFF1A2540) else Color.White,
+                        border = BorderStroke(1.dp, if (isDark) Color(0xFF2A3B5A) else Color(0xFFD1D5DB)),
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp, vertical = 14.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Text("Время", style = MaterialTheme.typography.bodyLarge, color = primaryText)
+                            Surface(
+                                onClick = { showTimePicker = true },
+                                shape = RoundedCornerShape(10.dp),
+                                color = BrandBlue.copy(alpha = 0.12f),
+                            ) {
+                                Text(
+                                    "%02d:%02d".format(uiState.homeworkDueHour, uiState.homeworkDueMinute),
+                                    modifier = Modifier.padding(horizontal = 18.dp, vertical = 10.dp),
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.Bold,
+                                    color = BrandBlue,
+                                )
+                            }
+                        }
+                    }
+
+                    if (showTimePicker) {
+                        val timePickerState = rememberTimePickerState(
+                            initialHour = uiState.homeworkDueHour,
+                            initialMinute = uiState.homeworkDueMinute,
+                            is24Hour = true,
+                        )
+                        AlertDialog(
+                            onDismissRequest = { showTimePicker = false },
+                            confirmButton = {
+                                TextButton(onClick = {
+                                    viewModel.updateHomeworkDueTime(timePickerState.hour, timePickerState.minute)
+                                    showTimePicker = false
+                                }) { Text("OK") }
+                            },
+                            dismissButton = {
+                                TextButton(onClick = { showTimePicker = false }) { Text("Отмена") }
+                            },
+                            title = { Text("Выберите время") },
+                            text = { TimePicker(state = timePickerState) },
+                        )
+                    }
                 }
             }
 

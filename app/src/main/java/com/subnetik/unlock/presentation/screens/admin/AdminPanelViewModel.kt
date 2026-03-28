@@ -4,10 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.subnetik.unlock.data.local.datastore.SettingsDataStore
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -15,7 +13,8 @@ import javax.inject.Inject
 
 data class AdminPanelUiState(
     val selectedSection: AdminSection = AdminSection.LEADS,
-    val isDarkTheme: Boolean? = null,
+    val isDarkTheme: Boolean? = true,
+    val refreshTrigger: Int = 0,
 )
 
 @HiltViewModel
@@ -25,9 +24,6 @@ class AdminPanelViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(AdminPanelUiState())
     val uiState: StateFlow<AdminPanelUiState> = _uiState.asStateFlow()
-
-    private val _refreshEvent = MutableSharedFlow<Unit>()
-    val refreshEvent = _refreshEvent.asSharedFlow()
 
     init {
         viewModelScope.launch {
@@ -42,8 +38,6 @@ class AdminPanelViewModel @Inject constructor(
     }
 
     fun refresh() {
-        viewModelScope.launch {
-            _refreshEvent.emit(Unit)
-        }
+        _uiState.update { it.copy(refreshTrigger = it.refreshTrigger + 1) }
     }
 }

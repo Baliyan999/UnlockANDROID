@@ -16,11 +16,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import com.subnetik.unlock.util.ErrorMapper
 import javax.inject.Inject
 
 data class MarketUiState(
     val isLoading: Boolean = true,
-    val isDarkTheme: Boolean? = null,
+    val isDarkTheme: Boolean? = true,
     val balance: Int = 0,
     val items: List<MarketItemResponse> = emptyList(),
     val purchases: List<MarketPurchaseResponse> = emptyList(),
@@ -122,7 +123,7 @@ class MarketViewModel @Inject constructor(
                     _uiState.update { it.copy(couponValidating = false, couponMessage = validateResponse.message ?: "Купон недействителен") }
                 }
             } catch (e: Exception) {
-                _uiState.update { it.copy(couponValidating = false, couponRedeeming = false, couponMessage = e.message ?: "Ошибка") }
+                _uiState.update { it.copy(couponValidating = false, couponRedeeming = false, couponMessage = ErrorMapper.map(e)) }
             }
         }
     }

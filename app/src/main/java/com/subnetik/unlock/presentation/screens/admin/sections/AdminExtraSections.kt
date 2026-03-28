@@ -18,6 +18,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.foundation.background
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -25,6 +27,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -340,7 +343,7 @@ class AdminTokensViewModel @Inject constructor(private val adminApi: AdminApi) :
         val finalAmount = if (state.isAdding) amount else -amount
         viewModelScope.launch {
             try {
-                adminApi.createTokenTransaction(AdminTokenTransactionCreateRequest(studentId = userId, amount = finalAmount, category = state.adjustReason.ifBlank { if (state.isAdding) "admin_add" else "admin_subtract" }, description = state.adjustReason.takeIf { it.isNotBlank() }))
+                adminApi.createTokenTransaction(AdminTokenTransactionCreateRequest(studentId = userId, amount = finalAmount, category = "admin_discretion", description = state.adjustReason.takeIf { it.isNotBlank() }))
                 _uiState.update { it.copy(adjustDialogUserId = null) }
                 loadData()
             } catch (e: Exception) { _uiState.update { it.copy(error = e.message) } }
@@ -409,12 +412,28 @@ fun AdminTokensSection(isDark: Boolean, viewModel: AdminTokensViewModel = hiltVi
             else items(uiState.students, key = { it.id }) { s ->
                 AdminGlassCard(isDark = isDark) {
                     Column(Modifier.fillMaxWidth().padding(Brand.Spacing.lg), verticalArrangement = Arrangement.spacedBy(Brand.Spacing.xs)) {
-                        Text(s.displayName.ifBlank { s.email }, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = textColor)
-                        Text(s.email, style = MaterialTheme.typography.bodySmall, color = subtextColor)
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Brand.Spacing.sm)) {
+                            if (!s.avatarUrl.isNullOrBlank()) {
+                                val fullAvatarUrl = if (s.avatarUrl.startsWith("http")) s.avatarUrl else "https://unlocklingua.com${s.avatarUrl}"
+                                AsyncImage(
+                                    model = fullAvatarUrl,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(36.dp).clip(CircleShape),
+                                    contentScale = ContentScale.Crop,
+                                )
+                            } else {
+                                Box(
+                                    Modifier.size(36.dp).clip(CircleShape).background(BrandBlue.copy(alpha = 0.15f)),
+                                    contentAlignment = Alignment.Center,
+                                ) { Text(s.displayName.firstOrNull()?.uppercase() ?: "?", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = BrandBlue) }
+                            }
+                            Column(Modifier.weight(1f)) {
+                                Text(s.displayName.ifBlank { s.email }, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = textColor)
+                                Text(s.email, style = MaterialTheme.typography.bodySmall, color = subtextColor)
+                            }
+                        }
                         Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                            Text("Баланс: ${s.balance}", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold, color = BrandGold)
-                            Text("Заработано: ${s.totalEarned}", style = MaterialTheme.typography.labelSmall, color = BrandGreen)
-                            Text("Потрачено: ${s.totalSpent}", style = MaterialTheme.typography.labelSmall, color = BrandCoral)
+                            Text("Баланс: ${s.tokenBalance}", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold, color = BrandGold)
                         }
                         HorizontalDivider(color = if (isDark) Color.White.copy(alpha = 0.06f) else Color.Black.copy(alpha = 0.04f))
                         Row(horizontalArrangement = Arrangement.spacedBy(Brand.Spacing.sm)) {
@@ -433,11 +452,12 @@ fun AdminTokensSection(isDark: Boolean, viewModel: AdminTokensViewModel = hiltVi
                 AdminGlassCard(isDark = isDark) {
                     Column(Modifier.fillMaxWidth().padding(Brand.Spacing.lg), verticalArrangement = Arrangement.spacedBy(Brand.Spacing.xs)) {
                         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                            Text(tx.userName, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = textColor, modifier = Modifier.weight(1f))
+                            Text(tx.student?.displayName ?: "—", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = textColor, modifier = Modifier.weight(1f))
                             Text("${if (tx.amount >= 0) "+" else ""}${tx.amount}", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = if (tx.amount >= 0) BrandGreen else BrandCoral)
                         }
-                        Text("${tx.type}: ${tx.reason}", style = MaterialTheme.typography.bodySmall, color = subtextColor)
+                        Text("${tx.transactionType}${tx.category?.let { " • $it" } ?: ""}", style = MaterialTheme.typography.bodySmall, color = subtextColor)
                         tx.description?.let { Text(it, style = MaterialTheme.typography.labelSmall, color = subtextColor) }
+                        tx.createdBy?.let { Text("Создал: ${it.displayName}", style = MaterialTheme.typography.labelSmall, color = subtextColor) }
                         tx.createdAt?.let { Text(it.take(10), style = MaterialTheme.typography.labelSmall, color = if (isDark) Color.White.copy(alpha = 0.3f) else subtextColor.copy(alpha = 0.5f)) }
                     }
                 }
@@ -985,8 +1005,13 @@ class AdminReceiptsViewModel @Inject constructor(private val adminApi: AdminApi)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AdminReceiptsSection(isDark: Boolean, viewModel: AdminReceiptsViewModel = hiltViewModel()) {
+fun AdminReceiptsSection(isDark: Boolean, refreshTrigger: Int = 0, viewModel: AdminReceiptsViewModel = hiltViewModel()) {
     val uiState by viewModel.uiState.collectAsState()
+
+    // Reload when refreshTrigger changes
+    LaunchedEffect(refreshTrigger) {
+        if (refreshTrigger > 0) viewModel.loadData()
+    }
     val textColor = if (isDark) Color.White else MaterialTheme.colorScheme.onSurface
     val subtextColor = if (isDark) Color.White.copy(alpha = 0.45f) else MaterialTheme.colorScheme.onSurfaceVariant
 
@@ -1039,9 +1064,43 @@ fun AdminReceiptsSection(isDark: Boolean, viewModel: AdminReceiptsViewModel = hi
                                 Text("Группа: $it", style = MaterialTheme.typography.bodySmall, color = subtextColor)
                             }
                         }
+                        // Receipt image toggle
+                        if (receipt.imageUrl.isNotBlank()) {
+                            var showImage by remember { mutableStateOf(false) }
+                            Surface(
+                                onClick = { showImage = !showImage },
+                                shape = RoundedCornerShape(8.dp),
+                                color = BrandBlue.copy(alpha = 0.10f),
+                            ) {
+                                Row(Modifier.padding(horizontal = 12.dp, vertical = 6.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                                    Icon(if (showImage) Icons.Default.PhotoLibrary else Icons.Default.Photo, null, Modifier.size(14.dp), tint = BrandBlue)
+                                    Text(if (showImage) "Скрыть чек" else "Показать чек", style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold, color = BrandBlue)
+                                }
+                            }
+                            if (showImage) {
+                                val imgUrl = if (receipt.imageUrl.startsWith("http")) receipt.imageUrl else "https://unlocklingua.com${receipt.imageUrl}"
+                                coil3.compose.AsyncImage(
+                                    model = imgUrl,
+                                    contentDescription = "Квитанция",
+                                    modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)),
+                                    contentScale = ContentScale.Fit,
+                                )
+                            }
+                        }
+                        // Shi Fu verdict
+                        receipt.extractedAmount?.let { amount ->
+                            Surface(color = BrandTeal.copy(alpha = 0.10f), shape = RoundedCornerShape(10.dp)) {
+                                Row(Modifier.fillMaxWidth().padding(10.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                    Text("🐉", fontSize = 18.sp)
+                                    Column {
+                                        Text("Вердикт Ши Фу", style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold, color = BrandTeal)
+                                        Text("$amount сум", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = textColor)
+                                    }
+                                }
+                            }
+                        }
                         Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                            receipt.finalAmount?.let { Text("Сумма: $it", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold, color = BrandGreen) }
-                            receipt.extractedAmount?.let { Text("Извлечено: $it", style = MaterialTheme.typography.labelSmall, color = subtextColor) }
+                            receipt.finalAmount?.let { Text("Итого: $it сум", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold, color = BrandGreen) }
                         }
                         Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                             receipt.paymentMethod?.let { Text(it, style = MaterialTheme.typography.labelSmall, color = subtextColor) }

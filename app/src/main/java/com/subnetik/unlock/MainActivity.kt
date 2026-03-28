@@ -1,15 +1,23 @@
 package com.subnetik.unlock
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.subnetik.unlock.data.local.datastore.AuthDataStore
 import com.subnetik.unlock.data.local.datastore.SettingsDataStore
+import com.subnetik.unlock.data.remote.SessionManager
 import com.subnetik.unlock.domain.model.AppUserRole
 import com.subnetik.unlock.domain.repository.AuthRepository
 import com.subnetik.unlock.presentation.navigation.AppNavigation
@@ -25,11 +33,27 @@ class MainActivity : ComponentActivity() {
     @Inject lateinit var settingsDataStore: SettingsDataStore
     @Inject lateinit var authRepository: AuthRepository
     @Inject lateinit var authApi: com.subnetik.unlock.data.remote.api.AuthApi
+    @Inject lateinit var sessionManager: SessionManager
+
+    private val notificationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { /* granted or not — FCM will still deliver silently */ }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        requestNotificationPermissionIfNeeded()
         setContent {
+            // Show toast when session expires
+            LaunchedEffect(Unit) {
+                sessionManager.sessionExpired.collect {
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Сессия истекла. Войдите снова.",
+                        Toast.LENGTH_LONG,
+                    ).show()
+                }
+            }
             val isLoggedIn by authDataStore.isLoggedIn.collectAsStateWithLifecycle(initialValue = false)
             val hasSeenOnboarding by settingsDataStore.hasSeenOnboarding.collectAsStateWithLifecycle(initialValue = true)
             val userRoleStr by authDataStore.userRole.collectAsStateWithLifecycle(initialValue = null)
@@ -39,7 +63,7 @@ class MainActivity : ComponentActivity() {
             val scope = rememberCoroutineScope()
             val themePreference by settingsDataStore.isDarkTheme.collectAsStateWithLifecycle(initialValue = null)
             val systemDark = isSystemInDarkTheme()
-            val isDark = themePreference ?: systemDark
+            val isDark = themePreference ?: true  // default dark theme
 
             // Check if terms need to be shown
             val needsStudentTerms = isLoggedIn && userRole == AppUserRole.STUDENT && !termsAccepted
@@ -78,6 +102,17 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                 }
+            }
+        }
+    }
+
+    private fun requestNotificationPermissionIfNeeded() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(
+                    this, Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
             }
         }
     }

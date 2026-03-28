@@ -32,6 +32,12 @@ fun TeacherGroupDetailScreen(
     val uiState by viewModel.uiState.collectAsState()
     val group = uiState.selectedGroup ?: return
 
+    // Homework creation overlay takes priority
+    if (uiState.showNewHomework) {
+        TeacherNewHomeworkScreen(viewModel = viewModel, isDark = isDark)
+        return
+    }
+
     // Attendance overlay
     if (uiState.showAttendance && uiState.selectedStudent != null) {
         TeacherAttendanceScreen(viewModel = viewModel, isDark = isDark)

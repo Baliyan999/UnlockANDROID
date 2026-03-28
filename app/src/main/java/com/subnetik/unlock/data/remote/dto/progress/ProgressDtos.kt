@@ -26,7 +26,7 @@ data class TestAttemptDetail(
     @SerialName("question_id") val questionId: String? = null,
     val prompt: String? = null,
     @SerialName("selected_answer") val selectedAnswer: String? = null,
-    val correct: Boolean? = null,
+    @SerialName("is_correct") val isCorrect: Boolean? = null,
     @SerialName("correct_answer") val correctAnswer: String? = null,
 )
 
@@ -39,6 +39,7 @@ data class VocabProgressSyncItem(
     @SerialName("known_word_ids") val knownWordIds: List<String>? = null,
     @SerialName("review_word_ids") val reviewWordIds: List<String>? = null,
     @SerialName("last_studied_at") val lastStudiedAt: String? = null,
+    val percent: Double = 0.0,
 )
 
 @Serializable

@@ -45,4 +45,12 @@ sealed class Routes(val route: String) {
     data object Market : Routes("market")
     data object Promocodes : Routes("promocodes")
     data object Referral : Routes("referral")
+    data object Lead : Routes("lead")
+    data object Teachers : Routes("teachers")
+    data object Reviews : Routes("reviews")
+    data object Blog : Routes("blog")
+    data object BlogDetail : Routes("blog_detail/{articleId}") {
+        fun createRoute(articleId: String) = "blog_detail/$articleId"
+    }
+    data object Calculator : Routes("calculator")
 }

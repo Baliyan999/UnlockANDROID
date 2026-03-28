@@ -28,7 +28,6 @@
             </intent-filter>
         </activity>
 
-        <!-- FCM Service (раскомментировать после добавления google-services.json)
         <service
             android:name=".service.UnlockFCMService"
             android:exported="false">
@@ -36,7 +35,6 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        -->
     </application>
 
 </manifest>

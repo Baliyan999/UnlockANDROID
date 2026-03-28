@@ -52,7 +52,7 @@ fun getBottomNavItems(role: AppUserRole): List<BottomNavItem> {
         )
         else -> BottomNavItem(
             route = Routes.Homework.route,
-            label = "Кабинет",
+            label = "Учебный кабинет",
             selectedIcon = Icons.Filled.Book,
             unselectedIcon = Icons.Outlined.Book,
         )

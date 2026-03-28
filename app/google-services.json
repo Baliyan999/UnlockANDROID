@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "522163420827",
+    "project_id": "unlock-language-studio",
+    "storage_bucket": "unlock-language-studio.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:522163420827:android:c42a6bba8103f773cad03e",
+        "android_client_info": {
+          "package_name": "com.subnetik.unlock"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQETQjDSZyLISxQ03PDy2lFSKFR46WeDs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

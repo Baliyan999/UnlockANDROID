@@ -22,7 +22,7 @@ data class PromocodesUiState(
     val isSuccess: Boolean = false,
     val redemptions: List<PromocodeRedemptionResponse> = emptyList(),
     val isLoadingHistory: Boolean = false,
-    val isDarkTheme: Boolean? = null,
+    val isDarkTheme: Boolean? = true,
 )
 
 @HiltViewModel

@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import com.subnetik.unlock.util.ErrorMapper
 import javax.inject.Inject
 
 enum class LeadFilter { PENDING, PROCESSED, DELETED }
@@ -64,7 +65,7 @@ class AdminLeadsViewModel @Inject constructor(
                 }
             } catch (e: Exception) {
                 _uiState.update {
-                    it.copy(isLoading = false, error = e.message ?: "Ошибка загрузки")
+                    it.copy(isLoading = false, error = ErrorMapper.map(e))
                 }
             }
         }

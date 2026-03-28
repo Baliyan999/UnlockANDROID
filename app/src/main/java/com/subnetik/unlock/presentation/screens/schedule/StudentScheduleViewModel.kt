@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 data class StudentScheduleUiState(
     val isLoading: Boolean = true,
-    val isDarkTheme: Boolean? = null,
+    val isDarkTheme: Boolean? = true,
     val schedule: StudentScheduleData? = null,
     val error: String? = null,
     val calendarEvents: List<CalendarEventResponse> = emptyList(),

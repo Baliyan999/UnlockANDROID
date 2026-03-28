@@ -42,7 +42,7 @@ fun ShiFuChatScreen(
     viewModel: ShiFuChatViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    val isDark = isSystemInDarkTheme()
+    val isDark = uiState.isDarkTheme ?: isSystemInDarkTheme()
     var inputText by remember { mutableStateOf("") }
     var showHistory by remember { mutableStateOf(false) }
     val listState = rememberLazyListState()

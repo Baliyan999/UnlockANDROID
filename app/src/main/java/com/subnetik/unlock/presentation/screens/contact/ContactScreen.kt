@@ -2,11 +2,9 @@ package com.subnetik.unlock.presentation.screens.contact
 
 import android.content.Intent
 import android.net.Uri
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -19,52 +17,80 @@ import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.res.painterResource
+import com.subnetik.unlock.R
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.subnetik.unlock.data.local.datastore.SettingsDataStore
+import com.subnetik.unlock.presentation.screens.admin.components.AdminBackground
 import com.subnetik.unlock.presentation.theme.*
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
+
+@HiltViewModel
+class ContactViewModel @Inject constructor(
+    settingsDataStore: SettingsDataStore,
+) : ViewModel() {
+    val isDarkTheme = settingsDataStore.isDarkTheme
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ContactScreen(onBack: () -> Unit) {
-    val isDark = isSystemInDarkTheme()
+fun ContactScreen(
+    onBack: () -> Unit,
+    viewModel: ContactViewModel = hiltViewModel(),
+) {
+    val themePreference by viewModel.isDarkTheme.collectAsStateWithLifecycle(initialValue = null)
+    val isDark = themePreference ?: (MaterialTheme.colorScheme.surface.luminance() < 0.5f)
     val context = LocalContext.current
 
-    val bgTop = if (isDark) Color(0xFF0D1120) else Color(0xFFF7F7FC)
-    val bgBottom = if (isDark) Color(0xFF1A1E33) else Color(0xFFE6EDF8)
+    val primaryText = if (isDark) Color.White else MaterialTheme.colorScheme.onSurface
+    val secondaryText = if (isDark) Color.White.copy(alpha = 0.5f) else MaterialTheme.colorScheme.onSurfaceVariant
+    val cardColor = if (isDark) Color.White.copy(alpha = 0.06f) else Color.White.copy(alpha = 0.85f)
+    val strokeColor = if (isDark) Color.White.copy(alpha = 0.08f) else Color.Black.copy(alpha = 0.06f)
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Контакты", fontWeight = FontWeight.Bold) },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Назад")
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Transparent,
-                ),
-            )
-        },
-        containerColor = Color.Transparent,
-    ) { padding ->
-        Box(modifier = Modifier.fillMaxSize()) {
-            // Background
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Brush.linearGradient(listOf(bgTop, bgBottom))),
-            )
+    Box(modifier = Modifier.fillMaxSize()) {
+        AdminBackground(isDark = isDark)
 
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Text(
+                            "Контакты",
+                            fontWeight = FontWeight.Bold,
+                            color = primaryText,
+                        )
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = onBack) {
+                            Icon(
+                                Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = "Назад",
+                                tint = primaryText,
+                            )
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = Color.Transparent,
+                    ),
+                )
+            },
+            containerColor = Color.Transparent,
+        ) { padding ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -76,7 +102,7 @@ fun ContactScreen(onBack: () -> Unit) {
             ) {
                 Spacer(Modifier.height(Brand.Spacing.sm))
 
-                // Header icon + title
+                // Header icon
                 Box(
                     modifier = Modifier
                         .size(80.dp)
@@ -100,47 +126,57 @@ fun ContactScreen(onBack: () -> Unit) {
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
+                    color = primaryText,
                 )
                 Text(
                     "Мы всегда на связи!\nВыберите удобный способ",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = secondaryText,
                     textAlign = TextAlign.Center,
                 )
 
                 Spacer(Modifier.height(Brand.Spacing.sm))
 
-                // Phone card
+                // Phone
                 ContactCard(
                     icon = Icons.Default.Phone,
                     title = "Телефон",
                     subtitle = "+998772686886",
                     tint = BrandBlue,
-                    isDark = isDark,
+                    cardColor = cardColor,
+                    strokeColor = strokeColor,
+                    primaryText = primaryText,
+                    secondaryText = secondaryText,
                     onClick = {
                         context.startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:+998772686886")))
                     },
                 )
 
-                // WhatsApp card
+                // WhatsApp
                 ContactCard(
                     icon = Icons.Default.Textsms,
                     title = "WhatsApp",
                     subtitle = "+998772686886",
                     tint = BrandTeal,
-                    isDark = isDark,
+                    cardColor = cardColor,
+                    strokeColor = strokeColor,
+                    primaryText = primaryText,
+                    secondaryText = secondaryText,
                     onClick = {
                         context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://wa.me/998772686886")))
                     },
                 )
 
-                // Telegram card
+                // Telegram
                 ContactCard(
                     icon = Icons.AutoMirrored.Filled.Send,
                     title = "Telegram",
                     subtitle = "@unlock_language",
                     tint = BrandIndigo,
-                    isDark = isDark,
+                    cardColor = cardColor,
+                    strokeColor = strokeColor,
+                    primaryText = primaryText,
+                    secondaryText = secondaryText,
                     onClick = {
                         context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/unlock_language")))
                     },
@@ -149,11 +185,17 @@ fun ContactScreen(onBack: () -> Unit) {
                 Spacer(Modifier.height(Brand.Spacing.sm))
 
                 // Google Maps section
-                GoogleMapSection(isDark = isDark, context = context)
+                GoogleMapSection(
+                    cardColor = cardColor,
+                    strokeColor = strokeColor,
+                    primaryText = primaryText,
+                    secondaryText = secondaryText,
+                    context = context,
+                )
 
                 Spacer(Modifier.height(Brand.Spacing.sm))
 
-                // Footer
+                // Footer social icons
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
@@ -165,10 +207,10 @@ fun ContactScreen(onBack: () -> Unit) {
                     "UNLOCK Language Studio",
                     style = MaterialTheme.typography.labelSmall,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                    color = secondaryText.copy(alpha = 0.5f),
                 )
 
-                Spacer(Modifier.height(Brand.Spacing.xl))
+                Spacer(Modifier.height(Brand.Spacing.xxl))
             }
         }
     }
@@ -180,18 +222,19 @@ private fun ContactCard(
     title: String,
     subtitle: String,
     tint: Color,
-    isDark: Boolean,
+    cardColor: Color,
+    strokeColor: Color,
+    primaryText: Color,
+    secondaryText: Color,
     onClick: () -> Unit,
 ) {
-    val cardBg = if (isDark) Color(0xFF171E33).copy(alpha = 0.96f) else Color.White.copy(alpha = 0.98f)
-
     Surface(
         onClick = onClick,
         modifier = Modifier
-            .fillMaxWidth()
-            .border(1.dp, tint.copy(alpha = 0.15f), RoundedCornerShape(18.dp)),
+            .fillMaxWidth(),
         shape = RoundedCornerShape(18.dp),
-        color = cardBg,
+        color = cardColor,
+        border = androidx.compose.foundation.BorderStroke(1.dp, strokeColor),
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
@@ -201,12 +244,7 @@ private fun ContactCard(
             Box(
                 modifier = Modifier
                     .size(50.dp)
-                    .background(
-                        Brush.linearGradient(
-                            listOf(tint.copy(alpha = 0.2f), tint.copy(alpha = 0.08f)),
-                        ),
-                        RoundedCornerShape(14.dp),
-                    ),
+                    .background(tint.copy(alpha = 0.15f), RoundedCornerShape(14.dp)),
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
@@ -222,11 +260,12 @@ private fun ContactCard(
                     text = title,
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Bold,
+                    color = primaryText,
                 )
                 Text(
                     text = subtitle,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = secondaryText,
                 )
             }
 
@@ -234,49 +273,62 @@ private fun ContactCard(
                 Icons.AutoMirrored.Filled.KeyboardArrowRight,
                 contentDescription = null,
                 modifier = Modifier.size(18.dp),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                tint = secondaryText.copy(alpha = 0.5f),
             )
         }
     }
 }
 
 @Composable
-private fun GoogleMapSection(isDark: Boolean, context: android.content.Context) {
-    val cardBg = if (isDark) Color(0xFF171E33).copy(alpha = 0.96f) else Color.White.copy(alpha = 0.98f)
+private fun GoogleMapSection(
+    cardColor: Color,
+    strokeColor: Color,
+    primaryText: Color,
+    secondaryText: Color,
+    context: android.content.Context,
+) {
+    val openMap = {
+        val uri = Uri.parse("geo:0,0?q=${Uri.encode("41.304608,69.267618(UNLOCK Language Studio)")}")
+        val intent = Intent(Intent.ACTION_VIEW, uri)
+        intent.setPackage("com.google.android.apps.maps")
+        try {
+            context.startActivity(intent)
+        } catch (_: Exception) {
+            // Fallback without package restriction
+            context.startActivity(Intent(Intent.ACTION_VIEW, uri))
+        }
+    }
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .border(1.dp, BrandCoral.copy(alpha = 0.15f), RoundedCornerShape(18.dp))
-            .clip(RoundedCornerShape(18.dp)),
+            .clip(RoundedCornerShape(18.dp))
+            .border(
+                width = 1.dp,
+                color = strokeColor,
+                shape = RoundedCornerShape(18.dp),
+            ),
     ) {
-        // Google Maps WebView
-        AndroidView(
-            factory = { ctx ->
-                WebView(ctx).apply {
-                    webViewClient = WebViewClient()
-                    settings.javaScriptEnabled = true
-                    settings.loadWithOverviewMode = true
-                    settings.useWideViewPort = true
-                    isVerticalScrollBarEnabled = false
-                    isHorizontalScrollBarEnabled = false
-                    // Disable scrolling inside the WebView
-                    setOnTouchListener { _, _ -> true }
-                    loadUrl("https://www.google.com/maps/@41.304608,69.267618,17z")
-                }
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(200.dp),
-        )
+        // Static map image — tapping opens Google Maps / default map app
+        Surface(
+            onClick = openMap,
+            color = Color(0xFF1A1E33),
+            shape = RoundedCornerShape(0.dp),
+        ) {
+            androidx.compose.foundation.Image(
+                painter = painterResource(R.drawable.unlock_map_dark),
+                contentDescription = "Карта — UNLOCK Language Studio",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp),
+                contentScale = ContentScale.Crop,
+            )
+        }
 
         // Address bar
         Surface(
-            onClick = {
-                val uri = Uri.parse("geo:41.304608,69.267618?q=41.304608,69.267618(UNLOCK Language Studio)")
-                context.startActivity(Intent(Intent.ACTION_VIEW, uri))
-            },
-            color = cardBg,
+            onClick = openMap,
+            color = cardColor,
             shape = RoundedCornerShape(0.dp),
         ) {
             Row(
@@ -305,11 +357,12 @@ private fun GoogleMapSection(isDark: Boolean, context: android.content.Context) 
                         "Central Palace, 6 этаж",
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Bold,
+                        color = primaryText,
                     )
                     Text(
                         "ул. Якуба Коласа, 2/1, Ташкент",
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        color = secondaryText,
                     )
                 }
 

@@ -53,6 +53,7 @@ fun AdminHomeScreen(
         AdminGreetingHeader(
             displayName = uiState.displayName,
             isDark = isDark,
+            unreadCount = uiState.unreadCount,
             onNotifications = onNavigateToNotifications,
         )
 
@@ -89,6 +90,7 @@ fun AdminHomeScreen(
 private fun AdminGreetingHeader(
     displayName: String?,
     isDark: Boolean,
+    unreadCount: Int = 0,
     onNotifications: () -> Unit,
 ) {
     val firstName = displayName
@@ -150,12 +152,27 @@ private fun AdminGreetingHeader(
                     color = primaryText,
                     letterSpacing = 2.sp,
                 )
-                IconButton(onClick = onNotifications) {
-                    Icon(
-                        Icons.Default.Notifications,
-                        contentDescription = "Уведомления",
-                        tint = iconTint,
-                    )
+                Box(contentAlignment = Alignment.TopEnd) {
+                    IconButton(onClick = onNotifications) {
+                        Icon(
+                            Icons.Default.Notifications,
+                            contentDescription = "Уведомления",
+                            tint = if (unreadCount > 0) BrandCoral else iconTint,
+                        )
+                    }
+                    if (unreadCount > 0) {
+                        Badge(
+                            containerColor = BrandCoral,
+                            modifier = Modifier.offset(x = (-4).dp, y = 4.dp),
+                        ) {
+                            Text(
+                                "${minOf(unreadCount, 99)}",
+                                color = Color.White,
+                                fontSize = 10.sp,
+                                fontWeight = FontWeight.Bold,
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -485,7 +502,7 @@ private fun DetailTag(icon: ImageVector, text: String, color: Color) {
 private fun SchoolStatsWidget(uiState: AdminHomeUiState) {
     val studentsCount = remember(uiState.users) { uiState.users.count { it.role == "student" } }
     val regularCount = remember(uiState.users) { uiState.users.count { it.role == "user" } }
-    val pendingLeads = uiState.leadStats?.pending ?: 0
+    val pendingSupport = uiState.pendingSupportCount
     val activePromos = uiState.promocodeStats?.active ?: 0
 
     Column(verticalArrangement = Arrangement.spacedBy(Brand.Spacing.md)) {
@@ -508,9 +525,9 @@ private fun SchoolStatsWidget(uiState: AdminHomeUiState) {
             }
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 MetricPill(
-                    value = if (uiState.isLoading) "..." else "$pendingLeads",
+                    value = if (uiState.isLoading) "..." else "$pendingSupport",
                     label = "Ожидают сапорта",
-                    tint = if (pendingLeads > 0) BrandCoral else BrandGreen,
+                    tint = if (pendingSupport > 0) BrandCoral else BrandGreen,
                     modifier = Modifier.weight(1f),
                 )
                 MetricPill(

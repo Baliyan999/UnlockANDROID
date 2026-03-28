@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import com.subnetik.unlock.util.ErrorMapper
 import javax.inject.Inject
 
 data class ProfileUiState(
@@ -24,7 +25,7 @@ data class ProfileUiState(
     val isLoading: Boolean = false,
     val error: String? = null,
     val successMessage: String? = null,
-    val isDarkTheme: Boolean? = null,
+    val isDarkTheme: Boolean? = true,
 )
 
 @HiltViewModel
@@ -149,7 +150,7 @@ class ProfileViewModel @Inject constructor(
                     is Resource.Loading -> {}
                 }
             } catch (e: Exception) {
-                _uiState.update { it.copy(isLoading = false, error = e.message ?: "Ошибка загрузки") }
+                _uiState.update { it.copy(isLoading = false, error = ErrorMapper.map(e, ErrorMapper.ErrorContext.PROFILE)) }
             }
         }
     }

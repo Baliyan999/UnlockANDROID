@@ -56,7 +56,8 @@ fun AdminPanelScreen(
                     AdminSection.LESSONS -> AdminLessonsSection(isDark = isDark)
                     AdminSection.HOMEWORK -> AdminHomeworkSection(isDark = isDark)
                     AdminSection.NOTIFICATIONS -> AdminNotificationsSection(isDark = isDark)
-                    AdminSection.RECEIPTS -> AdminReceiptsSection(isDark = isDark)
+                    AdminSection.RECEIPTS -> AdminReceiptsSection(isDark = isDark, refreshTrigger = uiState.refreshTrigger)
+                    AdminSection.CALENDAR -> AdminCalendarSection(isDark = isDark, refreshTrigger = uiState.refreshTrigger)
                 }
             }
         }

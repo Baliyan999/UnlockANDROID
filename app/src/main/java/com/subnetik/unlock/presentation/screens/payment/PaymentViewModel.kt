@@ -16,11 +16,12 @@ import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import com.subnetik.unlock.util.ErrorMapper
 import javax.inject.Inject
 
 data class PaymentUiState(
     val isLoading: Boolean = false,
-    val isDarkTheme: Boolean? = null,
+    val isDarkTheme: Boolean? = true,
     val isStudent: Boolean = true,
     val paymentInfo: StudentPaymentInfoResponse? = null,
     val uploadSuccess: Boolean = false,
@@ -62,7 +63,7 @@ class PaymentViewModel @Inject constructor(
                 _uiState.update { it.copy(isLoading = false, uploadSuccess = true) }
             } catch (e: Exception) {
                 android.util.Log.e("PaymentVM", "Upload failed", e)
-                _uiState.update { it.copy(isLoading = false, uploadError = e.message) }
+                _uiState.update { it.copy(isLoading = false, uploadError = ErrorMapper.map(e, ErrorMapper.ErrorContext.PAYMENT)) }
             }
         }
     }

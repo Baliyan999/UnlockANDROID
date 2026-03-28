@@ -1,13 +1,20 @@
 package com.subnetik.unlock.data.repository
 
+import android.util.Log
+import com.google.firebase.messaging.FirebaseMessaging
 import com.subnetik.unlock.data.local.datastore.AuthDataStore
 import com.subnetik.unlock.data.remote.api.AuthApi
+import com.subnetik.unlock.data.remote.api.NotificationApi
 import com.subnetik.unlock.data.remote.dto.auth.*
+import com.subnetik.unlock.data.remote.dto.notification.DeviceTokenRequest
 import com.subnetik.unlock.domain.model.AppUserRole
 import com.subnetik.unlock.domain.model.Resource
 import com.subnetik.unlock.domain.repository.AuthRepository
+import com.subnetik.unlock.util.ErrorMapper
+import com.subnetik.unlock.util.ErrorMapper.ErrorContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.tasks.await
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -16,6 +23,7 @@ import javax.inject.Inject
 class AuthRepositoryImpl @Inject constructor(
     private val authApi: AuthApi,
     private val authDataStore: AuthDataStore,
+    private val notificationApi: NotificationApi,
 ) : AuthRepository {
 
     override suspend fun register(
@@ -36,7 +44,7 @@ class AuthRepositoryImpl @Inject constructor(
             )
             Resource.Success(response)
         } catch (e: Exception) {
-            Resource.Error(e.message ?: "Registration failed")
+            Resource.Error(ErrorMapper.map(e, ErrorContext.REGISTER))
         }
     }
 
@@ -64,10 +72,12 @@ class AuthRepositoryImpl @Inject constructor(
                     authDataStore.saveTermsAccepted(profile.termsAcceptedAt != null)
                     authDataStore.saveTeacherTermsAccepted(profile.teacherTermsAcceptedAt != null)
                 } catch (_: Exception) { }
+                // Register FCM token with server
+                registerFcmToken()
             }
             Resource.Success(response)
         } catch (e: Exception) {
-            Resource.Error(e.message ?: "Login failed")
+            Resource.Error(ErrorMapper.map(e, ErrorContext.LOGIN))
         }
     }
 
@@ -92,7 +102,7 @@ class AuthRepositoryImpl @Inject constructor(
             } catch (_: Exception) { }
             Resource.Success(response)
         } catch (e: Exception) {
-            Resource.Error(e.message ?: "Verification failed")
+            Resource.Error(ErrorMapper.map(e, ErrorContext.LOGIN))
         }
     }
 
@@ -101,7 +111,7 @@ class AuthRepositoryImpl @Inject constructor(
             val profile = authApi.getProfile()
             Resource.Success(profile)
         } catch (e: Exception) {
-            Resource.Error(e.message ?: "Failed to load profile")
+            Resource.Error(ErrorMapper.map(e, ErrorContext.PROFILE))
         }
     }
 
@@ -125,12 +135,14 @@ class AuthRepositoryImpl @Inject constructor(
             }
             Resource.Success(response)
         } catch (e: Exception) {
-            Resource.Error(e.message ?: "Failed to update profile")
+            Resource.Error(ErrorMapper.map(e, ErrorContext.PROFILE))
         }
     }
 
     override suspend fun logout(): Resource<Unit> {
         return try {
+            // Unregister FCM token before logout
+            unregisterFcmToken()
             try { authApi.logout() } catch (_: Exception) { }
             authDataStore.clearAll()
             Resource.Success(Unit)
@@ -144,7 +156,7 @@ class AuthRepositoryImpl @Inject constructor(
         return try {
             Resource.Success(authApi.getReferralInfo())
         } catch (e: Exception) {
-            Resource.Error(e.message ?: "Failed to load referral info")
+            Resource.Error(ErrorMapper.map(e))
         }
     }
 
@@ -173,7 +185,7 @@ class AuthRepositoryImpl @Inject constructor(
             authDataStore.saveAvatar(response.url)
             Resource.Success(response.url)
         } catch (e: Exception) {
-            Resource.Error(e.message ?: "Не удалось загрузить аватар")
+            Resource.Error(ErrorMapper.map(e, ErrorContext.PROFILE))
         }
     }
 
@@ -183,7 +195,31 @@ class AuthRepositoryImpl @Inject constructor(
             authDataStore.clearAvatar()
             Resource.Success(Unit)
         } catch (e: Exception) {
-            Resource.Error(e.message ?: "Не удалось удалить аватар")
+            Resource.Error(ErrorMapper.map(e, ErrorContext.PROFILE))
+        }
+    }
+
+    private suspend fun registerFcmToken() {
+        try {
+            val token = FirebaseMessaging.getInstance().token.await()
+            notificationApi.registerDeviceToken(
+                DeviceTokenRequest(token = token, platform = "android")
+            )
+            Log.d("AuthRepo", "FCM token registered with server")
+        } catch (e: Exception) {
+            Log.e("AuthRepo", "Failed to register FCM token: ${e.message}")
+        }
+    }
+
+    private suspend fun unregisterFcmToken() {
+        try {
+            val token = FirebaseMessaging.getInstance().token.await()
+            notificationApi.unregisterDeviceToken(
+                DeviceTokenRequest(token = token, platform = "android")
+            )
+            Log.d("AuthRepo", "FCM token unregistered from server")
+        } catch (e: Exception) {
+            Log.e("AuthRepo", "Failed to unregister FCM token: ${e.message}")
         }
     }
 }

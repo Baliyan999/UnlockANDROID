@@ -36,6 +36,9 @@ import com.subnetik.unlock.domain.model.AppUserRole
 import com.subnetik.unlock.presentation.screens.auth.AuthScreen
 import kotlinx.coroutines.launch
 import com.subnetik.unlock.presentation.screens.auth.VerifyCodeScreen
+import com.subnetik.unlock.presentation.screens.guest.GuestHomeScreen
+import com.subnetik.unlock.presentation.screens.lead.LeadScreen
+import com.subnetik.unlock.presentation.screens.guest.GuestLockedScreen
 import com.subnetik.unlock.presentation.screens.home.HomeScreen
 import com.subnetik.unlock.presentation.screens.notifications.NotificationsScreen
 import com.subnetik.unlock.presentation.screens.onboarding.OnboardingScreen
@@ -57,6 +60,11 @@ import com.subnetik.unlock.presentation.screens.schedule.StudentScheduleScreen
 import com.subnetik.unlock.presentation.screens.shifu.ShiFuChatScreen
 import com.subnetik.unlock.presentation.screens.teacher.TeacherHomeScreen
 import com.subnetik.unlock.presentation.screens.teacher.TeacherGroupsScreen
+import com.subnetik.unlock.presentation.screens.teachers.TeachersScreen
+import com.subnetik.unlock.presentation.screens.reviews.ReviewsScreen
+import com.subnetik.unlock.presentation.screens.blog.BlogScreen
+import com.subnetik.unlock.presentation.screens.blog.BlogDetailScreen
+import com.subnetik.unlock.presentation.screens.guest.CalculatorScreen
 
 @Composable
 fun AppNavigation(
@@ -71,8 +79,7 @@ fun AppNavigation(
 
     val startDestination = when {
         !hasSeenOnboarding -> Routes.Onboarding.route
-        !isLoggedIn -> Routes.Auth.route
-        else -> Routes.Home.route
+        else -> Routes.Home.route   // guests start at Home with marketing content
     }
 
     val mainTabRoutes = setOf(
@@ -88,7 +95,7 @@ fun AppNavigation(
             val currentRoute = navBackStackEntry?.destination?.route
 
             val baseRoute = currentRoute?.substringBefore("?")
-            if (isLoggedIn && baseRoute in mainTabRoutes) {
+            if (baseRoute in mainTabRoutes) {
                 val items = getBottomNavItems(userRole)
                 UnlockBottomBar(
                     items = items,
@@ -116,7 +123,7 @@ fun AppNavigation(
                 OnboardingScreen(
                     onComplete = {
                         scope.launch { settingsDataStore?.setOnboardingSeen() }
-                        navController.navigate(Routes.Auth.route) {
+                        navController.navigate(Routes.Home.route) {
                             popUpTo(Routes.Onboarding.route) { inclusive = true }
                         }
                     }
@@ -156,11 +163,43 @@ fun AppNavigation(
             // Main tabs
             composable(Routes.Home.route) {
                 when (userRole) {
+                    AppUserRole.GUEST -> GuestHomeScreen(
+                        onNavigateToTest = {
+                            navController.navigate(Routes.Test.route) {
+                                popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        },
+                        onNavigateToLead = {
+                            navController.navigate(Routes.Lead.route)
+                        },
+                        onNavigateToTeachers = {
+                            navController.navigate(Routes.Teachers.route)
+                        },
+                        onNavigateToReviews = {
+                            navController.navigate(Routes.Reviews.route)
+                        },
+                        onNavigateToBlog = {
+                            navController.navigate(Routes.Blog.route)
+                        },
+                        onNavigateToCalculator = {
+                            navController.navigate(Routes.Calculator.route)
+                        },
+                    )
                     AppUserRole.ADMIN -> AdminHomeScreen(
                         onNavigateToNotifications = { navController.navigate(Routes.Notifications.route) },
                     )
                     AppUserRole.TEACHER -> TeacherHomeScreen(
                         onNavigateToNotifications = { navController.navigate(Routes.Notifications.route) },
+                    )
+                    AppUserRole.USER -> GuestHomeScreen(
+                        onNavigateToTeachers = { navController.navigate(Routes.Teachers.route) },
+                        onNavigateToReviews = { navController.navigate(Routes.Reviews.route) },
+                        onNavigateToBlog = { navController.navigate(Routes.Blog.route) },
+                        onNavigateToCalculator = {
+                            navController.navigate(Routes.Calculator.route)
+                        },
                     )
                     else -> HomeScreen(
                         onNavigateToVocabulary = { navController.navigate(Routes.Vocabulary.route) },
@@ -186,8 +225,20 @@ fun AppNavigation(
             ) { backStackEntry ->
                 val tab = backStackEntry.arguments?.getString("tab") ?: ""
                 when (userRole) {
+                    AppUserRole.GUEST -> GuestLockedScreen(
+                        title = "Учебный кабинет",
+                        message = "Войдите, чтобы открыть учебный кабинет",
+                        onLogin = {
+                            navController.navigate(Routes.Auth.route)
+                        },
+                    )
                     AppUserRole.ADMIN -> AdminPanelScreen()
                     AppUserRole.TEACHER -> TeacherGroupsScreen()
+                    AppUserRole.USER -> GuestLockedScreen(
+                        title = "Учебный кабинет",
+                        message = "Раздел доступен только ученикам.\nВ текущем аккаунте этот раздел отключен. Войдите под учетной записью учащегося, чтобы открыть домашние задания.",
+                        onLogin = {},
+                    )
                     else -> com.subnetik.unlock.presentation.screens.homework.StudentHomeworkScreen(
                         initialTab = tab,
                     )
@@ -198,20 +249,36 @@ fun AppNavigation(
                 TestListScreen(
                     onNavigateToTest = { level ->
                         navController.navigate(Routes.TestSession.createRoute(level))
-                    }
+                    },
+                    onNavigateToLogin = {
+                        navController.navigate(Routes.Auth.route)
+                    },
                 )
             }
 
             composable(Routes.Profile.route) {
-                ProfileScreen(
-                    onNavigateToEditProfile = { navController.navigate(Routes.EditProfile.route) },
-                    onNavigateToNotifications = { navController.navigate(Routes.Notifications.route) },
-                    onNavigateToContact = { navController.navigate(Routes.Contact.route) },
-                    onNavigateToShiFu = { navController.navigate(Routes.ShiFuChat.route) },
-                    onNavigateToPayment = { navController.navigate(Routes.Payment.route) },
-                    onNavigateToPromocodes = { navController.navigate(Routes.Promocodes.route) },
-                    onLogout = onLogout,
-                )
+                if (userRole == AppUserRole.GUEST) {
+                    AuthScreen(
+                        onAuthSuccess = {
+                            navController.navigate(Routes.Home.route) {
+                                popUpTo(0) { inclusive = true }
+                            }
+                        },
+                        onNavigateToVerifyCode = { email ->
+                            navController.navigate(Routes.VerifyCode.createRoute(email))
+                        },
+                    )
+                } else {
+                    ProfileScreen(
+                        onNavigateToEditProfile = { navController.navigate(Routes.EditProfile.route) },
+                        onNavigateToNotifications = { navController.navigate(Routes.Notifications.route) },
+                        onNavigateToContact = { navController.navigate(Routes.Contact.route) },
+                        onNavigateToShiFu = { navController.navigate(Routes.ShiFuChat.route) },
+                        onNavigateToPayment = { navController.navigate(Routes.Payment.route) },
+                        onNavigateToPromocodes = { navController.navigate(Routes.Promocodes.route) },
+                        onLogout = onLogout,
+                    )
+                }
             }
 
             // Vocabulary
@@ -340,6 +407,45 @@ fun AppNavigation(
             }
             composable(Routes.Referral.route) {
                 com.subnetik.unlock.presentation.screens.referral.ReferralScreen(
+                    onBack = { navController.popBackStack() },
+                )
+            }
+            composable(Routes.Lead.route) {
+                LeadScreen(
+                    onBack = { navController.popBackStack() },
+                )
+            }
+            composable(Routes.Teachers.route) {
+                TeachersScreen(
+                    onBack = { navController.popBackStack() },
+                )
+            }
+            composable(Routes.Reviews.route) {
+                ReviewsScreen(
+                    onBack = { navController.popBackStack() },
+                    isLoggedIn = isLoggedIn,
+                )
+            }
+            composable(Routes.Blog.route) {
+                BlogScreen(
+                    onBack = { navController.popBackStack() },
+                    onNavigateToArticle = { articleId ->
+                        navController.navigate(Routes.BlogDetail.createRoute(articleId))
+                    },
+                )
+            }
+            composable(
+                Routes.BlogDetail.route,
+                arguments = listOf(navArgument("articleId") { type = NavType.StringType })
+            ) { backStackEntry ->
+                val articleId = backStackEntry.arguments?.getString("articleId") ?: ""
+                BlogDetailScreen(
+                    articleId = articleId,
+                    onBack = { navController.popBackStack() },
+                )
+            }
+            composable(Routes.Calculator.route) {
+                CalculatorScreen(
                     onBack = { navController.popBackStack() },
                 )
             }

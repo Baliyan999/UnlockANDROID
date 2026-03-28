@@ -9,6 +9,7 @@ import com.subnetik.unlock.data.remote.dto.progress.TestProgressSyncItem
 import com.subnetik.unlock.data.remote.dto.progress.VocabProgressSyncItem
 import com.subnetik.unlock.domain.model.Resource
 import com.subnetik.unlock.domain.repository.ProgressRepository
+import com.subnetik.unlock.util.ErrorMapper
 import com.subnetik.unlock.util.NetworkMonitor
 import kotlinx.coroutines.flow.first
 import kotlinx.serialization.json.Json
@@ -24,9 +25,9 @@ class ProgressRepositoryImpl @Inject constructor(
 ) : ProgressRepository {
 
     override suspend fun syncProgress(): Resource<Unit> {
-        if (!networkMonitor.isOnline()) return Resource.Error("No network")
+        if (!networkMonitor.isOnline()) return Resource.Error("Нет подключения к интернету")
 
-        val email = authDataStore.email.first() ?: return Resource.Error("Not logged in")
+        val email = authDataStore.email.first() ?: return Resource.Error("Сессия истекла. Войдите снова")
 
         return try {
             val testProgress = testProgressDao.getAll()
@@ -70,7 +71,7 @@ class ProgressRepositoryImpl @Inject constructor(
             )
             Resource.Success(Unit)
         } catch (e: Exception) {
-            Resource.Error(e.message ?: "Sync failed")
+            Resource.Error(ErrorMapper.map(e))
         }
     }
 }

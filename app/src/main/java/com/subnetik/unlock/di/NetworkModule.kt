@@ -6,6 +6,9 @@ import com.subnetik.unlock.data.remote.api.StudentApi
 import com.subnetik.unlock.data.remote.api.AiApi
 import com.subnetik.unlock.data.remote.api.AuthApi
 import com.subnetik.unlock.data.remote.api.CalendarApi
+import com.subnetik.unlock.data.remote.api.BlogApi
+import com.subnetik.unlock.data.remote.api.LeadApi
+import com.subnetik.unlock.data.remote.api.ReviewsApi
 import com.subnetik.unlock.data.remote.api.MarketApi
 import com.subnetik.unlock.data.remote.api.NotificationApi
 import com.subnetik.unlock.data.remote.api.PaymentApi
@@ -16,17 +19,40 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
+import okhttp3.Dns
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import java.net.InetAddress
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
+
+    /**
+     * Fallback DNS resolver for debug builds.
+     * Android emulators (especially API 36) often have broken system DNS.
+     * This tries the system resolver first, then falls back to a hardcoded
+     * mapping so the app stays functional during development.
+     */
+    private val fallbackDns = object : Dns {
+        private val hardcoded = mapOf(
+            "unlocklingua.com" to listOf(InetAddress.getByName("157.180.90.95")),
+        )
+
+        override fun lookup(hostname: String): List<InetAddress> {
+            return try {
+                Dns.SYSTEM.lookup(hostname)
+            } catch (e: Exception) {
+                hardcoded[hostname]
+                    ?: throw e
+            }
+        }
+    }
 
     @Provides
     @Singleton
@@ -51,6 +77,7 @@ object NetworkModule {
         return OkHttpClient.Builder()
             .addInterceptor(authInterceptor)
             .addInterceptor(logging)
+            .apply { if (BuildConfig.DEBUG) dns(fallbackDns) }
             .connectTimeout(20, TimeUnit.SECONDS)
             .readTimeout(60, TimeUnit.SECONDS)
             .writeTimeout(40, TimeUnit.SECONDS)
@@ -111,4 +138,19 @@ object NetworkModule {
     @Singleton
     fun provideCalendarApi(retrofit: Retrofit): CalendarApi =
         retrofit.create(CalendarApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideLeadApi(retrofit: Retrofit): LeadApi =
+        retrofit.create(LeadApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideReviewsApi(retrofit: Retrofit): ReviewsApi =
+        retrofit.create(ReviewsApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideBlogApi(retrofit: Retrofit): BlogApi =
+        retrofit.create(BlogApi::class.java)
 }

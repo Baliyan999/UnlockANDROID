@@ -12,6 +12,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -1114,7 +1115,7 @@ private fun AttendanceScreen(isDark: Boolean, student: AdminStudent?, uiState: A
 }
 
 // ═══════════════════════════════════════════════════════════════
-//  PROGRESS SCREEN
+//  PROGRESS SCREEN (iOS-matching design)
 // ═══════════════════════════════════════════════════════════════
 
 @Composable
@@ -1122,6 +1123,9 @@ private fun ProgressScreen(isDark: Boolean, student: AdminStudent?, uiState: Adm
     val textColor = if (isDark) Color.White else MaterialTheme.colorScheme.onSurface
     val subtextColor = if (isDark) Color.White.copy(alpha = 0.45f) else MaterialTheme.colorScheme.onSurfaceVariant
     val cardBg = if (isDark) Color.White.copy(alpha = 0.06f) else Color.White.copy(alpha = 0.85f)
+    val strokeColor = if (isDark) Color.White.copy(alpha = 0.08f) else Color.Black.copy(alpha = 0.06f)
+
+    var expandedTestLevel by remember { mutableStateOf<String?>(null) }
 
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
@@ -1154,66 +1158,263 @@ private fun ProgressScreen(isDark: Boolean, student: AdminStudent?, uiState: Adm
         } else if (uiState.progressData != null) {
             // HSK Tests
             item {
-                Row(horizontalArrangement = Arrangement.spacedBy(Brand.Spacing.xs), verticalAlignment = Alignment.CenterVertically) {
-                    Icon(Icons.Default.Verified, null, Modifier.size(20.dp), tint = BrandBlue)
-                    Text("Тесты HSK", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = textColor)
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
+                    Icon(Icons.Default.CheckCircle, null, Modifier.size(20.dp), tint = BrandBlue)
+                    Spacer(Modifier.width(Brand.Spacing.sm))
+                    Text("Тесты HSK", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, color = textColor)
                 }
             }
             items((1..6).toList()) { level ->
                 val test = uiState.progressData.tests.find { it.levelId == "hsk$level" || it.levelId == "$level" }
                 val prevTest = if (level > 1) uiState.progressData.tests.find { it.levelId == "hsk${level - 1}" || it.levelId == "${level - 1}" } else null
-                val isLocked = level > 1 && (prevTest == null || !prevTest.passed)
-                val statusText = when {
-                    test?.passed == true -> "Пройден (${test.bestPercent}%)"
-                    test != null -> "В процессе (${test.bestPercent}%)"
-                    isLocked -> "Пройдите HSK ${level - 1}"
-                    else -> "Не начат"
-                }
-                Surface(shape = RoundedCornerShape(14.dp), color = cardBg, modifier = Modifier.fillMaxWidth()) {
-                    Row(Modifier.fillMaxWidth().padding(Brand.Spacing.md), verticalAlignment = Alignment.CenterVertically) {
-                        Box(Modifier.size(36.dp).clip(RoundedCornerShape(10.dp)).background(hskLevelColor(level).copy(alpha = if (isLocked) 0.3f else 1f)), contentAlignment = Alignment.Center) {
-                            Text("$level", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = Color.White)
-                        }
-                        Spacer(Modifier.width(Brand.Spacing.sm))
-                        Column(Modifier.weight(1f)) {
-                            Text("HSK $level", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = if (isLocked) subtextColor else textColor)
-                            Text(statusText, style = MaterialTheme.typography.labelSmall, color = subtextColor)
-                        }
-                        if (isLocked) {
-                            Icon(Icons.Default.Lock, null, Modifier.size(18.dp), tint = subtextColor)
-                        }
-                    }
-                }
+                val isLocked = level > 1 && (prevTest == null || prevTest.bestScore < 8)
+                val isCompleted = test != null && test.bestScore > 0
+
+                AdminTestLevelCard(
+                    level = level,
+                    testResult = test,
+                    isLocked = isLocked,
+                    isCompleted = isCompleted,
+                    isDark = isDark,
+                    cardBg = cardBg,
+                    strokeColor = strokeColor,
+                    textColor = textColor,
+                    subtextColor = subtextColor,
+                    isExpanded = expandedTestLevel == (test?.levelId ?: ""),
+                    onToggleExpand = {
+                        val id = test?.levelId ?: ""
+                        expandedTestLevel = if (expandedTestLevel == id) null else id
+                    },
+                )
             }
 
             // Vocabulary
             item {
-                Row(horizontalArrangement = Arrangement.spacedBy(Brand.Spacing.xs), verticalAlignment = Alignment.CenterVertically) {
-                    Icon(Icons.Default.MenuBook, null, Modifier.size(20.dp), tint = BrandGreen)
-                    Text("Словарь", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = textColor)
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
+                    Icon(Icons.AutoMirrored.Filled.MenuBook, null, Modifier.size(20.dp), tint = BrandTeal)
+                    Spacer(Modifier.width(Brand.Spacing.sm))
+                    Text("Словарь", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, color = textColor)
                 }
             }
             if (uiState.progressData.vocabulary.isEmpty()) {
-                item { Text("Ученик ещё не изучал словарь", style = MaterialTheme.typography.bodySmall, color = subtextColor) }
+                item { Text("Ученик ещё не изучал словарь", style = MaterialTheme.typography.bodySmall, color = subtextColor, modifier = Modifier.fillMaxWidth(), textAlign = androidx.compose.ui.text.style.TextAlign.Center) }
             } else {
                 items(uiState.progressData.vocabulary) { vocab ->
-                    Surface(shape = RoundedCornerShape(14.dp), color = cardBg, modifier = Modifier.fillMaxWidth()) {
-                        Row(Modifier.fillMaxWidth().padding(Brand.Spacing.md), verticalAlignment = Alignment.CenterVertically) {
-                            Box(Modifier.size(36.dp).clip(RoundedCornerShape(10.dp)).background(hskLevelColor(vocab.level)), contentAlignment = Alignment.Center) {
-                                Text("${vocab.level}", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = Color.White)
-                            }
-                            Spacer(Modifier.width(Brand.Spacing.sm))
-                            Column {
-                                Text("HSK ${vocab.level}", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = textColor)
-                                Text("${vocab.knownCount}/${vocab.totalWords} слов изучено", style = MaterialTheme.typography.labelSmall, color = subtextColor)
-                            }
-                        }
-                    }
+                    AdminVocabLevelCard(
+                        vocab = vocab,
+                        isDark = isDark,
+                        cardBg = cardBg,
+                        strokeColor = strokeColor,
+                        textColor = textColor,
+                        subtextColor = subtextColor,
+                    )
                 }
             }
         } else {
             item { Text("Нет данных о прогрессе", style = MaterialTheme.typography.bodySmall, color = subtextColor) }
         }
+    }
+}
+
+@Composable
+private fun AdminTestLevelCard(
+    level: Int,
+    testResult: com.subnetik.unlock.data.remote.dto.progress.TestProgressSyncItem?,
+    isLocked: Boolean,
+    isCompleted: Boolean,
+    isDark: Boolean,
+    cardBg: Color,
+    strokeColor: Color,
+    textColor: Color,
+    subtextColor: Color,
+    isExpanded: Boolean,
+    onToggleExpand: () -> Unit,
+) {
+    val alpha = if (isLocked) 0.5f else 1f
+
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(14.dp),
+        color = cardBg.copy(alpha = alpha),
+        border = BorderStroke(1.dp, strokeColor),
+    ) {
+        Column(Modifier.padding(12.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Box(
+                    Modifier.size(32.dp).background(BrandBlue.copy(alpha = if (isLocked) 0.08f else 0.18f), RoundedCornerShape(8.dp)),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text("$level", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = if (isLocked) subtextColor else BrandBlue)
+                }
+                Spacer(Modifier.width(Brand.Spacing.md))
+                Column(Modifier.weight(1f)) {
+                    Text("HSK $level", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = if (isLocked) subtextColor else textColor)
+                    Text(
+                        when {
+                            isCompleted -> {
+                                val t = testResult!!
+                                val attText = adminRussianPlural(t.attempts, "попытка", "попытки", "попыток")
+                                "${t.bestScore}/${t.totalQuestions} (${t.bestPercent}%) \u2022 ${t.attempts} $attText"
+                            }
+                            isLocked -> "Пройдите HSK ${level - 1}"
+                            else -> "Не начат"
+                        },
+                        style = MaterialTheme.typography.bodySmall, color = subtextColor,
+                    )
+                }
+                if (isLocked) {
+                    Icon(Icons.Default.Lock, null, Modifier.size(14.dp), tint = subtextColor.copy(alpha = 0.5f))
+                } else if (isCompleted && testResult != null) {
+                    Surface(shape = RoundedCornerShape(50), color = if (testResult.bestScore >= 8) BrandTeal else BrandCoral) {
+                        Text(
+                            if (testResult.bestScore >= 8) "Пройден" else "Не сдан",
+                            Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                            style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold, color = Color.White, fontSize = 10.sp,
+                        )
+                    }
+                }
+            }
+
+            // Expandable answers
+            if (testResult != null && !testResult.bestAttemptDetails.isNullOrEmpty() && !isLocked) {
+                Spacer(Modifier.height(8.dp))
+                Surface(onClick = onToggleExpand, shape = RoundedCornerShape(50), color = BrandBlue.copy(alpha = 0.08f)) {
+                    Row(Modifier.padding(horizontal = 12.dp, vertical = 6.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                        Icon(if (isExpanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown, null, Modifier.size(14.dp), tint = BrandBlue)
+                        Text(if (isExpanded) "Скрыть ответы" else "Показать ответы", style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold, color = BrandBlue, fontSize = 11.sp)
+                    }
+                }
+
+                androidx.compose.animation.AnimatedVisibility(visible = isExpanded, enter = androidx.compose.animation.expandVertically() + androidx.compose.animation.fadeIn(), exit = androidx.compose.animation.shrinkVertically() + androidx.compose.animation.fadeOut()) {
+                    Column(Modifier.padding(top = 8.dp)) {
+                        val details = testResult.bestAttemptDetails!!
+                        val correctCount = details.count { it.isCorrect == true }
+                        val wrongCount = details.size - correctCount
+
+                        Row(Modifier.padding(vertical = 4.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                                Box(Modifier.size(8.dp).background(BrandTeal, CircleShape))
+                                Text("Верно: $correctCount", style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold, color = BrandTeal, fontSize = 11.sp)
+                            }
+                            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                                Box(Modifier.size(8.dp).background(BrandCoral, CircleShape))
+                                Text("Ошибки: $wrongCount", style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold, color = BrandCoral, fontSize = 11.sp)
+                            }
+                        }
+
+                        Spacer(Modifier.height(4.dp))
+
+                        Surface(shape = RoundedCornerShape(12.dp), color = Color.Transparent, border = BorderStroke(1.dp, if (isDark) Color.White.copy(alpha = 0.06f) else Color.Black.copy(alpha = 0.06f))) {
+                            Column {
+                                details.forEachIndexed { idx, detail ->
+                                    AdminQuestionDetailRow(index = idx + 1, detail = detail, isDark = isDark, primaryText = textColor)
+                                    if (idx < details.lastIndex) {
+                                        HorizontalDivider(color = if (isDark) Color.White.copy(alpha = 0.06f) else Color.Black.copy(alpha = 0.06f))
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun AdminQuestionDetailRow(
+    index: Int,
+    detail: com.subnetik.unlock.data.remote.dto.progress.TestAttemptDetail,
+    isDark: Boolean,
+    primaryText: Color,
+) {
+    val isCorrect = detail.isCorrect == true
+    val accent = if (isCorrect) BrandTeal else BrandCoral
+
+    Row(
+        Modifier.fillMaxWidth().background(accent.copy(alpha = 0.04f)).padding(horizontal = 12.dp, vertical = 10.dp),
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
+    ) {
+        Box(Modifier.size(26.dp).background(accent.copy(alpha = 0.15f), CircleShape), contentAlignment = Alignment.Center) {
+            Text("$index", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = accent)
+        }
+        Column(Modifier.weight(1f)) {
+            Text(detail.prompt ?: "", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold, color = primaryText, fontSize = 12.sp)
+            Spacer(Modifier.height(4.dp))
+            if (isCorrect) {
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+                    Icon(Icons.Default.Check, null, Modifier.size(12.dp), tint = BrandTeal)
+                    Text(detail.correctAnswer ?: "", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold, color = BrandTeal, fontSize = 11.sp)
+                }
+            } else {
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+                    Icon(Icons.Default.Close, null, Modifier.size(12.dp), tint = BrandCoral)
+                    Text(detail.selectedAnswer ?: "", style = MaterialTheme.typography.bodySmall.copy(textDecoration = androidx.compose.ui.text.style.TextDecoration.LineThrough), color = BrandCoral, fontSize = 11.sp)
+                }
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+                    Icon(Icons.Default.Check, null, Modifier.size(12.dp), tint = BrandTeal)
+                    Text(detail.correctAnswer ?: "", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold, color = BrandTeal, fontSize = 11.sp)
+                }
+            }
+        }
+        Icon(if (isCorrect) Icons.Default.CheckCircle else Icons.Default.Cancel, null, Modifier.size(16.dp), tint = accent)
+    }
+}
+
+@Composable
+private fun AdminVocabLevelCard(
+    vocab: com.subnetik.unlock.data.remote.dto.progress.VocabProgressSyncItem,
+    isDark: Boolean,
+    cardBg: Color,
+    strokeColor: Color,
+    textColor: Color,
+    subtextColor: Color,
+) {
+    val notStudied = maxOf(0, vocab.totalWords - vocab.knownCount - vocab.reviewCount)
+    val barFraction = if (vocab.totalWords > 0) vocab.knownCount.toFloat() / vocab.totalWords else 0f
+
+    Surface(Modifier.fillMaxWidth(), shape = RoundedCornerShape(14.dp), color = cardBg, border = BorderStroke(1.dp, strokeColor)) {
+        Column(Modifier.padding(12.dp)) {
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                Text("HSK ${vocab.level}", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = textColor)
+                Text("${vocab.percent.toInt()}%", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = BrandTeal)
+            }
+            Spacer(Modifier.height(8.dp))
+            LinearProgressIndicator(
+                progress = { barFraction },
+                modifier = Modifier.fillMaxWidth().height(6.dp).clip(RoundedCornerShape(3.dp)),
+                color = BrandTeal,
+                trackColor = if (isDark) Color.White.copy(alpha = 0.08f) else Color.Black.copy(alpha = 0.06f),
+            )
+            Spacer(Modifier.height(10.dp))
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                AdminVocabStatPill("Выучено", vocab.knownCount, BrandTeal, subtextColor, Modifier.weight(1f))
+                AdminVocabStatPill("Повторить", vocab.reviewCount, BrandCoral, subtextColor, Modifier.weight(1f))
+                AdminVocabStatPill("Не изучено", notStudied, subtextColor, subtextColor, Modifier.weight(1f))
+            }
+        }
+    }
+}
+
+@Composable
+private fun AdminVocabStatPill(label: String, count: Int, color: Color, subtextColor: Color, modifier: Modifier = Modifier) {
+    Column(
+        modifier.background(color.copy(alpha = 0.08f), RoundedCornerShape(8.dp)).padding(vertical = 6.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Text("$count", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = color, fontSize = 14.sp)
+        Text(label, style = MaterialTheme.typography.labelSmall, color = subtextColor, fontSize = 9.sp)
+    }
+}
+
+private fun adminRussianPlural(count: Int, one: String, few: String, many: String): String {
+    val mod100 = count % 100
+    val mod10 = count % 10
+    return when {
+        mod100 in 11..19 -> many
+        mod10 == 1 -> one
+        mod10 in 2..4 -> few
+        else -> many
     }
 }
 

@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.*
 import javax.inject.Inject
 
 data class TeacherHomeUiState(
@@ -28,7 +29,7 @@ data class TeacherHomeUiState(
     val totalStudents: Int = 0,
     val todayLessonsCount: Int = 0,
     val unreadNotifications: Int = 0,
-    val isDarkTheme: Boolean? = null,
+    val isDarkTheme: Boolean? = true,
     // Group detail
     val selectedGroup: AdminGroup? = null,
     val groupStudents: List<AdminStudent> = emptyList(),
@@ -50,6 +51,8 @@ data class TeacherHomeUiState(
     val homeworkDescription: String = "",
     val homeworkHasDeadline: Boolean = false,
     val homeworkDueDate: Long? = null,
+    val homeworkDueHour: Int = 16,
+    val homeworkDueMinute: Int = 0,
     val isCreatingHomework: Boolean = false,
     // Error
     val error: String? = null,
@@ -253,6 +256,10 @@ class TeacherHomeViewModel @Inject constructor(
         _uiState.update { it.copy(homeworkDueDate = millis) }
     }
 
+    fun updateHomeworkDueTime(hour: Int, minute: Int) {
+        _uiState.update { it.copy(homeworkDueHour = hour, homeworkDueMinute = minute) }
+    }
+
     fun createHomework() {
         val state = _uiState.value
         val groupId = state.homeworkGroupId ?: return
@@ -262,8 +269,13 @@ class TeacherHomeViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val dueDate = if (state.homeworkHasDeadline && state.homeworkDueDate != null) {
+                    val cal = Calendar.getInstance()
+                    cal.timeInMillis = state.homeworkDueDate
+                    cal.set(Calendar.HOUR_OF_DAY, state.homeworkDueHour)
+                    cal.set(Calendar.MINUTE, state.homeworkDueMinute)
+                    cal.set(Calendar.SECOND, 0)
                     val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US)
-                    sdf.format(Date(state.homeworkDueDate))
+                    sdf.format(cal.time)
                 } else null
 
                 adminApi.createHomeworkAssignment(

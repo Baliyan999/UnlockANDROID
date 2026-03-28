@@ -12,6 +12,7 @@ import java.util.*
 import com.subnetik.unlock.domain.model.Resource
 import com.subnetik.unlock.domain.repository.AuthRepository
 import com.subnetik.unlock.domain.repository.NotificationRepository
+import com.subnetik.unlock.service.NotificationHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,9 +23,10 @@ import javax.inject.Inject
 
 data class HomeUiState(
     val displayName: String? = null,
+    val role: String? = null,
     val unreadCount: Int = 0,
     val tokenBalance: Int = 0,
-    val isDarkTheme: Boolean? = null,
+    val isDarkTheme: Boolean? = true,
     val schedule: StudentScheduleData? = null,
     val calendarEvents: List<CalendarEventResponse> = emptyList(),
 )
@@ -36,6 +38,7 @@ class HomeViewModel @Inject constructor(
     private val studentApi: StudentApi,
     private val calendarApi: CalendarApi,
     private val settingsDataStore: SettingsDataStore,
+    private val notificationHelper: NotificationHelper,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUiState())
@@ -45,6 +48,11 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             authRepository.getDisplayName().collect { name ->
                 _uiState.update { it.copy(displayName = name) }
+            }
+        }
+        viewModelScope.launch {
+            authRepository.getUserRole().collect { appRole ->
+                _uiState.update { it.copy(role = appRole.name.lowercase()) }
             }
         }
         viewModelScope.launch {
@@ -61,7 +69,14 @@ class HomeViewModel @Inject constructor(
     private fun loadUnreadCount() {
         viewModelScope.launch {
             when (val result = notificationRepository.getUnreadCount()) {
-                is Resource.Success -> _uiState.update { it.copy(unreadCount = result.data) }
+                is Resource.Success -> {
+                    android.util.Log.d("HomeVM", "Unread count: ${result.data}")
+                    _uiState.update { it.copy(unreadCount = result.data) }
+                    notificationHelper.updateBadge(result.data)
+                }
+                is Resource.Error -> {
+                    android.util.Log.e("HomeVM", "Unread count FAIL: ${result.message}")
+                }
                 else -> {}
             }
         }

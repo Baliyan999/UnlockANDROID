@@ -14,10 +14,11 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
+import com.subnetik.unlock.util.ErrorMapper
 import javax.inject.Inject
 
 data class SupportBookingUiState(
-    val isDarkTheme: Boolean? = null,
+    val isDarkTheme: Boolean? = true,
     val teachers: List<String> = listOf("Куат Бахитов", "Артур Гарифьянов"),
     val selectedTeacher: String = "Куат Бахитов",
     val selectedDate: Calendar = Calendar.getInstance().apply { add(Calendar.DAY_OF_MONTH, 1) },
@@ -118,7 +119,7 @@ class SupportBookingViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         isSubmitting = false,
-                        errorMessage = e.message ?: "Ошибка при создании записи",
+                        errorMessage = ErrorMapper.map(e),
                     )
                 }
             }

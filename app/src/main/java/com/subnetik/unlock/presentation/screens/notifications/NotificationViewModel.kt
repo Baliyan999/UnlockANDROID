@@ -2,6 +2,7 @@ package com.subnetik.unlock.presentation.screens.notifications
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.subnetik.unlock.data.local.datastore.SettingsDataStore
 import com.subnetik.unlock.data.remote.dto.notification.InboxNotification
 import com.subnetik.unlock.domain.model.Resource
 import com.subnetik.unlock.domain.repository.NotificationRepository
@@ -22,7 +23,10 @@ data class NotificationUiState(
 @HiltViewModel
 class NotificationViewModel @Inject constructor(
     private val notificationRepository: NotificationRepository,
+    settingsDataStore: SettingsDataStore,
 ) : ViewModel() {
+
+    val isDarkTheme = settingsDataStore.isDarkTheme
 
     private val _uiState = MutableStateFlow(NotificationUiState())
     val uiState: StateFlow<NotificationUiState> = _uiState.asStateFlow()

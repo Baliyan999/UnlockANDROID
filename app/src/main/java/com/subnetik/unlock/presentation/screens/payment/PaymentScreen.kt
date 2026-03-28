@@ -112,6 +112,9 @@ fun PaymentScreen(
                 }
 
                 Text("Оплата обучения", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold, color = primaryText)
+
+                // region QR-payment section – hidden, not deleted
+                if (false) {
                 Text(
                     "Отсканируйте QR-код любым\nплатёжным приложением",
                     style = MaterialTheme.typography.bodySmall,
@@ -179,6 +182,8 @@ fun PaymentScreen(
                         }
                     }
                 }
+                } // end hidden QR-payment section
+                // endregion
 
                 // ─── Upload Button (students only) ───────
                 if (uiState.isStudent) {

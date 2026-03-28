@@ -42,10 +42,12 @@ private val hskDescriptions = mapOf(
 @Composable
 fun TestListScreen(
     onNavigateToTest: (Int) -> Unit,
+    onNavigateToLogin: (() -> Unit)? = null,
     viewModel: TestViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val isDark = uiState.isDarkTheme ?: isSystemInDarkTheme()
+    val isLoggedIn = uiState.isLoggedIn
     val primaryText = if (isDark) Color.White else MaterialTheme.colorScheme.onSurface
     val secondaryText = if (isDark) Color.White.copy(alpha = 0.5f) else MaterialTheme.colorScheme.onSurfaceVariant
 
@@ -77,19 +79,31 @@ fun TestListScreen(
                     modifier = Modifier.fillMaxWidth().padding(vertical = Brand.Spacing.lg),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    // Shield icon
-                    Box(
-                        modifier = Modifier
-                            .size(72.dp)
-                            .background(BrandBlue.copy(alpha = 0.15f), CircleShape),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Icon(
-                            Icons.Default.Verified,
-                            contentDescription = null,
-                            modifier = Modifier.size(40.dp),
-                            tint = BrandBlue,
+                    // Shield icon with glow
+                    Box(contentAlignment = Alignment.Center) {
+                        // Glow
+                        Box(
+                            modifier = Modifier
+                                .size(80.dp)
+                                .background(BrandBlue.copy(alpha = 0.12f), CircleShape),
                         )
+                        // Main circle
+                        Box(
+                            modifier = Modifier
+                                .size(58.dp)
+                                .background(
+                                    Brush.linearGradient(listOf(BrandBlue, BrandIndigo)),
+                                    CircleShape,
+                                ),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Icon(
+                                Icons.Default.Verified,
+                                contentDescription = null,
+                                modifier = Modifier.size(28.dp),
+                                tint = Color.White,
+                            )
+                        }
                     }
 
                     Spacer(Modifier.height(Brand.Spacing.lg))
@@ -116,15 +130,15 @@ fun TestListScreen(
                 }
             }
 
-            // Info badges
+            // Info badges 2x2
             item(span = { GridItemSpan(2) }) {
                 Column(verticalArrangement = Arrangement.spacedBy(Brand.Spacing.sm)) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(Brand.Spacing.sm),
                     ) {
-                        InfoBadge(Icons.Default.Shuffle, "Случайный порядок", BrandBlue, isDark, Modifier.weight(1f))
-                        InfoBadge(Icons.Default.FormatListNumbered, "10 вопросов", BrandIndigo, isDark, Modifier.weight(1f))
+                        InfoBadge(Icons.Default.Shuffle, "Случайный порядок", BrandTeal, isDark, Modifier.weight(1f))
+                        InfoBadge(Icons.Default.FormatListNumbered, "10 вопросов", BrandBlue, isDark, Modifier.weight(1f))
                     }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -136,31 +150,116 @@ fun TestListScreen(
                 }
             }
 
+            // Login banner for guests
+            if (!isLoggedIn) {
+                item(span = { GridItemSpan(2) }) {
+                    TestLoginBanner(isDark = isDark, onLogin = onNavigateToLogin)
+                }
+            }
+
             item(span = { GridItemSpan(2) }) { Spacer(Modifier.height(4.dp)) }
 
             // HSK level cards
             items((1..6).toList()) { level ->
-                val progress = uiState.levelProgress[level]
-                val passed = progress?.passed == true
-                val isLocked = level > 1 && uiState.levelProgress[level - 1]?.passed != true
+                if (!isLoggedIn) {
+                    // Guest: all cards locked
+                    TestLevelCard(
+                        level = level,
+                        description = hskDescriptions[level] ?: "",
+                        bestPercent = null,
+                        attempts = 0,
+                        passed = false,
+                        isLocked = true,
+                        lockReason = "Войдите, чтобы открыть тесты",
+                        isDark = isDark,
+                        onClick = { onNavigateToLogin?.invoke() },
+                    )
+                } else {
+                    val progress = uiState.levelProgress[level]
+                    val passed = progress?.passed == true
+                    val isLocked = level > 1 && uiState.levelProgress[level - 1]?.passed != true
 
-                TestLevelCard(
-                    level = level,
-                    description = hskDescriptions[level] ?: "",
-                    bestPercent = progress?.bestPercent,
-                    attempts = progress?.attempts ?: 0,
-                    passed = passed,
-                    isLocked = isLocked,
-                    lockReason = if (isLocked) "Пройдите HSK ${level - 1}" else null,
-                    isDark = isDark,
-                    onClick = { if (!isLocked) onNavigateToTest(level) },
-                )
+                    TestLevelCard(
+                        level = level,
+                        description = hskDescriptions[level] ?: "",
+                        bestPercent = progress?.bestPercent,
+                        attempts = progress?.attempts ?: 0,
+                        passed = passed,
+                        isLocked = isLocked,
+                        lockReason = if (isLocked) "Пройдите HSK ${level - 1}" else null,
+                        isDark = isDark,
+                        onClick = { if (!isLocked) onNavigateToTest(level) },
+                    )
+                }
             }
 
             item(span = { GridItemSpan(2) }) { Spacer(Modifier.height(Brand.Spacing.xl)) }
         }
     }
 }
+
+// ════════════════════════════════════════════════════════════
+// Login Banner (matching iOS TestLoginBanner)
+// ════════════════════════════════════════════════════════════
+
+@Composable
+private fun TestLoginBanner(
+    isDark: Boolean,
+    onLogin: (() -> Unit)? = null,
+) {
+    val bannerBg = BrandBlue.copy(alpha = if (isDark) 0.10f else 0.06f)
+    val borderColor = BrandBlue.copy(alpha = 0.20f)
+
+    Surface(
+        onClick = { onLogin?.invoke() },
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        color = bannerBg,
+        border = BorderStroke(1.dp, borderColor),
+    ) {
+        Row(
+            modifier = Modifier.padding(14.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            // Shield icon
+            Box(
+                modifier = Modifier
+                    .size(38.dp)
+                    .background(BrandBlue.copy(alpha = 0.15f), CircleShape),
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    Icons.Default.Lock,
+                    contentDescription = null,
+                    modifier = Modifier.size(16.dp),
+                    tint = BrandBlue,
+                )
+            }
+
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    "Только для зарегистрированных",
+                    style = MaterialTheme.typography.labelMedium,
+                    fontWeight = FontWeight.SemiBold,
+                    color = BrandBlue,
+                )
+                Spacer(Modifier.height(2.dp))
+                Text(
+                    "Авторизуйтесь в профиле, чтобы проходить тесты и сохранять результаты.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = if (isDark) Color.White.copy(alpha = 0.5f) else MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
+        }
+    }
+}
+
+// ════════════════════════════════════════════════════════════
+// Info Badge
+// ════════════════════════════════════════════════════════════
 
 @Composable
 private fun InfoBadge(
@@ -193,6 +292,10 @@ private fun InfoBadge(
         }
     }
 }
+
+// ════════════════════════════════════════════════════════════
+// Level Card
+// ════════════════════════════════════════════════════════════
 
 @Composable
 private fun TestLevelCard(
@@ -306,7 +409,29 @@ private fun TestLevelCard(
                         .padding(horizontal = Brand.Spacing.md, vertical = Brand.Spacing.md),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    Spacer(Modifier.height(4.dp))
+                    // Passed / perfect badges
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End,
+                    ) {
+                        if (passed) {
+                            Icon(
+                                Icons.Default.Verified,
+                                contentDescription = null,
+                                modifier = Modifier.size(20.dp),
+                                tint = BrandTeal,
+                            )
+                        }
+                        if (bestPercent == 100) {
+                            Spacer(Modifier.width(2.dp))
+                            Icon(
+                                Icons.Default.Star,
+                                contentDescription = null,
+                                modifier = Modifier.size(16.dp),
+                                tint = BrandGold,
+                            )
+                        }
+                    }
 
                     // Level circle
                     Box(

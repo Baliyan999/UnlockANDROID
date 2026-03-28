@@ -121,13 +121,24 @@ fun StudentScheduleScreen(
                                                     .background(Color.White.copy(alpha = 0.2f), RoundedCornerShape(10.dp)),
                                                 contentAlignment = Alignment.Center,
                                             ) {
-                                                Icon(Icons.Default.CalendarMonth, contentDescription = null, tint = Color.White, modifier = Modifier.size(22.dp))
+                                                Icon(
+                                                    if (nextLessonInfo.isOngoing) Icons.Default.GraphicEq else Icons.Default.CalendarMonth,
+                                                    contentDescription = null, tint = Color.White, modifier = Modifier.size(22.dp),
+                                                )
                                             }
                                             Spacer(Modifier.width(Brand.Spacing.md))
                                             Column {
-                                                Text("Следующее занятие", style = MaterialTheme.typography.labelMedium, color = Color.White.copy(alpha = 0.8f))
                                                 Text(
-                                                    "${nextLessonInfo.dayName} в ${nextLessonInfo.time}",
+                                                    if (nextLessonInfo.isOngoing) "Занятие идёт!" else "Следующее занятие",
+                                                    style = MaterialTheme.typography.labelMedium,
+                                                    color = Color.White.copy(alpha = 0.8f),
+                                                )
+                                                Text(
+                                                    if (nextLessonInfo.isOngoing) {
+                                                        "Идёт занятие • ${nextLessonInfo.minutesLeft} мин\nдо конца"
+                                                    } else {
+                                                        "${nextLessonInfo.dayName} в ${nextLessonInfo.time}"
+                                                    },
                                                     style = MaterialTheme.typography.headlineSmall,
                                                     fontWeight = FontWeight.Bold,
                                                     color = Color.White,
@@ -395,7 +406,7 @@ fun StudentScheduleScreen(
 
 // ─── Helpers ──────────────────────────────────────────────────
 
-private data class NextLessonInfo(val dayName: String, val time: String)
+private data class NextLessonInfo(val dayName: String, val time: String, val isOngoing: Boolean = false, val minutesLeft: Int = 0)
 
 private data class WeekDay(val label: String, val token: String, val dayOfMonth: Int, val dateString: String = "")
 
@@ -412,7 +423,17 @@ private fun findNextLesson(scheduleDays: String, scheduleTime: String?): NextLes
     val nowMinutes = now.get(Calendar.HOUR_OF_DAY) * 60 + now.get(Calendar.MINUTE)
     val startMinutes = parseMinutes(startTime)
 
-    // Check today first
+    val (_, endTimeStr) = parseTimeRange(scheduleTime)
+    val endMinutes = parseMinutes(endTimeStr)
+
+    // Check if lesson is ongoing right now
+    if (nowDow in activeDays && startMinutes != null && endMinutes != null &&
+        nowMinutes >= startMinutes && nowMinutes < endMinutes) {
+        val left = endMinutes - nowMinutes
+        return NextLessonInfo("Сейчас", startTime, isOngoing = true, minutesLeft = left)
+    }
+
+    // Check today (upcoming)
     if (nowDow in activeDays && (startMinutes == null || startMinutes > nowMinutes)) {
         return NextLessonInfo("Сегодня", startTime)
     }
