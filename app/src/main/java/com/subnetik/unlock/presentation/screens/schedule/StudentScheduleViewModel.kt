@@ -2,6 +2,7 @@ package com.subnetik.unlock.presentation.screens.schedule
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.subnetik.unlock.BuildConfig
 import com.subnetik.unlock.data.local.datastore.SettingsDataStore
 import com.subnetik.unlock.data.remote.api.CalendarApi
 import com.subnetik.unlock.data.remote.api.StudentApi
@@ -52,7 +53,7 @@ class StudentScheduleViewModel @Inject constructor(
                 val schedule = studentApi.getSchedule()
                 _uiState.update { it.copy(isLoading = false, schedule = schedule) }
             } catch (e: Exception) {
-                android.util.Log.e("ScheduleVM", "Failed to load schedule", e)
+                if (BuildConfig.DEBUG) android.util.Log.e("ScheduleVM", "Failed to load schedule", e)
                 _uiState.update { it.copy(isLoading = false, error = e.message) }
             }
         }

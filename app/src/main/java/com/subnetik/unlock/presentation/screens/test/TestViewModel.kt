@@ -2,10 +2,12 @@ package com.subnetik.unlock.presentation.screens.test
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.subnetik.unlock.BuildConfig
 import com.subnetik.unlock.data.local.datastore.SettingsDataStore
 import com.subnetik.unlock.data.local.db.entity.TestProgressEntity
 import com.subnetik.unlock.data.remote.api.ProgressApi
 import com.subnetik.unlock.data.remote.dto.progress.ProgressSyncRequest
+import com.subnetik.unlock.data.remote.dto.progress.TestAttemptDetail
 import com.subnetik.unlock.data.remote.dto.progress.TestProgressSyncItem
 import com.subnetik.unlock.domain.model.TestQuestion
 import com.subnetik.unlock.domain.repository.AuthRepository
@@ -36,6 +38,7 @@ data class TestUiState(
     val isDarkTheme: Boolean? = true,
     val showTrialButton: Boolean = false,
     val isLoggedIn: Boolean = false,
+    val answerDetails: List<TestAttemptDetail> = emptyList(),
 )
 
 @HiltViewModel
@@ -44,6 +47,7 @@ class TestViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val settingsDataStore: SettingsDataStore,
     private val progressApi: ProgressApi,
+    private val json: kotlinx.serialization.json.Json,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(TestUiState())
@@ -108,6 +112,15 @@ class TestViewModel @Inject constructor(
                         hasLocalOnly = true
                     }
 
+                    // Merge bestAttemptDetails: use server's if server has better score, otherwise keep local
+                    val mergedDetailsJson = if (item.bestPercent >= (local?.bestPercent ?: 0)) {
+                        item.bestAttemptDetails?.let { details ->
+                            try { json.encodeToString(kotlinx.serialization.builtins.ListSerializer(TestAttemptDetail.serializer()), details) } catch (_: Exception) { null }
+                        } ?: local?.bestAttemptDetailsJson
+                    } else {
+                        local?.bestAttemptDetailsJson
+                    }
+
                     val entity = TestProgressEntity(
                         key = "${email}_$level",
                         bestPercent = mergedBestPercent,
@@ -116,6 +129,7 @@ class TestViewModel @Inject constructor(
                         attempts = mergedAttempts,
                         passed = mergedPassed,
                         lastAttemptAt = item.lastAttemptAt ?: local?.lastAttemptAt,
+                        bestAttemptDetailsJson = mergedDetailsJson,
                     )
                     testRepository.saveProgress(entity)
                     map[level] = entity
@@ -128,7 +142,7 @@ class TestViewModel @Inject constructor(
                     syncAllToServer(email, map)
                 }
             } catch (e: Exception) {
-                android.util.Log.w("TestVM", "Server fetch failed: ${e.message}")
+                if (BuildConfig.DEBUG) android.util.Log.w("TestVM", "Server fetch failed: ${e.message}")
             }
         }
     }
@@ -150,6 +164,7 @@ class TestViewModel @Inject constructor(
                 score = 0,
                 testComplete = false,
                 remainingSeconds = 600,
+                answerDetails = emptyList(),
             )
         }
         startTimer()
@@ -171,12 +186,24 @@ class TestViewModel @Inject constructor(
     fun selectAnswer(answerId: String) {
         if (_uiState.value.answerRevealed) return
         val question = _uiState.value.currentQuestion ?: return
-        val isCorrect = question.answers.find { it.id == answerId }?.isCorrect == true
+        val selectedAnswer = question.answers.find { it.id == answerId }
+        val isCorrect = selectedAnswer?.isCorrect == true
+        val correctAnswer = question.answers.find { it.isCorrect }
+
+        val detail = TestAttemptDetail(
+            questionId = question.id,
+            prompt = question.prompt,
+            selectedAnswer = selectedAnswer?.text,
+            correctAnswer = correctAnswer?.text,
+            isCorrect = isCorrect,
+        )
+
         _uiState.update {
             it.copy(
                 selectedAnswerId = answerId,
                 answerRevealed = true,
                 score = if (isCorrect) it.score + 1 else it.score,
+                answerDetails = it.answerDetails + detail,
             )
         }
     }
@@ -212,6 +239,16 @@ class TestViewModel @Inject constructor(
             val percent = if (state.totalQuestions > 0) (state.score * 100) / state.totalQuestions else 0
             val existing = testRepository.getProgress(email, "$level")
 
+            // Determine if this attempt is a new best — if so, update bestAttemptDetails
+            val isBetterScore = percent > (existing?.bestPercent ?: 0) ||
+                    (percent == (existing?.bestPercent ?: 0) && state.score > (existing?.bestScore ?: 0))
+
+            val detailsJson = if (isBetterScore && state.answerDetails.isNotEmpty()) {
+                json.encodeToString(kotlinx.serialization.builtins.ListSerializer(TestAttemptDetail.serializer()), state.answerDetails)
+            } else {
+                existing?.bestAttemptDetailsJson
+            }
+
             val entity = TestProgressEntity(
                 key = "${email}_$level",
                 bestPercent = maxOf(percent, existing?.bestPercent ?: 0),
@@ -220,6 +257,7 @@ class TestViewModel @Inject constructor(
                 attempts = (existing?.attempts ?: 0) + 1,
                 passed = percent >= 70 || existing?.passed == true,
                 lastAttemptAt = Instant.now().toString(),
+                bestAttemptDetailsJson = detailsJson,
             )
             testRepository.saveProgress(entity)
 
@@ -236,6 +274,11 @@ class TestViewModel @Inject constructor(
     private suspend fun syncAllToServer(email: String, map: Map<Int, TestProgressEntity>) {
         try {
             val testItems = map.map { (level, entity) ->
+                val details = entity.bestAttemptDetailsJson?.let { raw ->
+                    try {
+                        json.decodeFromString<List<TestAttemptDetail>>(raw)
+                    } catch (_: Exception) { null }
+                }
                 TestProgressSyncItem(
                     levelId = "hsk$level",
                     bestPercent = entity.bestPercent,
@@ -244,12 +287,13 @@ class TestViewModel @Inject constructor(
                     attempts = entity.attempts,
                     passed = entity.passed,
                     lastAttemptAt = entity.lastAttemptAt,
+                    bestAttemptDetails = details,
                 )
             }
             progressApi.syncProgress(ProgressSyncRequest(tests = testItems, vocabulary = emptyList()))
-            android.util.Log.d("TestVM", "Test progress synced to server: ${testItems.size} levels")
+            if (BuildConfig.DEBUG) android.util.Log.d("TestVM", "Test progress synced to server: ${testItems.size} levels")
         } catch (e: Exception) {
-            android.util.Log.w("TestVM", "Test sync failed: ${e.message}")
+            if (BuildConfig.DEBUG) android.util.Log.w("TestVM", "Test sync failed: ${e.message}")
         }
     }
 

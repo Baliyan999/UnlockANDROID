@@ -149,7 +149,7 @@ fun MarketScreen(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .background(
-                                        Color.White.copy(alpha = 0.08f),
+                                        if (isDark) Color.White.copy(alpha = 0.08f) else Color(0xFF2A2F5A),
                                         RoundedCornerShape(bottomStart = 22.dp, bottomEnd = 22.dp),
                                     )
                                     .padding(vertical = 10.dp),

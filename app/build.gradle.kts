@@ -113,6 +113,9 @@ dependencies {
     // QR Code
     implementation("com.google.zxing:core:3.5.3")
 
+    // Encrypted SharedPreferences
+    implementation("androidx.security:security-crypto:1.1.0-alpha06")
+
     // Firebase
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.messaging)

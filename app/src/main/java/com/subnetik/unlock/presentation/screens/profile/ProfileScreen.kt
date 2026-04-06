@@ -1168,8 +1168,12 @@ private fun SettingsSheetContent(
         val isUserRole = uiState.role?.lowercase() == "user" || uiState.role == null
         val isTeacherOrAdmin = uiState.role?.lowercase() in listOf("teacher", "admin")
         if (!isUserRole) {
-        val studentDocs = com.subnetik.unlock.presentation.screens.terms.getStudentDocuments()
+        val allStudentDocs = com.subnetik.unlock.presentation.screens.terms.getStudentDocuments()
         val teacherDocs = com.subnetik.unlock.presentation.screens.terms.getTeacherDocuments()
+        val isAdmin = uiState.role?.lowercase() == "admin"
+        // Teachers see only privacy + termsOfUse in general section; admins and students see all 3
+        val generalDocs = if (isAdmin || !isTeacherOrAdmin) allStudentDocs
+            else allStudentDocs.filter { it.id in listOf("privacy", "termsOfUse") }
         var activeViewerDoc by remember { mutableStateOf<com.subnetik.unlock.presentation.screens.terms.TermsDocument?>(null) }
 
         GlassCard(isDark = isDark) {
@@ -1185,7 +1189,7 @@ private fun SettingsSheetContent(
                     color = textColor,
                 )
 
-                studentDocs.forEach { doc ->
+                generalDocs.forEach { doc ->
                     Surface(
                         onClick = { activeViewerDoc = doc },
                         color = fieldBg,

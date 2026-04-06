@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -50,19 +51,20 @@ fun TestListScreen(
     val isLoggedIn = uiState.isLoggedIn
     val primaryText = if (isDark) Color.White else MaterialTheme.colorScheme.onSurface
     val secondaryText = if (isDark) Color.White.copy(alpha = 0.5f) else MaterialTheme.colorScheme.onSurfaceVariant
+    val columns = if (LocalConfiguration.current.screenWidthDp >= 600) 3 else 2
 
     Box(modifier = Modifier.fillMaxSize()) {
         AdminBackground(isDark = isDark)
 
         LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
+            columns = GridCells.Fixed(columns),
             contentPadding = PaddingValues(horizontal = Brand.Spacing.lg, vertical = Brand.Spacing.md),
             horizontalArrangement = Arrangement.spacedBy(Brand.Spacing.md),
             verticalArrangement = Arrangement.spacedBy(Brand.Spacing.md),
             modifier = Modifier.fillMaxSize().statusBarsPadding(),
         ) {
             // Title
-            item(span = { GridItemSpan(2) }) {
+            item(span = { GridItemSpan(maxLineSpan) }) {
                 Text(
                     "Тест",
                     modifier = Modifier.fillMaxWidth(),
@@ -74,7 +76,7 @@ fun TestListScreen(
             }
 
             // Shield icon + header
-            item(span = { GridItemSpan(2) }) {
+            item(span = { GridItemSpan(maxLineSpan) }) {
                 Column(
                     modifier = Modifier.fillMaxWidth().padding(vertical = Brand.Spacing.lg),
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -131,7 +133,7 @@ fun TestListScreen(
             }
 
             // Info badges 2x2
-            item(span = { GridItemSpan(2) }) {
+            item(span = { GridItemSpan(maxLineSpan) }) {
                 Column(verticalArrangement = Arrangement.spacedBy(Brand.Spacing.sm)) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -152,12 +154,12 @@ fun TestListScreen(
 
             // Login banner for guests
             if (!isLoggedIn) {
-                item(span = { GridItemSpan(2) }) {
+                item(span = { GridItemSpan(maxLineSpan) }) {
                     TestLoginBanner(isDark = isDark, onLogin = onNavigateToLogin)
                 }
             }
 
-            item(span = { GridItemSpan(2) }) { Spacer(Modifier.height(4.dp)) }
+            item(span = { GridItemSpan(maxLineSpan) }) { Spacer(Modifier.height(4.dp)) }
 
             // HSK level cards
             items((1..6).toList()) { level ->
@@ -193,7 +195,7 @@ fun TestListScreen(
                 }
             }
 
-            item(span = { GridItemSpan(2) }) { Spacer(Modifier.height(Brand.Spacing.xl)) }
+            item(span = { GridItemSpan(maxLineSpan) }) { Spacer(Modifier.height(Brand.Spacing.xl)) }
         }
     }
 }

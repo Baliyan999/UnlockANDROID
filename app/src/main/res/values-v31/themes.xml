@@ -2,9 +2,12 @@
 <resources>
 
     <style name="Theme.UnlockLanguageStudio" parent="android:Theme.Material.Light.NoActionBar">
-        <!-- Dark branded window background so the splash is never white -->
+        <!-- Dark branded window background -->
         <item name="android:windowBackground">@color/brand_dark_navy</item>
         <item name="android:statusBarColor">@color/brand_dark_navy</item>
         <item name="android:navigationBarColor">@color/brand_dark_navy</item>
+
+        <!-- Android 12+ SplashScreen API: dark branded splash -->
+        <item name="android:windowSplashScreenBackground">@color/brand_dark_navy</item>
     </style>
 </resources>

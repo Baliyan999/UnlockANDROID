@@ -19,4 +19,16 @@ interface BlogApi {
 
     @POST("blog/{id}/view")
     suspend fun incrementView(@Path("id") id: Int): ViewResponse
+
+    @POST("blog/")
+    suspend fun createPost(@Body request: CreateBlogPostRequest): BlogPostDto
+
+    @PUT("blog/{postId}")
+    suspend fun updatePost(@Path("postId") postId: Int, @Body request: UpdateBlogPostRequest): BlogPostDto
+
+    @DELETE("blog/{postId}")
+    suspend fun deletePost(@Path("postId") postId: Int): Any
+
+    @PATCH("blog/{postId}/status")
+    suspend fun updateStatus(@Path("postId") postId: Int, @Body request: Map<String, String>): Any
 }

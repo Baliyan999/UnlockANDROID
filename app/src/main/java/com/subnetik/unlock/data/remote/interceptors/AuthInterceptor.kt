@@ -1,5 +1,6 @@
 package com.subnetik.unlock.data.remote.interceptors
 
+import com.subnetik.unlock.BuildConfig
 import com.subnetik.unlock.data.local.datastore.AuthDataStore
 import com.subnetik.unlock.data.remote.SessionManager
 import kotlinx.coroutines.flow.first
@@ -29,7 +30,7 @@ class AuthInterceptor @Inject constructor(
 
         val response = chain.proceed(request)
 
-        if (response.code != 200) {
+        if (response.code != 200 && BuildConfig.DEBUG) {
             android.util.Log.w("AuthInterceptor", "${request.method} ${request.url} -> ${response.code} (hasToken=${!token.isNullOrEmpty()})")
         }
 
@@ -38,7 +39,9 @@ class AuthInterceptor @Inject constructor(
             val path = request.url.encodedPath.trimStart('/')
             val isAuthEndpoint = AUTH_PATHS.any { path.contains(it) }
             if (!isAuthEndpoint) {
-                android.util.Log.w("AuthInterceptor", "Session expired – clearing local session")
+                if (BuildConfig.DEBUG) {
+                    android.util.Log.w("AuthInterceptor", "Session expired – clearing local session")
+                }
                 runBlocking { authDataStore.clearAll() }
                 sessionManager.notifySessionExpired()
             }

@@ -215,6 +215,8 @@ fun AppNavigation(
                         onNavigateToPayment = { navController.navigate(Routes.StudentPayments.route) },
                         onNavigateToMarket = { navController.navigate(Routes.Market.route) },
                         onNavigateToReferral = { navController.navigate(Routes.Referral.route) },
+                        onNavigateToBlog = { navController.navigate(Routes.Blog.route) },
+                        onNavigateToReviews = { navController.navigate(Routes.Reviews.route) },
                     )
                 }
             }
@@ -358,7 +360,10 @@ fun AppNavigation(
                         navController.navigate(Routes.Test.route) {
                             popUpTo(Routes.Test.route) { inclusive = true }
                         }
-                    }
+                    },
+                    onBookTrial = {
+                        navController.navigate(Routes.SupportBooking.route)
+                    },
                 )
             }
 
@@ -470,7 +475,8 @@ private fun UnlockBottomBar(
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 12.dp, end = 12.dp, bottom = 16.dp),
+            .navigationBarsPadding()
+            .padding(start = 12.dp, end = 12.dp, bottom = 8.dp),
         shape = RoundedCornerShape(22.dp),
         color = barBg,
         shadowElevation = if (isDark) 0.dp else 4.dp,
@@ -525,7 +531,8 @@ private fun UnlockBottomBar(
                             lineHeight = 10.sp,
                             fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
                             color = textColor,
-                            maxLines = 1,
+                            maxLines = 2,
+                            textAlign = androidx.compose.ui.text.style.TextAlign.Center,
                         )
                     }
                 }

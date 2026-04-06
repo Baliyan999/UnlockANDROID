@@ -58,15 +58,24 @@ class AdminBlogViewModel @Inject constructor(private val adminApi: AdminApi) : V
         val posts: List<AdminBlogPost> = emptyList(),
         val selectedFilter: String = "all",
         val error: String? = null,
-        val showCreateDialog: Boolean = false,
-        val createTitle: String = "",
-        val createExcerpt: String = "",
-        val createContent: String = "",
-        val createLanguage: String = "ru",
+        // Create/Edit dialog
+        val showFormDialog: Boolean = false,
+        val editingPostId: Int? = null,
+        val formTitle: String = "",
+        val formExcerpt: String = "",
+        val formContent: String = "",
+        val formSlug: String = "",
+        val formLanguage: String = "ru",
+        val formStatus: String = "draft",
+        val formImageUrl: String = "",
         val coverImageUri: Uri? = null,
         val coverUploadedUrl: String? = null,
         val isUploadingCover: Boolean = false,
+        val isSaving: Boolean = false,
+        // Delete confirmation
+        val deleteConfirmPostId: Int? = null,
     ) {
+        val isEditing: Boolean get() = editingPostId != null
         val filtered: List<AdminBlogPost>
             get() = if (selectedFilter == "all") posts else posts.filter { it.status.lowercase() == selectedFilter }
     }
@@ -85,12 +94,61 @@ class AdminBlogViewModel @Inject constructor(private val adminApi: AdminApi) : V
 
     fun selectFilter(f: String) { _uiState.update { it.copy(selectedFilter = f) } }
 
-    fun showCreateDialog() { _uiState.update { it.copy(showCreateDialog = true, createTitle = "", createExcerpt = "", createContent = "", createLanguage = "ru", coverImageUri = null, coverUploadedUrl = null) } }
-    fun dismissCreateDialog() { _uiState.update { it.copy(showCreateDialog = false) } }
-    fun updateCreateTitle(v: String) { _uiState.update { it.copy(createTitle = v) } }
-    fun updateCreateExcerpt(v: String) { _uiState.update { it.copy(createExcerpt = v) } }
-    fun updateCreateContent(v: String) { _uiState.update { it.copy(createContent = v) } }
-    fun updateCreateLanguage(v: String) { _uiState.update { it.copy(createLanguage = v) } }
+    // ─── Form: Create ───────────────────────────────────────
+    fun showCreateDialog() {
+        _uiState.update {
+            it.copy(
+                showFormDialog = true, editingPostId = null,
+                formTitle = "", formExcerpt = "", formContent = "", formSlug = "",
+                formLanguage = "ru", formStatus = "draft", formImageUrl = "",
+                coverImageUri = null, coverUploadedUrl = null,
+            )
+        }
+    }
+
+    // ─── Form: Edit ─────────────────────────────────────────
+    fun showEditDialog(post: AdminBlogPost) {
+        _uiState.update {
+            it.copy(
+                showFormDialog = true, editingPostId = post.id,
+                formTitle = post.title, formExcerpt = post.excerpt, formContent = post.content,
+                formSlug = post.slug, formLanguage = post.language, formStatus = post.status,
+                formImageUrl = post.imageUrl ?: post.cover ?: "",
+                coverImageUri = null, coverUploadedUrl = null,
+            )
+        }
+    }
+
+    fun dismissFormDialog() { _uiState.update { it.copy(showFormDialog = false, editingPostId = null) } }
+
+    fun updateFormTitle(v: String) { _uiState.update { it.copy(formTitle = v) } }
+    fun updateFormExcerpt(v: String) { _uiState.update { it.copy(formExcerpt = v) } }
+    fun updateFormContent(v: String) { _uiState.update { it.copy(formContent = v) } }
+    fun updateFormSlug(v: String) { _uiState.update { it.copy(formSlug = v) } }
+    fun updateFormLanguage(v: String) { _uiState.update { it.copy(formLanguage = v) } }
+    fun updateFormStatus(v: String) { _uiState.update { it.copy(formStatus = v) } }
+    fun updateFormImageUrl(v: String) { _uiState.update { it.copy(formImageUrl = v) } }
+
+    /** Auto-generate slug from title (transliterate basic Cyrillic) */
+    fun autoGenerateSlug() {
+        val title = _uiState.value.formTitle
+        val slug = title.lowercase()
+            .replace(Regex("[а-яё]") ) { ch ->
+                when (ch.value) {
+                    "а" -> "a"; "б" -> "b"; "в" -> "v"; "г" -> "g"; "д" -> "d"
+                    "е" -> "e"; "ё" -> "yo"; "ж" -> "zh"; "з" -> "z"; "и" -> "i"
+                    "й" -> "y"; "к" -> "k"; "л" -> "l"; "м" -> "m"; "н" -> "n"
+                    "о" -> "o"; "п" -> "p"; "р" -> "r"; "с" -> "s"; "т" -> "t"
+                    "у" -> "u"; "ф" -> "f"; "х" -> "kh"; "ц" -> "ts"; "ч" -> "ch"
+                    "ш" -> "sh"; "щ" -> "shch"; "ъ" -> ""; "ы" -> "y"; "ь" -> ""
+                    "э" -> "e"; "ю" -> "yu"; "я" -> "ya"
+                    else -> ch.value
+                }
+            }
+            .replace(Regex("[^a-z0-9]+"), "-")
+            .trim('-')
+        _uiState.update { it.copy(formSlug = slug) }
+    }
 
     fun selectCoverImage(uri: Uri, context: Context) {
         _uiState.update { it.copy(coverImageUri = uri, isUploadingCover = true) }
@@ -104,30 +162,65 @@ class AdminBlogViewModel @Inject constructor(private val adminApi: AdminApi) : V
                 val requestBody = bytes.toRequestBody(mimeType.toMediaTypeOrNull())
                 val part = MultipartBody.Part.createFormData("file", fileName, requestBody)
                 val response = adminApi.uploadBlogImage(part)
-                _uiState.update { it.copy(isUploadingCover = false, coverUploadedUrl = response.url) }
+                _uiState.update { it.copy(isUploadingCover = false, coverUploadedUrl = response.url, formImageUrl = response.url ?: "") }
             } catch (e: Exception) {
                 _uiState.update { it.copy(isUploadingCover = false, error = "Ошибка загрузки: ${e.message}") }
             }
         }
     }
 
-    fun removeCoverImage() { _uiState.update { it.copy(coverImageUri = null, coverUploadedUrl = null) } }
+    fun removeCoverImage() { _uiState.update { it.copy(coverImageUri = null, coverUploadedUrl = null, formImageUrl = "") } }
 
-    fun createPost() {
-        val state = _uiState.value
-        if (state.createTitle.isBlank()) return
+    // ─── Save (create or update) ────────────────────────────
+    fun savePost() {
+        val s = _uiState.value
+        if (s.formTitle.isBlank()) return
+        _uiState.update { it.copy(isSaving = true) }
         viewModelScope.launch {
             try {
-                adminApi.createBlogPost(AdminBlogCreateRequest(title = state.createTitle.trim(), excerpt = state.createExcerpt.trim(), content = state.createContent.trim(), language = state.createLanguage, cover = state.coverUploadedUrl))
-                _uiState.update { it.copy(showCreateDialog = false) }
+                val imageUrl = s.coverUploadedUrl ?: s.formImageUrl.takeIf { it.isNotBlank() }
+                if (s.isEditing) {
+                    adminApi.updateBlogPost(
+                        s.editingPostId!!,
+                        AdminBlogUpdateRequest(
+                            title = s.formTitle.trim(),
+                            excerpt = s.formExcerpt.trim(),
+                            content = s.formContent.trim(),
+                            slug = s.formSlug.trim(),
+                            language = s.formLanguage,
+                            status = s.formStatus,
+                            imageUrl = imageUrl,
+                        ),
+                    )
+                } else {
+                    adminApi.createBlogPost(
+                        AdminBlogCreateRequest(
+                            title = s.formTitle.trim(),
+                            excerpt = s.formExcerpt.trim(),
+                            content = s.formContent.trim(),
+                            slug = s.formSlug.trim(),
+                            language = s.formLanguage,
+                            status = s.formStatus,
+                            imageUrl = imageUrl,
+                        ),
+                    )
+                }
+                _uiState.update { it.copy(showFormDialog = false, editingPostId = null, isSaving = false) }
                 loadData()
-            } catch (e: Exception) { _uiState.update { it.copy(error = e.message) } }
+            } catch (e: Exception) {
+                _uiState.update { it.copy(isSaving = false, error = e.message) }
+            }
         }
     }
 
     fun publishPost(id: Int) { updatePostStatus(id, "published") }
     fun unpublishPost(id: Int) { updatePostStatus(id, "draft") }
-    fun deletePost(id: Int) {
+
+    fun showDeleteConfirm(id: Int) { _uiState.update { it.copy(deleteConfirmPostId = id) } }
+    fun dismissDeleteConfirm() { _uiState.update { it.copy(deleteConfirmPostId = null) } }
+    fun confirmDeletePost() {
+        val id = _uiState.value.deleteConfirmPostId ?: return
+        _uiState.update { it.copy(deleteConfirmPostId = null) }
         viewModelScope.launch {
             try { adminApi.deleteBlogPost(id); loadData() }
             catch (e: Exception) { _uiState.update { it.copy(error = e.message) } }
@@ -153,18 +246,93 @@ fun AdminBlogSection(isDark: Boolean, viewModel: AdminBlogViewModel = hiltViewMo
         uri?.let { viewModel.selectCoverImage(it, context) }
     }
 
-    // Create dialog
-    if (uiState.showCreateDialog) {
+    // ─── Delete confirmation dialog ─────────────────────────
+    if (uiState.deleteConfirmPostId != null) {
+        AlertDialog(
+            onDismissRequest = { viewModel.dismissDeleteConfirm() },
+            title = { Text("Удалить пост?", fontWeight = FontWeight.Bold) },
+            text = { Text("Это действие нельзя отменить. Пост будет удалён навсегда.") },
+            confirmButton = {
+                TextButton(onClick = { viewModel.confirmDeletePost() }) {
+                    Text("Удалить", color = BrandCoral, fontWeight = FontWeight.Bold)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { viewModel.dismissDeleteConfirm() }) {
+                    Text("Отмена")
+                }
+            },
+        )
+    }
+
+    // ─── Create / Edit bottom sheet ─────────────────────────
+    if (uiState.showFormDialog) {
         ModalBottomSheet(
-            onDismissRequest = { viewModel.dismissCreateDialog() },
+            onDismissRequest = { viewModel.dismissFormDialog() },
             sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
             containerColor = if (isDark) Color(0xFF0D1120) else Color(0xFFF7F7FC),
         ) {
-            Column(Modifier.fillMaxWidth().padding(horizontal = 20.dp).padding(bottom = 32.dp), verticalArrangement = Arrangement.spacedBy(Brand.Spacing.md)) {
-                Text("Новый пост", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold, color = textColor)
-                OutlinedTextField(uiState.createTitle, { viewModel.updateCreateTitle(it) }, Modifier.fillMaxWidth(), label = { Text("Заголовок") }, shape = RoundedCornerShape(12.dp), singleLine = true)
-                OutlinedTextField(uiState.createExcerpt, { viewModel.updateCreateExcerpt(it) }, Modifier.fillMaxWidth(), label = { Text("Краткое описание") }, shape = RoundedCornerShape(12.dp), maxLines = 3)
-                OutlinedTextField(uiState.createContent, { viewModel.updateCreateContent(it) }, Modifier.fillMaxWidth().heightIn(min = 100.dp), label = { Text("Содержание") }, shape = RoundedCornerShape(12.dp), maxLines = 10)
+            Column(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp)
+                    .padding(bottom = 32.dp),
+                verticalArrangement = Arrangement.spacedBy(Brand.Spacing.md),
+            ) {
+                Text(
+                    if (uiState.isEditing) "Редактировать пост" else "Новый пост",
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = textColor,
+                )
+
+                // Title
+                OutlinedTextField(
+                    uiState.formTitle,
+                    { viewModel.updateFormTitle(it) },
+                    Modifier.fillMaxWidth(),
+                    label = { Text("Заголовок") },
+                    shape = RoundedCornerShape(12.dp),
+                    singleLine = true,
+                )
+
+                // Slug with auto-generate
+                OutlinedTextField(
+                    uiState.formSlug,
+                    { viewModel.updateFormSlug(it) },
+                    Modifier.fillMaxWidth(),
+                    label = { Text("Slug (URL)") },
+                    shape = RoundedCornerShape(12.dp),
+                    singleLine = true,
+                    trailingIcon = {
+                        IconButton(onClick = { viewModel.autoGenerateSlug() }) {
+                            Icon(Icons.Default.AutoFixHigh, "Сгенерировать slug", Modifier.size(20.dp))
+                        }
+                    },
+                )
+
+                // Excerpt
+                OutlinedTextField(
+                    uiState.formExcerpt,
+                    { viewModel.updateFormExcerpt(it) },
+                    Modifier.fillMaxWidth(),
+                    label = { Text("Краткое описание") },
+                    shape = RoundedCornerShape(12.dp),
+                    maxLines = 3,
+                )
+
+                // Content
+                OutlinedTextField(
+                    uiState.formContent,
+                    { viewModel.updateFormContent(it) },
+                    Modifier
+                        .fillMaxWidth()
+                        .heightIn(min = 120.dp),
+                    label = { Text("Содержание") },
+                    shape = RoundedCornerShape(12.dp),
+                    maxLines = 15,
+                )
+
                 // Cover image
                 Text("Обложка:", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold, color = textColor)
                 if (uiState.coverImageUri != null) {
@@ -172,7 +340,10 @@ fun AdminBlogSection(isDark: Boolean, viewModel: AdminBlogViewModel = hiltViewMo
                         AsyncImage(
                             model = uiState.coverImageUri,
                             contentDescription = null,
-                            modifier = Modifier.fillMaxWidth().height(160.dp).clip(RoundedCornerShape(12.dp)),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(160.dp)
+                                .clip(RoundedCornerShape(12.dp)),
                             contentScale = ContentScale.Crop,
                         )
                         if (uiState.isUploadingCover) {
@@ -192,6 +363,27 @@ fun AdminBlogSection(isDark: Boolean, viewModel: AdminBlogViewModel = hiltViewMo
                     if (uiState.coverUploadedUrl != null) {
                         Text("Загружено", style = MaterialTheme.typography.labelSmall, color = BrandGreen, fontWeight = FontWeight.Bold)
                     }
+                } else if (uiState.formImageUrl.isNotBlank()) {
+                    // Show existing image URL (for edit mode)
+                    Box(Modifier.fillMaxWidth()) {
+                        AsyncImage(
+                            model = uiState.formImageUrl,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(160.dp)
+                                .clip(RoundedCornerShape(12.dp)),
+                            contentScale = ContentScale.Crop,
+                        )
+                        IconButton(
+                            onClick = { viewModel.removeCoverImage() },
+                            modifier = Modifier.align(Alignment.TopEnd).padding(4.dp),
+                        ) {
+                            Surface(shape = RoundedCornerShape(50), color = BrandCoral) {
+                                Icon(Icons.Default.Close, null, Modifier.size(20.dp).padding(2.dp), tint = Color.White)
+                            }
+                        }
+                    }
                 } else {
                     OutlinedButton(
                         onClick = { imagePickerLauncher.launch("image/*") },
@@ -203,22 +395,57 @@ fun AdminBlogSection(isDark: Boolean, viewModel: AdminBlogViewModel = hiltViewMo
                         Text("Выбрать обложку")
                     }
                 }
+
                 // Language selector
+                Text("Язык:", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold, color = textColor)
                 Row(horizontalArrangement = Arrangement.spacedBy(Brand.Spacing.sm)) {
                     listOf("ru" to "Русский", "uz" to "Узбекский", "en" to "Английский").forEach { (code, label) ->
                         FilterChip(
-                            selected = uiState.createLanguage == code,
-                            onClick = { viewModel.updateCreateLanguage(code) },
+                            selected = uiState.formLanguage == code,
+                            onClick = { viewModel.updateFormLanguage(code) },
                             label = { Text(label, style = MaterialTheme.typography.labelSmall) },
                         )
                     }
                 }
-                Button({ viewModel.createPost() }, Modifier.fillMaxWidth().height(44.dp), shape = RoundedCornerShape(12.dp), enabled = uiState.createTitle.isNotBlank() && !uiState.isUploadingCover) { Text("Создать пост", fontWeight = FontWeight.SemiBold) }
+
+                // Status selector
+                Text("Статус:", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold, color = textColor)
+                Row(horizontalArrangement = Arrangement.spacedBy(Brand.Spacing.sm)) {
+                    listOf("draft" to "Черновик", "published" to "Опубликован").forEach { (code, label) ->
+                        FilterChip(
+                            selected = uiState.formStatus == code,
+                            onClick = { viewModel.updateFormStatus(code) },
+                            label = { Text(label, style = MaterialTheme.typography.labelSmall) },
+                        )
+                    }
+                }
+
+                // Save button
+                Button(
+                    onClick = { viewModel.savePost() },
+                    modifier = Modifier.fillMaxWidth().height(44.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    enabled = uiState.formTitle.isNotBlank() && !uiState.isUploadingCover && !uiState.isSaving,
+                ) {
+                    if (uiState.isSaving) {
+                        CircularProgressIndicator(Modifier.size(20.dp), color = Color.White, strokeWidth = 2.dp)
+                    } else {
+                        Text(
+                            if (uiState.isEditing) "Сохранить" else "Создать пост",
+                            fontWeight = FontWeight.SemiBold,
+                        )
+                    }
+                }
             }
         }
     }
 
-    LazyColumn(Modifier.fillMaxSize(), contentPadding = PaddingValues(horizontal = Brand.Spacing.lg, vertical = Brand.Spacing.md), verticalArrangement = Arrangement.spacedBy(Brand.Spacing.md)) {
+    // ─── Main list ──────────────────────────────────────────
+    LazyColumn(
+        Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(horizontal = Brand.Spacing.lg, vertical = Brand.Spacing.md),
+        verticalArrangement = Arrangement.spacedBy(Brand.Spacing.md),
+    ) {
         item { AdminSectionHeader(Icons.AutoMirrored.Filled.Article, "Управление блогом", isDark) }
 
         item {
@@ -249,40 +476,120 @@ fun AdminBlogSection(isDark: Boolean, viewModel: AdminBlogViewModel = hiltViewMo
             )
         }
 
-        uiState.error?.let { error -> item { AdminErrorBanner(error, isDark, onRetry = { viewModel.loadData() }) } }
+        uiState.error?.let { error ->
+            item { AdminErrorBanner(error, isDark, onRetry = { viewModel.loadData() }) }
+        }
 
-        if (uiState.isLoading) { item { Box(Modifier.fillMaxWidth().padding(vertical = Brand.Spacing.xxxl), contentAlignment = Alignment.Center) { CircularProgressIndicator(Modifier.size(32.dp), color = BrandBlue, strokeWidth = 3.dp) } } }
-        else if (uiState.filtered.isEmpty()) { item { AdminEmptyState(Icons.AutoMirrored.Filled.Article, "Нет постов", "Посты блога появятся здесь", isDark = isDark) } }
-        else {
+        if (uiState.isLoading) {
+            item {
+                Box(
+                    Modifier.fillMaxWidth().padding(vertical = Brand.Spacing.xxxl),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    CircularProgressIndicator(Modifier.size(32.dp), color = BrandBlue, strokeWidth = 3.dp)
+                }
+            }
+        } else if (uiState.filtered.isEmpty()) {
+            item {
+                AdminEmptyState(
+                    Icons.AutoMirrored.Filled.Article,
+                    "Нет постов",
+                    "Посты блога появятся здесь",
+                    isDark = isDark,
+                )
+            }
+        } else {
             items(uiState.filtered, key = { it.id }) { post ->
                 AdminGlassCard(isDark = isDark) {
                     Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(0.dp)) {
                         // Cover image
-                        post.cover?.takeIf { it.isNotBlank() }?.let { coverUrl ->
+                        val coverUrl = post.imageUrl ?: post.cover
+                        coverUrl?.takeIf { it.isNotBlank() }?.let { url ->
                             AsyncImage(
-                                model = coverUrl,
+                                model = url,
                                 contentDescription = null,
-                                modifier = Modifier.fillMaxWidth().height(140.dp).clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(140.dp)
+                                    .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
                                 contentScale = ContentScale.Crop,
                             )
                         }
-                        Column(Modifier.fillMaxWidth().padding(Brand.Spacing.lg), verticalArrangement = Arrangement.spacedBy(Brand.Spacing.sm)) {
-                            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                                Text(post.title, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = textColor, modifier = Modifier.weight(1f))
+                        Column(
+                            Modifier.fillMaxWidth().padding(Brand.Spacing.lg),
+                            verticalArrangement = Arrangement.spacedBy(Brand.Spacing.sm),
+                        ) {
+                            // Title + status
+                            Row(
+                                Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                Text(
+                                    post.title,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    fontWeight = FontWeight.Bold,
+                                    color = textColor,
+                                    modifier = Modifier.weight(1f),
+                                )
                                 AdminStatusTag(statusLabel(post.status), statusColor(post.status))
                             }
-                            if (post.excerpt.isNotBlank()) Text(post.excerpt, style = MaterialTheme.typography.bodySmall, color = subtextColor, maxLines = 2)
-                            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                AdminStatusTag(post.language.uppercase(), BrandBlue)
-                                post.createdAt?.let { Text(it.take(10), style = MaterialTheme.typography.labelSmall, color = subtextColor) }
+
+                            // Excerpt
+                            if (post.excerpt.isNotBlank()) {
+                                Text(post.excerpt, style = MaterialTheme.typography.bodySmall, color = subtextColor, maxLines = 2)
                             }
-                            HorizontalDivider(color = if (isDark) Color.White.copy(alpha = 0.06f) else Color.Black.copy(alpha = 0.04f))
+
+                            // Slug
+                            if (post.slug.isNotBlank()) {
+                                Text(
+                                    "/${post.slug}",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = BrandBlue.copy(alpha = 0.7f),
+                                )
+                            }
+
+                            // Meta: language, views, likes, date
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                AdminStatusTag(post.language.uppercase(), BrandBlue)
+                                if (post.views > 0) {
+                                    Row(
+                                        horizontalArrangement = Arrangement.spacedBy(2.dp),
+                                        verticalAlignment = Alignment.CenterVertically,
+                                    ) {
+                                        Icon(Icons.Default.Visibility, null, Modifier.size(14.dp), tint = subtextColor)
+                                        Text("${post.views}", style = MaterialTheme.typography.labelSmall, color = subtextColor)
+                                    }
+                                }
+                                if (post.likes > 0) {
+                                    Row(
+                                        horizontalArrangement = Arrangement.spacedBy(2.dp),
+                                        verticalAlignment = Alignment.CenterVertically,
+                                    ) {
+                                        Icon(Icons.Default.Favorite, null, Modifier.size(14.dp), tint = BrandCoral)
+                                        Text("${post.likes}", style = MaterialTheme.typography.labelSmall, color = subtextColor)
+                                    }
+                                }
+                                post.createdAt?.let {
+                                    Text(it.take(10), style = MaterialTheme.typography.labelSmall, color = subtextColor)
+                                }
+                            }
+
+                            HorizontalDivider(
+                                color = if (isDark) Color.White.copy(alpha = 0.06f) else Color.Black.copy(alpha = 0.04f),
+                            )
+
+                            // Action buttons
                             Row(horizontalArrangement = Arrangement.spacedBy(Brand.Spacing.sm)) {
+                                AdminActionButton("Изменить", Icons.Default.Edit, BrandBlue, onClick = { viewModel.showEditDialog(post) })
                                 when (post.status.lowercase()) {
                                     "draft" -> AdminActionButton("Опубликовать", Icons.Default.Publish, BrandTeal, onClick = { viewModel.publishPost(post.id) })
                                     "published" -> AdminActionButton("Снять", Icons.Default.Unpublished, BrandGold, onClick = { viewModel.unpublishPost(post.id) })
                                 }
-                                AdminActionButton("Удалить", Icons.Default.Delete, BrandCoral, onClick = { viewModel.deletePost(post.id) })
+                                AdminActionButton("Удалить", Icons.Default.Delete, BrandCoral, onClick = { viewModel.showDeleteConfirm(post.id) })
                             }
                         }
                     }

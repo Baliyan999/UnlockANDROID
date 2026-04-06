@@ -2,6 +2,7 @@ package com.subnetik.unlock.presentation.screens.vocabulary
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.subnetik.unlock.BuildConfig
 import com.subnetik.unlock.data.local.datastore.SettingsDataStore
 import com.subnetik.unlock.data.local.db.entity.VocabularyProgressEntity
 import com.subnetik.unlock.data.remote.api.ProgressApi
@@ -83,10 +84,10 @@ class VocabularyViewModel @Inject constructor(
                     if (localOnlyKnown.isNotEmpty() || localOnlyReview.isNotEmpty()) {
                         syncLevelToServerSync(level)
                     }
-                    android.util.Log.d("VocabVM", "loadWords synced: known=${knownIds.size} review=${reviewIds.size}")
+                    if (BuildConfig.DEBUG) android.util.Log.d("VocabVM", "loadWords synced: known=${knownIds.size} review=${reviewIds.size}")
                 }
             } catch (e: Exception) {
-                android.util.Log.w("VocabVM", "Server sync failed: ${e.message}")
+                if (BuildConfig.DEBUG) android.util.Log.w("VocabVM", "Server sync failed: ${e.message}")
             }
 
             _uiState.update {
@@ -193,14 +194,14 @@ class VocabularyViewModel @Inject constructor(
                     localKnownMap[item.level] = mergedKnown.toMutableSet()
                     localReviewMap[item.level] = mergedReview.toMutableSet()
                     progressMap[item.level] = mergedKnown.size
-                    android.util.Log.d("VocabVM", "Merged level ${item.level}: known=${mergedKnown.size} review=${mergedReview.size}")
+                    if (BuildConfig.DEBUG) android.util.Log.d("VocabVM", "Merged level ${item.level}: known=${mergedKnown.size} review=${mergedReview.size}")
                 }
                 // Only sync back if we had local-only words to push
                 if (hasLocalOnly) {
                     syncLocalToServer(email, localKnownMap, localReviewMap)
                 }
             } catch (e: Exception) {
-                android.util.Log.w("VocabVM", "Server progress load failed: ${e.message}")
+                if (BuildConfig.DEBUG) android.util.Log.w("VocabVM", "Server progress load failed: ${e.message}")
             }
 
             _uiState.update { it.copy(levelProgress = progressMap) }
@@ -233,10 +234,10 @@ class VocabularyViewModel @Inject constructor(
                         vocabulary = vocabItems,
                     )
                 )
-                android.util.Log.d("VocabVM", "Synced ${vocabItems.size} levels to server")
+                if (BuildConfig.DEBUG) android.util.Log.d("VocabVM", "Synced ${vocabItems.size} levels to server")
             }
         } catch (e: Exception) {
-            android.util.Log.w("VocabVM", "Sync to server failed: ${e.message}")
+            if (BuildConfig.DEBUG) android.util.Log.w("VocabVM", "Sync to server failed: ${e.message}")
         }
     }
 
@@ -278,9 +279,9 @@ class VocabularyViewModel @Inject constructor(
                         vocabulary = listOf(vocabItem),
                     )
                 )
-                android.util.Log.d("VocabVM", "Synced level $level: ${knownIds.size} known")
+                if (BuildConfig.DEBUG) android.util.Log.d("VocabVM", "Synced level $level: ${knownIds.size} known")
             } catch (e: Exception) {
-                android.util.Log.w("VocabVM", "Sync level $level failed: ${e.message}")
+                if (BuildConfig.DEBUG) android.util.Log.w("VocabVM", "Sync level $level failed: ${e.message}")
             }
         }
     }

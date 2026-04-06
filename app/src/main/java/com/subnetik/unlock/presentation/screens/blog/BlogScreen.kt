@@ -17,22 +17,28 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import android.content.Context
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
+import com.subnetik.unlock.data.local.OfflineCache
 import com.subnetik.unlock.data.local.datastore.SettingsDataStore
 import com.subnetik.unlock.data.remote.api.BlogApi
 import com.subnetik.unlock.data.remote.dto.blog.BlogPostDto
 import com.subnetik.unlock.presentation.screens.admin.components.AdminBackground
 import com.subnetik.unlock.presentation.theme.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -44,7 +50,10 @@ import javax.inject.Inject
 class BlogViewModel @Inject constructor(
     settingsDataStore: SettingsDataStore,
     private val blogApi: BlogApi,
+    @ApplicationContext private val appContext: Context,
 ) : ViewModel() {
+
+    private val json = Json { ignoreUnknownKeys = true; isLenient = true }
 
     val isDarkTheme = settingsDataStore.isDarkTheme
 
@@ -66,9 +75,31 @@ class BlogViewModel @Inject constructor(
             _isLoading.value = true
             _error.value = null
             try {
-                _posts.value = blogApi.getPosts()
+                val fetched = blogApi.getPosts()
+                _posts.value = fetched
+                // Cache for offline use
+                try {
+                    val encoded = json.encodeToString(
+                        kotlinx.serialization.builtins.ListSerializer(BlogPostDto.serializer()),
+                        fetched,
+                    )
+                    OfflineCache.save(appContext, OfflineCache.Key.BLOG_POSTS, encoded)
+                } catch (_: Exception) { /* best-effort cache */ }
             } catch (e: Exception) {
-                _error.value = e.message
+                // Try loading from offline cache
+                val cached = OfflineCache.load(appContext, OfflineCache.Key.BLOG_POSTS)
+                if (cached != null) {
+                    try {
+                        _posts.value = json.decodeFromString(
+                            kotlinx.serialization.builtins.ListSerializer(BlogPostDto.serializer()),
+                            cached,
+                        )
+                    } catch (_: Exception) {
+                        _error.value = e.message
+                    }
+                } else {
+                    _error.value = e.message
+                }
             } finally {
                 _isLoading.value = false
             }
@@ -225,7 +256,23 @@ private fun BlogArticleCard(
         border = BorderStroke(1.dp, strokeColor),
         shadowElevation = if (isDark) 0.dp else 3.dp,
     ) {
-        Column(modifier = Modifier.padding(Brand.Spacing.lg)) {
+        Column {
+            // Cover image
+            if (!post.imageUrl.isNullOrBlank()) {
+                val coverUrl = if (post.imageUrl.startsWith("http")) post.imageUrl
+                    else "https://unlocklingua.com${post.imageUrl}"
+                coil3.compose.AsyncImage(
+                    model = coverUrl,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(180.dp)
+                        .clip(RoundedCornerShape(topStart = 18.dp, topEnd = 18.dp)),
+                    contentScale = ContentScale.Crop,
+                )
+            }
+
+            Column(modifier = Modifier.padding(Brand.Spacing.lg)) {
             // Date + category badge
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -331,6 +378,7 @@ private fun BlogArticleCard(
                         modifier = Modifier.size(16.dp),
                     )
                 }
+            }
             }
         }
     }

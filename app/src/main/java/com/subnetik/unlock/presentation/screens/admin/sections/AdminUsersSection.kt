@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -23,6 +24,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import coil3.compose.AsyncImage
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import com.subnetik.unlock.data.remote.api.AdminApi
 import com.subnetik.unlock.data.remote.dto.admin.AdminUser
 import com.subnetik.unlock.data.remote.dto.admin.AdminUserUpdateRequest
@@ -48,6 +52,10 @@ class AdminUsersViewModel @Inject constructor(
         val error: String? = null,
         val roleDialogUserId: Int? = null,
         val roleDialogCurrentRole: String = "",
+        val resetPasswordConfirmUserId: Int? = null,
+        val resetPasswordConfirmUserName: String = "",
+        val resetPasswordResultPassword: String? = null,
+        val isResettingPassword: Boolean = false,
     ) {
         val filtered: List<AdminUser>
             get() {
@@ -98,6 +106,27 @@ class AdminUsersViewModel @Inject constructor(
             } catch (e: Exception) { _uiState.update { it.copy(error = e.message) } }
         }
     }
+
+    fun showResetPasswordConfirm(userId: Int, userName: String) {
+        _uiState.update { it.copy(resetPasswordConfirmUserId = userId, resetPasswordConfirmUserName = userName) }
+    }
+    fun dismissResetPasswordConfirm() {
+        _uiState.update { it.copy(resetPasswordConfirmUserId = null) }
+    }
+    fun dismissResetPasswordResult() {
+        _uiState.update { it.copy(resetPasswordResultPassword = null) }
+    }
+    fun confirmResetPassword(userId: Int) {
+        viewModelScope.launch {
+            _uiState.update { it.copy(isResettingPassword = true, resetPasswordConfirmUserId = null) }
+            try {
+                val response = adminApi.resetPassword(userId)
+                _uiState.update { it.copy(isResettingPassword = false, resetPasswordResultPassword = response.newPassword) }
+            } catch (e: Exception) {
+                _uiState.update { it.copy(isResettingPassword = false, error = e.message) }
+            }
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -137,6 +166,62 @@ fun AdminUsersSection(isDark: Boolean, viewModel: AdminUsersViewModel = hiltView
                 }
             }
         }
+    }
+
+    // Reset password confirmation dialog
+    if (uiState.resetPasswordConfirmUserId != null) {
+        AlertDialog(
+            onDismissRequest = { viewModel.dismissResetPasswordConfirm() },
+            icon = { Icon(Icons.Default.Lock, null, tint = BrandCoral) },
+            title = { Text("Сбросить пароль", fontWeight = FontWeight.Bold) },
+            text = { Text("Сбросить пароль для ${uiState.resetPasswordConfirmUserName}?") },
+            confirmButton = {
+                TextButton(onClick = { viewModel.confirmResetPassword(uiState.resetPasswordConfirmUserId!!) }) {
+                    Text("Сбросить", color = BrandCoral, fontWeight = FontWeight.Bold)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { viewModel.dismissResetPasswordConfirm() }) {
+                    Text("Отмена")
+                }
+            },
+        )
+    }
+
+    // Reset password result dialog
+    if (uiState.resetPasswordResultPassword != null) {
+        val context = LocalContext.current
+        AlertDialog(
+            onDismissRequest = { viewModel.dismissResetPasswordResult() },
+            icon = { Icon(Icons.Default.CheckCircle, null, tint = BrandTeal) },
+            title = { Text("Новый пароль", fontWeight = FontWeight.Bold) },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp), horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
+                    Text(
+                        uiState.resetPasswordResultPassword!!,
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = textColor,
+                    )
+                    OutlinedButton(
+                        onClick = {
+                            val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                            clipboard.setPrimaryClip(ClipData.newPlainText("password", uiState.resetPasswordResultPassword))
+                        },
+                        shape = RoundedCornerShape(10.dp),
+                    ) {
+                        Icon(Icons.Default.ContentCopy, null, Modifier.size(16.dp))
+                        Spacer(Modifier.width(6.dp))
+                        Text("Скопировать")
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = { viewModel.dismissResetPasswordResult() }) {
+                    Text("Готово", fontWeight = FontWeight.Bold)
+                }
+            },
+        )
     }
 
     LazyColumn(
@@ -276,6 +361,9 @@ fun AdminUsersSection(isDark: Boolean, viewModel: AdminUsersViewModel = hiltView
                         HorizontalDivider(color = if (isDark) Color.White.copy(alpha = 0.06f) else Color.Black.copy(alpha = 0.04f))
                         Row(horizontalArrangement = Arrangement.spacedBy(Brand.Spacing.sm)) {
                             AdminActionButton("Роль", Icons.Default.ManageAccounts, BrandIndigo, onClick = { viewModel.showRoleDialog(user.id, user.role) })
+                            AdminActionButton("Сбросить пароль", Icons.Default.Lock, BrandCoral, onClick = {
+                                viewModel.showResetPasswordConfirm(user.id, user.displayName.ifBlank { user.email })
+                            })
                         }
                     }
                 }

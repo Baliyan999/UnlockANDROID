@@ -54,6 +54,14 @@ data class TeacherHomeUiState(
     val homeworkDueHour: Int = 16,
     val homeworkDueMinute: Int = 0,
     val isCreatingHomework: Boolean = false,
+    // Performance event
+    val showPerformanceEvent: Boolean = false,
+    val perfEventType: String = "lesson_answer",
+    val perfRawScore: Int = 80,
+    val perfScoreDelta: Int = 0,
+    val perfComment: String = "",
+    val isSubmittingPerformanceEvent: Boolean = false,
+    val performanceEventSuccess: Boolean = false,
     // Error
     val error: String? = null,
 )
@@ -133,23 +141,53 @@ class TeacherHomeViewModel @Inject constructor(
 
     fun openAttendance(student: AdminStudent) {
         val group = _uiState.value.selectedGroup ?: return
-        val dates = getLessonDatesForCurrentMonth(group.scheduleDays)
-        val map = mutableMapOf<String, Boolean>()
-        dates.forEach { date ->
-            val entry = student.attendance?.find { it.date == date }
-            map[date] = entry?.status == "present"
-        }
-        _uiState.update {
-            it.copy(
-                selectedStudent = student,
-                showAttendance = true,
-                lessonDates = dates,
-                attendanceMap = map,
-            )
+        val allDates = getLessonDatesForCurrentMonth(group.scheduleDays)
+        // Фильтруем будущие даты — показываем только до сегодня включительно
+        val todayStr = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US).format(java.util.Date())
+        val dates = allDates.filter { it <= todayStr }
+
+        // Загружаем свежие данные с сервера
+        viewModelScope.launch {
+            try {
+                val freshStudents = adminApi.getGroupStudents(group.id)
+                val freshStudent = freshStudents.find { it.id == student.id } ?: student
+                val map = mutableMapOf<String, Boolean>()
+                dates.forEach { date ->
+                    val entry = freshStudent.attendance?.find { it.date == date }
+                    map[date] = entry?.status == "present"
+                }
+                _uiState.update {
+                    it.copy(
+                        selectedStudent = freshStudent,
+                        showAttendance = true,
+                        lessonDates = dates,
+                        attendanceMap = map,
+                        groupStudents = freshStudents,
+                    )
+                }
+            } catch (_: Exception) {
+                // Если сеть недоступна — используем локальные данные
+                val map = mutableMapOf<String, Boolean>()
+                dates.forEach { date ->
+                    val entry = student.attendance?.find { it.date == date }
+                    map[date] = entry?.status == "present"
+                }
+                _uiState.update {
+                    it.copy(
+                        selectedStudent = student,
+                        showAttendance = true,
+                        lessonDates = dates,
+                        attendanceMap = map,
+                    )
+                }
+            }
         }
     }
 
     fun toggleAttendance(date: String) {
+        // Блокируем будущие даты
+        val todayStr = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US).format(java.util.Date())
+        if (date > todayStr) return
         val current = _uiState.value.attendanceMap.toMutableMap()
         current[date] = !(current[date] ?: false)
         _uiState.update { it.copy(attendanceMap = current) }
@@ -291,6 +329,79 @@ class TeacherHomeViewModel @Inject constructor(
                 _uiState.update { it.copy(isCreatingHomework = false, error = e.message) }
             }
         }
+    }
+
+    // ─── Performance Events ──────────────────────────────────
+
+    fun openPerformanceEvent(student: AdminStudent) {
+        _uiState.update {
+            it.copy(
+                selectedStudent = student,
+                showPerformanceEvent = true,
+                perfEventType = "lesson_answer",
+                perfRawScore = 80,
+                perfScoreDelta = 0,
+                perfComment = "",
+                performanceEventSuccess = false,
+            )
+        }
+    }
+
+    fun closePerformanceEvent() {
+        _uiState.update { it.copy(showPerformanceEvent = false, selectedStudent = null, performanceEventSuccess = false) }
+    }
+
+    fun updatePerfEventType(type: String) {
+        _uiState.update { it.copy(perfEventType = type) }
+    }
+
+    fun updatePerfRawScore(score: Int) {
+        _uiState.update { it.copy(perfRawScore = score.coerceIn(0, 100)) }
+    }
+
+    fun updatePerfScoreDelta(delta: Int) {
+        _uiState.update { it.copy(perfScoreDelta = delta) }
+    }
+
+    fun updatePerfComment(comment: String) {
+        _uiState.update { it.copy(perfComment = comment) }
+    }
+
+    fun submitPerformanceEvent() {
+        val state = _uiState.value
+        val student = state.selectedStudent ?: return
+        val group = state.selectedGroup ?: return
+
+        _uiState.update { it.copy(isSubmittingPerformanceEvent = true) }
+        viewModelScope.launch {
+            try {
+                val request = CreatePerformanceEventRequest(
+                    studentId = student.userId ?: return@launch,
+                    eventType = state.perfEventType,
+                    rawScore = if (state.perfEventType != "manual_adjustment") state.perfRawScore else null,
+                    scoreDelta = if (state.perfEventType == "manual_adjustment") state.perfScoreDelta else null,
+                    comment = state.perfComment.takeIf { it.isNotBlank() },
+                )
+                adminApi.createPerformanceEvent(groupId = group.id, request = request)
+                // Перезагрузить данные группы
+                try {
+                    val students = adminApi.getGroupStudents(group.id)
+                    _uiState.update { it.copy(groupStudents = students) }
+                } catch (_: Exception) { }
+                _uiState.update {
+                    it.copy(
+                        isSubmittingPerformanceEvent = false,
+                        performanceEventSuccess = true,
+                    )
+                }
+            } catch (e: Exception) {
+                _uiState.update { it.copy(isSubmittingPerformanceEvent = false, error = e.message) }
+            }
+        }
+    }
+
+    fun dismissPerformanceEventSuccess() {
+        _uiState.update { it.copy(performanceEventSuccess = false, showPerformanceEvent = false, selectedStudent = null) }
     }
 
     // ─── Helpers ───────────────────────────────────────────────

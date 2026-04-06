@@ -2,6 +2,7 @@ package com.subnetik.unlock.presentation.screens.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.subnetik.unlock.BuildConfig
 import com.subnetik.unlock.data.local.datastore.SettingsDataStore
 import com.subnetik.unlock.data.remote.api.CalendarApi
 import com.subnetik.unlock.data.remote.api.StudentApi
@@ -70,12 +71,12 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             when (val result = notificationRepository.getUnreadCount()) {
                 is Resource.Success -> {
-                    android.util.Log.d("HomeVM", "Unread count: ${result.data}")
+                    if (BuildConfig.DEBUG) android.util.Log.d("HomeVM", "Unread count: ${result.data}")
                     _uiState.update { it.copy(unreadCount = result.data) }
                     notificationHelper.updateBadge(result.data)
                 }
                 is Resource.Error -> {
-                    android.util.Log.e("HomeVM", "Unread count FAIL: ${result.message}")
+                    if (BuildConfig.DEBUG) android.util.Log.e("HomeVM", "Unread count FAIL: ${result.message}")
                 }
                 else -> {}
             }
@@ -86,10 +87,10 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val wallet = studentApi.getWallet()
-                android.util.Log.d("HomeVM", "Wallet loaded: balance=${wallet.balance}")
+                if (BuildConfig.DEBUG) android.util.Log.d("HomeVM", "Wallet loaded: balance=${wallet.balance}")
                 _uiState.update { it.copy(tokenBalance = wallet.balance) }
             } catch (e: Exception) {
-                android.util.Log.e("HomeVM", "Wallet FAIL: ${e::class.simpleName}: ${e.message}")
+                if (BuildConfig.DEBUG) android.util.Log.e("HomeVM", "Wallet FAIL: ${e::class.simpleName}: ${e.message}")
             }
         }
     }
@@ -98,10 +99,10 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val schedule = studentApi.getSchedule()
-                android.util.Log.d("HomeVM", "Schedule OK: group=${schedule.groupName}")
+                if (BuildConfig.DEBUG) android.util.Log.d("HomeVM", "Schedule OK: group=${schedule.groupName}")
                 _uiState.update { it.copy(schedule = schedule) }
             } catch (e: Exception) {
-                android.util.Log.e("HomeVM", "Schedule FAIL: ${e::class.simpleName}: ${e.message}", e)
+                if (BuildConfig.DEBUG) android.util.Log.e("HomeVM", "Schedule FAIL: ${e::class.simpleName}: ${e.message}", e)
             }
         }
     }

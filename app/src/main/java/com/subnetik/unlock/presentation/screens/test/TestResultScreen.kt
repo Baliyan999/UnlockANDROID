@@ -29,6 +29,7 @@ fun TestResultScreen(
     showTrialButton: Boolean = false,
     onRetry: () -> Unit,
     onBack: () -> Unit,
+    onBookTrial: () -> Unit = {},
 ) {
     val percent = if (total > 0) (score * 100) / total else 0
     val passed = percent >= 80
@@ -124,7 +125,7 @@ fun TestResultScreen(
                         if (showTrialButton) {
                             // CTA: book a trial lesson
                             OutlinedButton(
-                                onClick = { /* TODO: navigate to booking */ },
+                                onClick = onBookTrial,
                                 modifier = Modifier.fillMaxWidth().height(48.dp),
                                 shape = Brand.Shapes.full,
                                 border = BorderStroke(1.dp, if (isDark) Color.White.copy(alpha = 0.15f) else Color.Black.copy(alpha = 0.1f)),

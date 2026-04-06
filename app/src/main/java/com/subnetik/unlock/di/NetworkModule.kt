@@ -19,6 +19,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
+import okhttp3.CertificatePinner
 import okhttp3.Dns
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -63,6 +64,19 @@ object NetworkModule {
         coerceInputValues = true
     }
 
+    /**
+     * Certificate pinning for unlocklingua.com.
+     * Pins Let's Encrypt R12 (primary) and ISRG Root X1 (fallback)
+     * so the app keeps working when Let's Encrypt rotates intermediates.
+     */
+    private val certificatePinner = CertificatePinner.Builder()
+        .add(
+            "unlocklingua.com",
+            "sha256/kZwN96eHtZftBWrOZUsd6cA4es80n3NzSk/XtYz2EqQ=", // Let's Encrypt R12
+            "sha256/C5+lpZ7tcVwmwQIMcRtPbsQtWLABXhQzejna0wHFr8M=", // ISRG Root X1 (fallback)
+        )
+        .build()
+
     @Provides
     @Singleton
     fun provideOkHttpClient(authInterceptor: AuthInterceptor): OkHttpClient {
@@ -77,6 +91,7 @@ object NetworkModule {
         return OkHttpClient.Builder()
             .addInterceptor(authInterceptor)
             .addInterceptor(logging)
+            .certificatePinner(certificatePinner)
             .apply { if (BuildConfig.DEBUG) dns(fallbackDns) }
             .connectTimeout(20, TimeUnit.SECONDS)
             .readTimeout(60, TimeUnit.SECONDS)

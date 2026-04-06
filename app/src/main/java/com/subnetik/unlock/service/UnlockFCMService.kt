@@ -8,6 +8,7 @@ import android.content.Intent
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import com.subnetik.unlock.BuildConfig
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.subnetik.unlock.MainActivity
@@ -33,7 +34,7 @@ class UnlockFCMService : FirebaseMessagingService() {
 
     override fun onNewToken(token: String) {
         super.onNewToken(token)
-        Log.d(TAG, "FCM token refreshed")
+        if (BuildConfig.DEBUG) Log.d(TAG, "FCM token refreshed")
         serviceScope.launch {
             registerTokenWithServer(token)
         }
@@ -41,7 +42,7 @@ class UnlockFCMService : FirebaseMessagingService() {
 
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
-        Log.d(TAG, "FCM message received from: ${message.from}")
+        if (BuildConfig.DEBUG) Log.d(TAG, "FCM message received from: ${message.from}")
 
         val title = message.notification?.title
             ?: message.data["title"]
@@ -115,16 +116,16 @@ class UnlockFCMService : FirebaseMessagingService() {
     private suspend fun registerTokenWithServer(token: String) {
         val isLoggedIn = authDataStore.isLoggedIn.firstOrNull() ?: false
         if (!isLoggedIn) {
-            Log.d(TAG, "User not logged in, skipping FCM token registration")
+            if (BuildConfig.DEBUG) Log.d(TAG, "User not logged in, skipping FCM token registration")
             return
         }
         try {
             notificationApi.registerDeviceToken(
                 DeviceTokenRequest(token = token, platform = "android")
             )
-            Log.d(TAG, "FCM token registered with server")
+            if (BuildConfig.DEBUG) Log.d(TAG, "FCM token registered with server")
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to register FCM token: ${e.message}")
+            if (BuildConfig.DEBUG) Log.e(TAG, "Failed to register FCM token: ${e.message}")
         }
     }
 

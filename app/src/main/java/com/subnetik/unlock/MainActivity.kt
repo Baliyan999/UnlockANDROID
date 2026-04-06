@@ -9,10 +9,20 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.subnetik.unlock.data.local.datastore.AuthDataStore
@@ -54,10 +64,10 @@ class MainActivity : ComponentActivity() {
                     ).show()
                 }
             }
-            val isLoggedIn by authDataStore.isLoggedIn.collectAsStateWithLifecycle(initialValue = false)
+            // Use null initial value so we can detect "still loading" vs real value
+            val isLoggedIn by authDataStore.isLoggedIn.collectAsStateWithLifecycle(initialValue = null)
             val hasSeenOnboarding by settingsDataStore.hasSeenOnboarding.collectAsStateWithLifecycle(initialValue = true)
             val userRoleStr by authDataStore.userRole.collectAsStateWithLifecycle(initialValue = null)
-            val userRole = AppUserRole.resolve(isLoggedIn, userRoleStr)
             val termsAccepted by authDataStore.termsAccepted.collectAsStateWithLifecycle(initialValue = true)
             val teacherTermsAccepted by authDataStore.teacherTermsAccepted.collectAsStateWithLifecycle(initialValue = true)
             val scope = rememberCoroutineScope()
@@ -65,12 +75,32 @@ class MainActivity : ComponentActivity() {
             val systemDark = isSystemInDarkTheme()
             val isDark = themePreference ?: true  // default dark theme
 
-            // Check if terms need to be shown
-            val needsStudentTerms = isLoggedIn && userRole == AppUserRole.STUDENT && !termsAccepted
-            val needsTeacherGeneralTerms = isLoggedIn && userRole == AppUserRole.TEACHER && !termsAccepted
-            val needsTeacherWorkTerms = isLoggedIn && userRole == AppUserRole.TEACHER && termsAccepted && !teacherTermsAccepted
-
             UnlockTheme(darkTheme = isDark) {
+                // While DataStore hasn't emitted real values, show branded loading screen
+                val loggedIn = isLoggedIn
+                if (loggedIn == null) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Color(0xFF0F1429)),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Image(
+                            painter = painterResource(R.drawable.unlock_logo),
+                            contentDescription = null,
+                            modifier = Modifier.size(120.dp),
+                        )
+                    }
+                    return@UnlockTheme
+                }
+
+                val userRole = AppUserRole.resolve(loggedIn, userRoleStr)
+
+                // Check if terms need to be shown
+                val needsStudentTerms = loggedIn && userRole == AppUserRole.STUDENT && !termsAccepted
+                val needsTeacherGeneralTerms = loggedIn && userRole == AppUserRole.TEACHER && !termsAccepted
+                val needsTeacherWorkTerms = loggedIn && userRole == AppUserRole.TEACHER && termsAccepted && !teacherTermsAccepted
+
                 when {
                     needsStudentTerms || needsTeacherGeneralTerms -> {
                         com.subnetik.unlock.presentation.screens.terms.StudentTermsScreen(
@@ -94,7 +124,7 @@ class MainActivity : ComponentActivity() {
                     }
                     else -> {
                         AppNavigation(
-                            isLoggedIn = isLoggedIn,
+                            isLoggedIn = loggedIn,
                             hasSeenOnboarding = hasSeenOnboarding,
                             userRole = userRole,
                             onLogout = { scope.launch { authRepository.logout() } },

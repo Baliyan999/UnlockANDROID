@@ -68,6 +68,12 @@ data class AdminUser(
     @SerialName("teacher_name") val teacherName: String? = null,
 )
 
+@Serializable
+data class PasswordResetResponse(
+    val message: String = "",
+    @SerialName("new_password") val newPassword: String = "",
+)
+
 // ─── Promocodes ──────────────────────────────────────────────
 
 @Serializable
@@ -240,13 +246,23 @@ data class AdminBlogPost(
     val language: String = "",
     val status: String = "",
     val cover: String? = null,
+    @SerialName("image_url") val imageUrl: String? = null,
+    val views: Int = 0,
+    val likes: Int = 0,
+    val author: String? = null,
     @SerialName("created_at") val createdAt: String? = null,
     @SerialName("updated_at") val updatedAt: String? = null,
 )
 
 @Serializable
 data class AdminBlogUpdateRequest(
+    val title: String? = null,
+    val excerpt: String? = null,
+    val content: String? = null,
+    val slug: String? = null,
+    val language: String? = null,
     val status: String? = null,
+    @SerialName("image_url") val imageUrl: String? = null,
 )
 
 // ─── Tokens ──────────────────────────────────────────────────
@@ -342,18 +358,19 @@ data class AdminHomeworkAssignment(
 @Serializable
 data class HomeworkUserShort(
     val id: Int,
-    @SerialName("displayName") val displayName: String = "",
+    @SerialName("display_name") val displayName: String = "",
     val email: String = "",
     val role: String = "",
+    @SerialName("avatar_url") val avatarUrl: String? = null,
 )
 
 @Serializable
 data class HomeworkStudentRatingEntry(
     val rank: Int = 0,
     val student: HomeworkUserShort? = null,
-    @SerialName("averageGrade") val averageGrade: Double? = null,
-    @SerialName("totalScore") val totalScore: Int = 0,
-    @SerialName("gradedAssignments") val gradedAssignments: Int = 0,
+    @SerialName("average_grade") val averageGrade: Double? = null,
+    @SerialName("total_score") val totalScore: Int = 0,
+    @SerialName("graded_assignments") val gradedAssignments: Int = 0,
 )
 
 @Serializable
@@ -363,6 +380,32 @@ data class HomeworkStudentGroupOverview(
     val teacher: HomeworkUserShort? = null,
     val classmates: List<HomeworkUserShort> = emptyList(),
     val rating: List<HomeworkStudentRatingEntry> = emptyList(),
+)
+
+// ─── Teacher Group Rating (GET homework/groups/{groupId}/rating) ────
+
+@Serializable
+data class TeacherGroupRatingStudent(
+    val rank: Int = 0,
+    val student: HomeworkUserShort? = null,
+    @SerialName("average_grade") val averageGrade: Double? = null,
+    @SerialName("total_score") val totalScore: Int = 0,
+    @SerialName("graded_assignments") val gradedAssignments: Int = 0,
+    @SerialName("rating_points") val ratingPoints: Int = 0,
+    @SerialName("completed_homeworks") val completedHomeworks: Int = 0,
+    @SerialName("lesson_activity_count") val lessonActivityCount: Int = 0,
+    @SerialName("control_tests_count") val controlTestsCount: Int = 0,
+    val trend: String? = null, // "up", "down", "stable", or null
+) {
+    /** Convenience accessor for display name. */
+    val displayName: String get() = student?.displayName ?: ""
+}
+
+@Serializable
+data class TeacherGroupRatingResponse(
+    val id: Int = 0,
+    val name: String = "",
+    val rating: List<TeacherGroupRatingStudent> = emptyList(),
 )
 
 // ─── Receipts ────────────────────────────────────────────────
@@ -432,6 +475,94 @@ data class AdminStudent(
     val attendanceCount: Int get() = attendance?.count { it.status == "present" } ?: 0
     val totalLessons: Int get() = attendance?.size ?: 0
     val attendancePercent: Int get() = if (totalLessons > 0) (attendanceCount * 100 / totalLessons) else 0
+
+    /** Current-month present count (only entries matching current year+month up to today) */
+    val currentMonthAttendanceCount: Int get() {
+        val entries = attendance ?: return 0
+        val cal = java.util.Calendar.getInstance()
+        val curMonth = cal.get(java.util.Calendar.MONTH) + 1
+        val curYear = cal.get(java.util.Calendar.YEAR)
+        val todayStr = String.format("%04d-%02d-%02d", curYear, curMonth, cal.get(java.util.Calendar.DAY_OF_MONTH))
+        return entries.count { entry ->
+            entry.status == "present" && entry.date.length >= 10 && run {
+                val yy = entry.date.substring(0, 4).toIntOrNull() ?: return@run false
+                val mm = entry.date.substring(5, 7).toIntOrNull() ?: return@run false
+                yy == curYear && mm == curMonth && entry.date.take(10) <= todayStr
+            }
+        }
+    }
+
+    /** Total scheduled lesson days this month up to today, based on group scheduleDays string */
+    fun currentMonthTotalLessons(scheduleDays: String?): Int {
+        if (scheduleDays.isNullOrBlank()) return 0
+        val mapping = mapOf(
+            "пн" to java.util.Calendar.MONDAY,
+            "вт" to java.util.Calendar.TUESDAY,
+            "ср" to java.util.Calendar.WEDNESDAY,
+            "чт" to java.util.Calendar.THURSDAY,
+            "пт" to java.util.Calendar.FRIDAY,
+            "сб" to java.util.Calendar.SATURDAY,
+            "вс" to java.util.Calendar.SUNDAY,
+        )
+        val lessonWeekdays = scheduleDays.lowercase().split(" ").mapNotNull { mapping[it] }.toSet()
+        if (lessonWeekdays.isEmpty()) return 0
+
+        val cal = java.util.Calendar.getInstance()
+        val today = cal.clone() as java.util.Calendar
+        today.set(java.util.Calendar.HOUR_OF_DAY, 0)
+        today.set(java.util.Calendar.MINUTE, 0)
+        today.set(java.util.Calendar.SECOND, 0)
+        today.set(java.util.Calendar.MILLISECOND, 0)
+
+        val startOfMonth = today.clone() as java.util.Calendar
+        startOfMonth.set(java.util.Calendar.DAY_OF_MONTH, 1)
+
+        var count = 0
+        val cursor = startOfMonth.clone() as java.util.Calendar
+        while (!cursor.after(today)) {
+            if (cursor.get(java.util.Calendar.DAY_OF_WEEK) in lessonWeekdays) count++
+            cursor.add(java.util.Calendar.DAY_OF_MONTH, 1)
+        }
+        return count
+    }
+
+    /** Attendance percent for current month */
+    fun currentMonthAttendancePercent(scheduleDays: String?): Int {
+        val total = currentMonthTotalLessons(scheduleDays)
+        return if (total > 0) (currentMonthAttendanceCount * 100 / total) else 0
+    }
+
+    /** Whether student has "present" status for today's date */
+    val todayAttended: Boolean get() {
+        val entries = attendance ?: return false
+        val cal = java.util.Calendar.getInstance()
+        val todayStr = String.format(
+            "%04d-%02d-%02d",
+            cal.get(java.util.Calendar.YEAR),
+            cal.get(java.util.Calendar.MONTH) + 1,
+            cal.get(java.util.Calendar.DAY_OF_MONTH)
+        )
+        return entries.any { it.date.take(10) == todayStr && it.status == "present" }
+    }
+
+    /** Whether today is a lesson day for this student's group */
+    companion object {
+        fun isTodayLessonDay(scheduleDays: String?): Boolean {
+            if (scheduleDays.isNullOrBlank()) return false
+            val mapping = mapOf(
+                "пн" to java.util.Calendar.MONDAY,
+                "вт" to java.util.Calendar.TUESDAY,
+                "ср" to java.util.Calendar.WEDNESDAY,
+                "чт" to java.util.Calendar.THURSDAY,
+                "пт" to java.util.Calendar.FRIDAY,
+                "сб" to java.util.Calendar.SATURDAY,
+                "вс" to java.util.Calendar.SUNDAY,
+            )
+            val lessonWeekdays = scheduleDays.lowercase().split(" ").mapNotNull { mapping[it] }.toSet()
+            val todayWeekday = java.util.Calendar.getInstance().get(java.util.Calendar.DAY_OF_WEEK)
+            return todayWeekday in lessonWeekdays
+        }
+    }
     val lastPayment: PaymentEntry? get() = payments?.sortedByDescending { (it.year ?: 0) * 100 + (it.month ?: 0) }?.firstOrNull()
     val isPaid: Boolean get() {
         val cal = java.util.Calendar.getInstance()
@@ -509,9 +640,11 @@ data class AdminBlogCreateRequest(
     val title: String,
     val excerpt: String = "",
     val content: String = "",
+    val slug: String = "",
     val language: String = "ru",
     val status: String = "draft",
     val cover: String? = null,
+    @SerialName("image_url") val imageUrl: String? = null,
 )
 
 @Serializable
@@ -620,6 +753,41 @@ data class AdminNotificationDispatchResponse(
 data class AdminUserUpdateRequest(
     val role: String? = null,
     @SerialName("display_name") val displayName: String? = null,
+)
+
+@Serializable
+data class AssignTeacherRequest(
+    @SerialName("teacher_id") val teacherId: Int? = null,
+)
+
+@Serializable
+data class AdminTeacherOption(
+    val id: Int,
+    @SerialName("display_name") val displayName: String = "",
+)
+
+// ─── Performance Events ─────────────────────────────────────
+
+@Serializable
+data class CreatePerformanceEventRequest(
+    @SerialName("student_id") val studentId: Int,
+    @SerialName("event_type") val eventType: String,
+    @SerialName("raw_score") val rawScore: Int? = null,
+    @SerialName("score_delta") val scoreDelta: Int? = null,
+    @SerialName("lesson_id") val lessonId: Int? = null,
+    val comment: String? = null,
+)
+
+@Serializable
+data class PerformanceEventResponse(
+    val id: Int = 0,
+    @SerialName("student_id") val studentId: Int = 0,
+    @SerialName("event_type") val eventType: String = "",
+    @SerialName("raw_score") val rawScore: Int? = null,
+    @SerialName("score_delta") val scoreDelta: Int? = null,
+    @SerialName("lesson_id") val lessonId: Int? = null,
+    val comment: String? = null,
+    @SerialName("created_at") val createdAt: String? = null,
 )
 
 // ─── Blog Status ────────────────────────────────────────────

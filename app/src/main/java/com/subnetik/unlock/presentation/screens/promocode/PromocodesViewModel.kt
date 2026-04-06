@@ -2,6 +2,7 @@ package com.subnetik.unlock.presentation.screens.promocode
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.subnetik.unlock.BuildConfig
 import com.subnetik.unlock.data.local.datastore.SettingsDataStore
 import com.subnetik.unlock.data.remote.api.MarketApi
 import com.subnetik.unlock.data.remote.dto.admin.CouponRedeemRequest
@@ -84,10 +85,10 @@ class PromocodesViewModel @Inject constructor(
             _uiState.update { it.copy(isLoadingHistory = true) }
             try {
                 val wrapper = marketApi.getMyRedemptions()
-                android.util.Log.d("PromoVM", "Loaded ${wrapper.redemptions.size} redemptions, total=${wrapper.total}")
+                if (BuildConfig.DEBUG) android.util.Log.d("PromoVM", "Loaded ${wrapper.redemptions.size} redemptions, total=${wrapper.total}")
                 _uiState.update { it.copy(redemptions = wrapper.redemptions, isLoadingHistory = false) }
             } catch (e: Exception) {
-                android.util.Log.e("PromoVM", "Failed to load redemptions", e)
+                if (BuildConfig.DEBUG) android.util.Log.e("PromoVM", "Failed to load redemptions", e)
                 _uiState.update { it.copy(isLoadingHistory = false) }
             }
         }

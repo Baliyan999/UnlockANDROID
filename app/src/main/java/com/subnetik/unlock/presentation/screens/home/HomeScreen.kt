@@ -39,6 +39,8 @@ fun HomeScreen(
     onNavigateToPayment: () -> Unit = {},
     onNavigateToMarket: () -> Unit = {},
     onNavigateToReferral: () -> Unit = {},
+    onNavigateToBlog: () -> Unit = {},
+    onNavigateToReviews: () -> Unit = {},
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -256,19 +258,6 @@ fun HomeScreen(
                 )
 
                 StudentMenuItem(
-                    icon = Icons.Default.Payment,
-                    iconBg = BrandGreen,
-                    title = "Оплата",
-                    subtitle = "История оплат и квитанции.",
-                    isDark = isDark,
-                    cardColor = cardColor,
-                    strokeColor = strokeColor,
-                    primaryText = primaryText,
-                    secondaryText = secondaryText,
-                    onClick = onNavigateToPayment,
-                )
-
-                StudentMenuItem(
                     icon = Icons.Default.Translate,
                     iconBg = BrandBlue,
                     title = "Словарь HSK",
@@ -295,6 +284,32 @@ fun HomeScreen(
                 )
 
                 StudentMenuItem(
+                    icon = Icons.Default.CardGiftcard,
+                    iconBg = BrandGold,
+                    title = "Пригласить друга",
+                    subtitle = "Получай токены за приглашённых друзей.",
+                    isDark = isDark,
+                    cardColor = cardColor,
+                    strokeColor = strokeColor,
+                    primaryText = primaryText,
+                    secondaryText = secondaryText,
+                    onClick = onNavigateToReferral,
+                )
+
+                StudentMenuItem(
+                    icon = Icons.Default.Payment,
+                    iconBg = BrandGreen,
+                    title = "Оплата",
+                    subtitle = "История оплат и квитанции.",
+                    isDark = isDark,
+                    cardColor = cardColor,
+                    strokeColor = strokeColor,
+                    primaryText = primaryText,
+                    secondaryText = secondaryText,
+                    onClick = onNavigateToPayment,
+                )
+
+                StudentMenuItem(
                     icon = Icons.Default.Groups,
                     iconBg = BrandCoral,
                     title = "Записаться к Support-преподавателю",
@@ -308,16 +323,29 @@ fun HomeScreen(
                 )
 
                 StudentMenuItem(
-                    icon = Icons.Default.CardGiftcard,
-                    iconBg = BrandGold,
-                    title = "Пригласить друга",
-                    subtitle = "Получай токены за приглашённых друзей.",
+                    icon = Icons.Default.Book,
+                    iconBg = BrandIndigo,
+                    title = "Блог",
+                    subtitle = "Статьи и полезные материалы.",
                     isDark = isDark,
                     cardColor = cardColor,
                     strokeColor = strokeColor,
                     primaryText = primaryText,
                     secondaryText = secondaryText,
-                    onClick = onNavigateToReferral,
+                    onClick = onNavigateToBlog,
+                )
+
+                StudentMenuItem(
+                    icon = Icons.Default.Star,
+                    iconBg = BrandGold,
+                    title = "Отзывы",
+                    subtitle = "Читайте и оставляйте отзывы.",
+                    isDark = isDark,
+                    cardColor = cardColor,
+                    strokeColor = strokeColor,
+                    primaryText = primaryText,
+                    secondaryText = secondaryText,
+                    onClick = onNavigateToReviews,
                 )
             }
 

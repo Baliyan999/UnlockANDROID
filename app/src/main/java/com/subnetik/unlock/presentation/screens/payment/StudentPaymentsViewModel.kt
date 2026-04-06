@@ -2,6 +2,7 @@ package com.subnetik.unlock.presentation.screens.payment
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.subnetik.unlock.BuildConfig
 import com.subnetik.unlock.data.local.datastore.SettingsDataStore
 import com.subnetik.unlock.data.remote.api.PaymentApi
 import com.subnetik.unlock.data.remote.dto.payment.StudentPaymentInfoResponse
@@ -45,7 +46,7 @@ class StudentPaymentsViewModel @Inject constructor(
                 val info = paymentApi.getMyPaymentInfo()
                 _uiState.update { it.copy(isLoading = false, paymentInfo = info) }
             } catch (e: Exception) {
-                android.util.Log.e("StudentPaymentsVM", "Failed to load", e)
+                if (BuildConfig.DEBUG) android.util.Log.e("StudentPaymentsVM", "Failed to load", e)
                 _uiState.update { it.copy(isLoading = false, error = e.message) }
             }
         }

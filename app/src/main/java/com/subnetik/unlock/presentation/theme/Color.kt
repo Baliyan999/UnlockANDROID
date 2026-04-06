@@ -9,6 +9,7 @@ val BrandCoral = Color(0xFFF57840)
 val BrandIndigo = Color(0xFF5261C7)
 val BrandGold = Color(0xFFF5B038)
 val BrandGreen = Color(0xFF33B34D)
+val BrandRed = Color(0xFFE53935)
 
 // Light backgrounds
 val MistBlue = Color(0xFFEEF5FD)

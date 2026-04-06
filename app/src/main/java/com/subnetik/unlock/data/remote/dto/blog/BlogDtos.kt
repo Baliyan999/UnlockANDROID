@@ -23,7 +23,7 @@ data class BlogPostDto(
 @Serializable
 data class LikeResponse(
     val liked: Boolean,
-    @SerialName("likes_count") val likesCount: Int,
+    @SerialName("likes") val likesCount: Int,
 )
 
 @Serializable
@@ -34,4 +34,26 @@ data class LikeStatusResponse(
 @Serializable
 data class ViewResponse(
     @SerialName("views_count") val viewsCount: Int,
+)
+
+@Serializable
+data class CreateBlogPostRequest(
+    val title: String,
+    val excerpt: String? = null,
+    val content: String,
+    val slug: String,
+    val language: String = "ru",
+    val status: String = "draft",
+    @SerialName("image_url") val imageUrl: String? = null,
+)
+
+@Serializable
+data class UpdateBlogPostRequest(
+    val title: String? = null,
+    val excerpt: String? = null,
+    val content: String? = null,
+    val slug: String? = null,
+    val language: String? = null,
+    val status: String? = null,
+    @SerialName("image_url") val imageUrl: String? = null,
 )

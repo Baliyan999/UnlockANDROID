@@ -53,8 +53,17 @@ interface AdminApi {
     @PATCH("admin/users/{id}/role")
     suspend fun updateUserRole(@Path("id") id: Int, @Body request: AdminUserUpdateRequest): ApiMessageResponse
 
+    @PATCH("admin/users/{id}/teacher")
+    suspend fun assignTeacher(@Path("id") id: Int, @Body request: AssignTeacherRequest): ApiMessageResponse
+
+    @GET("admin/users/teachers")
+    suspend fun getTeachers(): List<AdminTeacherOption>
+
     @DELETE("admin/users/{id}")
     suspend fun deleteUser(@Path("id") id: Int): ApiMessageResponse
+
+    @POST("admin/users/{id}/reset-password")
+    suspend fun resetPassword(@Path("id") id: Int): PasswordResetResponse
 
     // ─── Support ─────────────────────────────────────────
     @GET("support/bookings/admin")
@@ -188,6 +197,9 @@ interface AdminApi {
     @GET("homework/my/groups")
     suspend fun getHomeworkStudentGroups(): List<HomeworkStudentGroupOverview>
 
+    @GET("homework/groups/{groupId}/rating")
+    suspend fun getGroupRating(@Path("groupId") groupId: Int): TeacherGroupRatingResponse
+
     // ─── Receipts ────────────────────────────────────────
     @GET("admin/payments/receipts")
     suspend fun getReceipts(): List<AdminReceipt>
@@ -197,6 +209,13 @@ interface AdminApi {
 
     @PUT("admin/payments/receipts/{id}/reject")
     suspend fun rejectReceipt(@Path("id") id: Int, @Body request: AdminReceiptActionRequest = AdminReceiptActionRequest()): AdminReceipt
+
+    // ─── Performance Events ─────────────────────────────
+    @POST("homework/groups/{groupId}/performance-events")
+    suspend fun createPerformanceEvent(
+        @Path("groupId") groupId: Int,
+        @Body request: CreatePerformanceEventRequest,
+    ): PerformanceEventResponse
 
     // ─── Notifications ───────────────────────────────────
     @GET("notifications/dispatch/options")

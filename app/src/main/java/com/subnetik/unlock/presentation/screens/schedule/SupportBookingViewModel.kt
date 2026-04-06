@@ -2,6 +2,7 @@ package com.subnetik.unlock.presentation.screens.schedule
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.subnetik.unlock.BuildConfig
 import com.subnetik.unlock.data.local.datastore.SettingsDataStore
 import com.subnetik.unlock.data.remote.api.StudentApi
 import com.subnetik.unlock.data.remote.dto.student.StudentSupportBooking
@@ -84,7 +85,7 @@ class SupportBookingViewModel @Inject constructor(
                 )
                 _uiState.update { it.copy(busySlots = response.busySlots.toSet(), isLoadingSlots = false) }
             } catch (e: Exception) {
-                android.util.Log.w("SupportBookingVM", "Failed to load busy slots: ${e.message}")
+                if (BuildConfig.DEBUG) android.util.Log.w("SupportBookingVM", "Failed to load busy slots: ${e.message}")
                 _uiState.update { it.copy(busySlots = emptySet(), isLoadingSlots = false) }
             }
         }

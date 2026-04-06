@@ -5,6 +5,7 @@ import com.subnetik.unlock.data.local.db.dao.TestProgressDao
 import com.subnetik.unlock.data.local.db.dao.VocabularyProgressDao
 import com.subnetik.unlock.data.remote.api.ProgressApi
 import com.subnetik.unlock.data.remote.dto.progress.ProgressSyncRequest
+import com.subnetik.unlock.data.remote.dto.progress.TestAttemptDetail
 import com.subnetik.unlock.data.remote.dto.progress.TestProgressSyncItem
 import com.subnetik.unlock.data.remote.dto.progress.VocabProgressSyncItem
 import com.subnetik.unlock.domain.model.Resource
@@ -33,6 +34,11 @@ class ProgressRepositoryImpl @Inject constructor(
             val testProgress = testProgressDao.getAll()
                 .filter { it.key.startsWith("${email}_") }
                 .map { entity ->
+                    val details = entity.bestAttemptDetailsJson?.let { raw ->
+                        try {
+                            json.decodeFromString<List<TestAttemptDetail>>(raw)
+                        } catch (_: Exception) { null }
+                    }
                     TestProgressSyncItem(
                         levelId = entity.key.removePrefix("${email}_"),
                         bestPercent = entity.bestPercent,
@@ -41,7 +47,7 @@ class ProgressRepositoryImpl @Inject constructor(
                         attempts = entity.attempts,
                         passed = entity.passed,
                         lastAttemptAt = entity.lastAttemptAt,
-                        bestAttemptDetails = null
+                        bestAttemptDetails = details,
                     )
                 }
 

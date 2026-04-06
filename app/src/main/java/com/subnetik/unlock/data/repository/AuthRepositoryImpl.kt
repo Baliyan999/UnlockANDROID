@@ -2,6 +2,7 @@ package com.subnetik.unlock.data.repository
 
 import android.util.Log
 import com.google.firebase.messaging.FirebaseMessaging
+import com.subnetik.unlock.BuildConfig
 import com.subnetik.unlock.data.local.datastore.AuthDataStore
 import com.subnetik.unlock.data.remote.api.AuthApi
 import com.subnetik.unlock.data.remote.api.NotificationApi
@@ -205,9 +206,9 @@ class AuthRepositoryImpl @Inject constructor(
             notificationApi.registerDeviceToken(
                 DeviceTokenRequest(token = token, platform = "android")
             )
-            Log.d("AuthRepo", "FCM token registered with server")
+            if (BuildConfig.DEBUG) Log.d("AuthRepo", "FCM token registered with server")
         } catch (e: Exception) {
-            Log.e("AuthRepo", "Failed to register FCM token: ${e.message}")
+            if (BuildConfig.DEBUG) Log.e("AuthRepo", "Failed to register FCM token: ${e.message}")
         }
     }
 
@@ -217,9 +218,9 @@ class AuthRepositoryImpl @Inject constructor(
             notificationApi.unregisterDeviceToken(
                 DeviceTokenRequest(token = token, platform = "android")
             )
-            Log.d("AuthRepo", "FCM token unregistered from server")
+            if (BuildConfig.DEBUG) Log.d("AuthRepo", "FCM token unregistered from server")
         } catch (e: Exception) {
-            Log.e("AuthRepo", "Failed to unregister FCM token: ${e.message}")
+            if (BuildConfig.DEBUG) Log.e("AuthRepo", "Failed to unregister FCM token: ${e.message}")
         }
     }
 }

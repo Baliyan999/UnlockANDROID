@@ -1,6 +1,7 @@
 package com.subnetik.unlock.presentation.screens.teacher
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -39,8 +40,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.subnetik.unlock.data.remote.dto.admin.AdminGroup
 import com.subnetik.unlock.data.remote.dto.admin.AdminHomeworkAssignment
-import com.subnetik.unlock.data.remote.dto.admin.HomeworkStudentGroupOverview
-import com.subnetik.unlock.data.remote.dto.admin.HomeworkStudentRatingEntry
+import com.subnetik.unlock.data.remote.dto.admin.TeacherGroupRatingStudent
 import com.subnetik.unlock.data.remote.dto.progress.TestAttemptDetail
 import com.subnetik.unlock.data.remote.dto.progress.TestProgressSyncItem
 import com.subnetik.unlock.data.remote.dto.progress.VocabProgressSyncItem
@@ -417,22 +417,15 @@ private fun HomeworkTab(
             0 -> {
                 // Stats row
                 item {
-                    val overdueCount = uiState.assignments.count { assignment ->
-                        assignment.dueDate != null && assignment.isCompleted != true && run {
-                            try {
-                                val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-                                val dueDate = sdf.parse(assignment.dueDate.take(10))
-                                dueDate != null && dueDate.before(Date())
-                            } catch (_: Exception) { false }
-                        }
-                    }
+                    val activeCount = uiState.assignments.count { it.isCompleted != true }
+                    val completedCount = uiState.assignments.count { it.isCompleted == true }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(Brand.Spacing.sm),
                     ) {
-                        GroupStatPill("${uiState.assignments.size}", "ВСЕГО ЗАДАНИЙ", BrandGreen, isDark, Modifier.weight(1f))
+                        GroupStatPill("$activeCount", "ВСЕГО ЗАДАНИЙ", BrandGreen, isDark, Modifier.weight(1f))
                         GroupStatPill("${uiState.groups.size}", "ГРУПП", BrandTeal, isDark, Modifier.weight(1f))
-                        GroupStatPill("$overdueCount", "ПРОСРОЧЕНО", BrandCoral, isDark, Modifier.weight(1f))
+                        GroupStatPill("$completedCount", "ПРОСРОЧЕНО", BrandCoral, isDark, Modifier.weight(1f))
                     }
                 }
 
@@ -492,33 +485,11 @@ private fun HomeworkTab(
             }
 
             1 -> {
-                // Rating tab - group filter chips
+                // Rating tab - group filter chips (always from teacher's groups)
                 item {
-                    if (uiState.ratingGroups.isEmpty() && !uiState.isLoadingRating) {
-                        // Show group chips from main groups for filtering
+                    if (uiState.groups.isNotEmpty()) {
                         LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                             items(uiState.groups, key = { it.id }) { group ->
-                                val isSelected = uiState.ratingSelectedGroupId == group.id
-                                Surface(
-                                    onClick = { viewModel.selectRatingGroup(group.id) },
-                                    shape = Brand.Shapes.full,
-                                    color = if (isSelected) BrandBlue else if (isDark) Color.White.copy(alpha = 0.06f) else Color.Black.copy(alpha = 0.06f),
-                                    border = if (isSelected) null else BorderStroke(1.dp, if (isDark) Color.White.copy(alpha = 0.1f) else Color.Black.copy(alpha = 0.06f)),
-                                ) {
-                                    Text(
-                                        group.name,
-                                        modifier = Modifier.padding(horizontal = 14.dp, vertical = 6.dp),
-                                        style = MaterialTheme.typography.labelMedium,
-                                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                                        color = if (isSelected) Color.White else primaryText.copy(alpha = 0.7f),
-                                        maxLines = 1,
-                                    )
-                                }
-                            }
-                        }
-                    } else if (uiState.ratingGroups.isNotEmpty()) {
-                        LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                            items(uiState.ratingGroups, key = { it.id }) { group ->
                                 val isSelected = uiState.ratingSelectedGroupId == group.id
                                 Surface(
                                     onClick = { viewModel.selectRatingGroup(group.id) },
@@ -548,10 +519,11 @@ private fun HomeworkTab(
                         ) { CircularProgressIndicator(modifier = Modifier.size(32.dp)) }
                     }
                 } else {
-                    val selectedGroup = uiState.ratingGroups.find { it.id == uiState.ratingSelectedGroupId }
-                    val ratingEntries = selectedGroup?.rating ?: emptyList()
+                    val students = uiState.groupRating?.rating
+                        ?.sortedBy { it.rank }
+                        ?: emptyList()
 
-                    if (ratingEntries.isEmpty()) {
+                    if (students.isEmpty()) {
                         item {
                             Column(
                                 modifier = Modifier.fillMaxWidth().padding(vertical = 40.dp),
@@ -568,8 +540,12 @@ private fun HomeworkTab(
                             }
                         }
                     } else {
-                        items(ratingEntries) { entry ->
-                            RatingEntryCard(entry = entry, isDark = isDark)
+                        items(students.size) { index ->
+                            TeacherRatingStudentCard(
+                                student = students[index],
+                                rank = students[index].rank,
+                                isDark = isDark,
+                            )
                         }
                     }
                 }
@@ -588,29 +564,21 @@ private fun HomeworkCard(
     val primaryText = if (isDark) Color.White else MaterialTheme.colorScheme.onSurface
     val secondaryText = if (isDark) Color.White.copy(alpha = 0.5f) else MaterialTheme.colorScheme.onSurfaceVariant
 
-    val isOverdue = assignment.dueDate != null && assignment.isCompleted != true && run {
-        try {
-            val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-            val dueDate = sdf.parse(assignment.dueDate.take(10))
-            dueDate != null && dueDate.before(Date())
-        } catch (_: Exception) { false }
-    }
+    // isCompleted from backend = deadline has passed
+    val isCompleted = assignment.isCompleted == true
 
     val strokeColor = when {
-        isOverdue -> BrandCoral.copy(alpha = 0.5f)
-        assignment.isCompleted == true -> BrandGreen.copy(alpha = 0.3f)
+        isCompleted -> BrandCoral.copy(alpha = 0.5f)
         else -> if (isDark) Color.White.copy(alpha = 0.08f) else Color.Black.copy(alpha = 0.06f)
     }
 
     val iconBgColor = when {
-        isOverdue -> BrandCoral.copy(alpha = 0.15f)
-        assignment.isCompleted == true -> BrandGreen.copy(alpha = 0.15f)
+        isCompleted -> BrandCoral.copy(alpha = 0.15f)
         else -> BrandGold.copy(alpha = 0.15f)
     }
 
     val iconTint = when {
-        isOverdue -> BrandCoral
-        assignment.isCompleted == true -> BrandGreen
+        isCompleted -> BrandCoral
         else -> BrandGold
     }
 
@@ -631,7 +599,7 @@ private fun HomeworkCard(
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
-                    if (isOverdue) Icons.Default.Warning else Icons.Default.Assignment,
+                    if (isCompleted) Icons.Default.Warning else Icons.Default.Assignment,
                     contentDescription = null,
                     tint = iconTint,
                     modifier = Modifier.size(22.dp),
@@ -659,11 +627,11 @@ private fun HomeworkCard(
                     }
                     if (assignment.dueDate != null) {
                         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                            Icon(Icons.Default.CalendarToday, contentDescription = null, modifier = Modifier.size(12.dp), tint = if (isOverdue) BrandCoral else secondaryText)
+                            Icon(Icons.Default.CalendarToday, contentDescription = null, modifier = Modifier.size(12.dp), tint = if (isCompleted) BrandCoral else secondaryText)
                             Text(
                                 formatDueDate(assignment.dueDate),
                                 style = MaterialTheme.typography.bodySmall,
-                                color = if (isOverdue) BrandCoral else secondaryText,
+                                color = if (isCompleted) BrandCoral else secondaryText,
                             )
                         }
                     }
@@ -690,16 +658,31 @@ private fun HomeworkCard(
 }
 
 @Composable
-private fun RatingEntryCard(entry: HomeworkStudentRatingEntry, isDark: Boolean) {
+private fun TeacherRatingStudentCard(
+    student: TeacherGroupRatingStudent,
+    rank: Int,
+    isDark: Boolean,
+) {
     val cardColor = if (isDark) Color.White.copy(alpha = 0.06f) else Color.White.copy(alpha = 0.9f)
     val strokeColor = if (isDark) Color.White.copy(alpha = 0.06f) else Color.Black.copy(alpha = 0.04f)
     val primaryText = if (isDark) Color.White else MaterialTheme.colorScheme.onSurface
     val secondaryText = if (isDark) Color.White.copy(alpha = 0.5f) else MaterialTheme.colorScheme.onSurfaceVariant
 
-    val rankColor = when (entry.rank) {
+    val rankColor = when (rank) {
         1 -> BrandGold
         2 -> Color(0xFFC0C0C0)
         3 -> Color(0xFFCD7F32)
+        else -> secondaryText
+    }
+
+    val trendIcon = when (student.trend) {
+        "up" -> Icons.Default.TrendingUp
+        "down" -> Icons.Default.TrendingDown
+        else -> Icons.Default.TrendingFlat
+    }
+    val trendColor = when (student.trend) {
+        "up" -> BrandGreen
+        "down" -> BrandCoral
         else -> secondaryText
     }
 
@@ -721,24 +704,65 @@ private fun RatingEntryCard(entry: HomeworkStudentRatingEntry, isDark: Boolean) 
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
-                    "#${entry.rank}",
+                    "#$rank",
                     style = MaterialTheme.typography.labelMedium,
                     fontWeight = FontWeight.Bold,
                     color = rankColor,
                 )
             }
 
-            Spacer(Modifier.width(Brand.Spacing.md))
+            Spacer(Modifier.width(Brand.Spacing.sm))
+
+            // Avatar
+            val avatarUrl = student.student?.avatarUrl?.let { url ->
+                if (url.startsWith("http")) url else "https://unlocklingua.com$url"
+            }
+            if (avatarUrl != null) {
+                coil3.compose.AsyncImage(
+                    model = avatarUrl,
+                    contentDescription = null,
+                    modifier = Modifier.size(30.dp).clip(CircleShape),
+                    contentScale = ContentScale.Crop,
+                )
+            } else {
+                Box(
+                    modifier = Modifier.size(30.dp).background(BrandBlue.copy(alpha = 0.15f), CircleShape),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(
+                        student.displayName.take(1),
+                        style = MaterialTheme.typography.labelMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = BrandBlue,
+                    )
+                }
+            }
+
+            Spacer(Modifier.width(Brand.Spacing.sm))
 
             Column(modifier = Modifier.weight(1f)) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        student.displayName.ifBlank { "?" },
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = primaryText,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f, fill = false),
+                    )
+                    if (student.trend != null) {
+                        Spacer(Modifier.width(6.dp))
+                        Icon(
+                            trendIcon,
+                            contentDescription = student.trend,
+                            modifier = Modifier.size(16.dp),
+                            tint = trendColor,
+                        )
+                    }
+                }
                 Text(
-                    entry.student?.displayName ?: "?",
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = primaryText,
-                )
-                Text(
-                    "Заданий: ${entry.gradedAssignments} • Ср. оценка: ${entry.averageGrade?.let { String.format("%.1f", it) } ?: "—"}",
+                    "Выполнено: ${student.completedHomeworks} • Ср. оценка: ${student.averageGrade?.let { String.format("%.1f", it) } ?: "—"}",
                     style = MaterialTheme.typography.bodySmall,
                     color = secondaryText,
                 )
@@ -749,7 +773,7 @@ private fun RatingEntryCard(entry: HomeworkStudentRatingEntry, isDark: Boolean) 
                 color = BrandGold.copy(alpha = 0.12f),
             ) {
                 Text(
-                    "${entry.totalScore}",
+                    "${student.ratingPoints}",
                     modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
                     style = MaterialTheme.typography.labelLarge,
                     fontWeight = FontWeight.Bold,
@@ -798,6 +822,11 @@ fun TeacherGroupsDetailScreen(viewModel: TeacherGroupsViewModel, isDark: Boolean
 
     if (uiState.showProgress && uiState.selectedStudent != null) {
         TeacherGroupsProgressScreen(viewModel = viewModel, isDark = isDark)
+        return
+    }
+
+    if (uiState.showPerformanceEvent && uiState.selectedStudent != null) {
+        TeacherGroupsPerformanceEventScreen(viewModel = viewModel, isDark = isDark)
         return
     }
 
@@ -870,7 +899,7 @@ fun TeacherGroupsDetailScreen(viewModel: TeacherGroupsViewModel, isDark: Boolean
                     item { Box(modifier = Modifier.fillMaxWidth().padding(vertical = Brand.Spacing.xl), contentAlignment = Alignment.Center) { CircularProgressIndicator(modifier = Modifier.size(32.dp)) } }
                 } else {
                     items(uiState.groupStudents, key = { it.id }) { student ->
-                        GroupStudentCard(student = student, isDark = isDark, onProgressClick = { viewModel.openProgress(student) }, onAttendanceClick = { viewModel.openAttendance(student) })
+                        GroupStudentCard(student = student, scheduleDays = group.scheduleDays, isDark = isDark, onProgressClick = { viewModel.openProgress(student) }, onAttendanceClick = { viewModel.openAttendance(student) }, onPerformanceClick = { viewModel.openPerformanceEvent(student) })
                     }
                 }
                 item { Spacer(Modifier.height(Brand.Spacing.xl)) }
@@ -893,11 +922,22 @@ private fun DetailInfoChip(icon: androidx.compose.ui.graphics.vector.ImageVector
 }
 
 @Composable
-private fun GroupStudentCard(student: com.subnetik.unlock.data.remote.dto.admin.AdminStudent, isDark: Boolean, onProgressClick: () -> Unit, onAttendanceClick: () -> Unit) {
+private fun GroupStudentCard(student: com.subnetik.unlock.data.remote.dto.admin.AdminStudent, scheduleDays: String?, isDark: Boolean, onProgressClick: () -> Unit, onAttendanceClick: () -> Unit, onPerformanceClick: () -> Unit) {
     val cardColor = if (isDark) Color.White.copy(alpha = 0.06f) else Color.White.copy(alpha = 0.9f)
     val strokeColor = if (isDark) Color.White.copy(alpha = 0.06f) else Color.Black.copy(alpha = 0.04f)
     val primaryText = if (isDark) Color.White else MaterialTheme.colorScheme.onSurface
     val secondaryText = if (isDark) Color.White.copy(alpha = 0.5f) else MaterialTheme.colorScheme.onSurfaceVariant
+
+    val monthTotal = student.currentMonthTotalLessons(scheduleDays)
+    val monthPresent = student.currentMonthAttendanceCount
+    val monthPercent = student.currentMonthAttendancePercent(scheduleDays)
+    val attendanceText = if (monthTotal > 0) {
+        "Посещаемость: $monthPresent/$monthTotal • $monthPercent%"
+    } else {
+        "Посещаемость: Нет занятий"
+    }
+    val isLessonDay = com.subnetik.unlock.data.remote.dto.admin.AdminStudent.isTodayLessonDay(scheduleDays)
+
     Surface(modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(16.dp), color = cardColor, border = BorderStroke(1.dp, strokeColor)) {
         Row(modifier = Modifier.padding(Brand.Spacing.md), verticalAlignment = Alignment.CenterVertically) {
             val avatarUrl = student.avatarUrl?.let { url -> if (url.startsWith("http")) url else "https://unlocklingua.com$url" }
@@ -911,7 +951,30 @@ private fun GroupStudentCard(student: com.subnetik.unlock.data.remote.dto.admin.
             Spacer(Modifier.width(Brand.Spacing.md))
             Column(modifier = Modifier.weight(1f)) {
                 Text(student.fullName, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = primaryText, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                Text("Посещаемость: ${student.attendanceCount}/${student.totalLessons} • ${student.attendancePercent}%", style = MaterialTheme.typography.bodySmall, color = secondaryText)
+                Text(attendanceText, style = MaterialTheme.typography.bodySmall, color = secondaryText)
+            }
+            // Today's attendance status icon (only on lesson days)
+            if (isLessonDay) {
+                Box(
+                    modifier = Modifier
+                        .size(28.dp)
+                        .background(
+                            if (student.todayAttended) BrandGreen.copy(alpha = 0.15f) else Color.Gray.copy(alpha = 0.10f),
+                            CircleShape,
+                        ),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(
+                        if (student.todayAttended) Icons.Default.CheckCircle else Icons.Default.RadioButtonUnchecked,
+                        contentDescription = if (student.todayAttended) "Присутствует" else "Отсутствует",
+                        tint = if (student.todayAttended) BrandGreen else Color.Gray,
+                        modifier = Modifier.size(18.dp),
+                    )
+                }
+                Spacer(Modifier.width(4.dp))
+            }
+            IconButton(onClick = onPerformanceClick, modifier = Modifier.size(36.dp)) {
+                Icon(Icons.Default.Star, contentDescription = "Баллы", tint = BrandGold, modifier = Modifier.size(22.dp))
             }
             IconButton(onClick = onProgressClick, modifier = Modifier.size(36.dp)) {
                 Icon(Icons.Default.BarChart, contentDescription = "Прогресс", tint = BrandTeal, modifier = Modifier.size(22.dp))

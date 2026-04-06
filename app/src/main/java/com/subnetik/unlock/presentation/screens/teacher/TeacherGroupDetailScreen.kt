@@ -50,6 +50,12 @@ fun TeacherGroupDetailScreen(
         return
     }
 
+    // Performance event overlay
+    if (uiState.showPerformanceEvent && uiState.selectedStudent != null) {
+        TeacherPerformanceEventScreen(viewModel = viewModel, isDark = isDark)
+        return
+    }
+
     val primaryText = if (isDark) Color.White else MaterialTheme.colorScheme.onSurface
     val secondaryText = if (isDark) Color.White.copy(alpha = 0.5f) else MaterialTheme.colorScheme.onSurfaceVariant
     val cardColor = if (isDark) Color.White.copy(alpha = 0.06f) else Color.White.copy(alpha = 0.9f)
@@ -229,9 +235,11 @@ fun TeacherGroupDetailScreen(
                     items(uiState.groupStudents, key = { it.id }) { student ->
                         TeacherStudentCard(
                             student = student,
+                            scheduleDays = group.scheduleDays,
                             isDark = isDark,
                             onProgressClick = { viewModel.openProgress(student) },
                             onAttendanceClick = { viewModel.openAttendance(student) },
+                            onPerformanceClick = { viewModel.openPerformanceEvent(student) },
                         )
                     }
                 }
@@ -278,14 +286,27 @@ private fun InfoChip(
 @Composable
 private fun TeacherStudentCard(
     student: AdminStudent,
+    scheduleDays: String?,
     isDark: Boolean,
     onProgressClick: () -> Unit,
     onAttendanceClick: () -> Unit,
+    onPerformanceClick: () -> Unit,
 ) {
     val cardColor = if (isDark) Color.White.copy(alpha = 0.06f) else Color.White.copy(alpha = 0.9f)
     val strokeColor = if (isDark) Color.White.copy(alpha = 0.06f) else Color.Black.copy(alpha = 0.04f)
     val primaryText = if (isDark) Color.White else MaterialTheme.colorScheme.onSurface
     val secondaryText = if (isDark) Color.White.copy(alpha = 0.5f) else MaterialTheme.colorScheme.onSurfaceVariant
+
+    val monthTotal = student.currentMonthTotalLessons(scheduleDays)
+    val monthPresent = student.currentMonthAttendanceCount
+    val monthPercent = student.currentMonthAttendancePercent(scheduleDays)
+    val attendanceText = if (monthTotal > 0) {
+        "Посещаемость: $monthPresent/$monthTotal • $monthPercent%"
+    } else {
+        "Посещаемость: Нет занятий"
+    }
+
+    val isLessonDay = AdminStudent.isTodayLessonDay(scheduleDays)
 
     Surface(
         modifier = Modifier.fillMaxWidth(),
@@ -338,9 +359,43 @@ private fun TeacherStudentCard(
                     overflow = TextOverflow.Ellipsis,
                 )
                 Text(
-                    "Посещаемость: ${student.attendanceCount}/${student.totalLessons} • ${student.attendancePercent}%",
+                    attendanceText,
                     style = MaterialTheme.typography.bodySmall,
                     color = secondaryText,
+                )
+            }
+
+            // Today's attendance status icon (only on lesson days)
+            if (isLessonDay) {
+                Box(
+                    modifier = Modifier
+                        .size(28.dp)
+                        .background(
+                            if (student.todayAttended) BrandGreen.copy(alpha = 0.15f) else Color.Gray.copy(alpha = 0.10f),
+                            CircleShape,
+                        ),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(
+                        if (student.todayAttended) Icons.Default.CheckCircle else Icons.Default.RadioButtonUnchecked,
+                        contentDescription = if (student.todayAttended) "Присутствует" else "Отсутствует",
+                        tint = if (student.todayAttended) BrandGreen else Color.Gray,
+                        modifier = Modifier.size(18.dp),
+                    )
+                }
+                Spacer(Modifier.width(4.dp))
+            }
+
+            // Performance event button
+            IconButton(
+                onClick = onPerformanceClick,
+                modifier = Modifier.size(36.dp),
+            ) {
+                Icon(
+                    Icons.Default.Star,
+                    contentDescription = "Баллы",
+                    tint = BrandGold,
+                    modifier = Modifier.size(22.dp),
                 )
             }
 
