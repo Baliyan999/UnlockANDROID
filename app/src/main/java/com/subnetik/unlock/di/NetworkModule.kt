@@ -7,19 +7,21 @@ import com.subnetik.unlock.data.remote.api.AiApi
 import com.subnetik.unlock.data.remote.api.AuthApi
 import com.subnetik.unlock.data.remote.api.CalendarApi
 import com.subnetik.unlock.data.remote.api.BlogApi
+import com.subnetik.unlock.data.remote.api.ChatApi
 import com.subnetik.unlock.data.remote.api.LeadApi
 import com.subnetik.unlock.data.remote.api.ReviewsApi
 import com.subnetik.unlock.data.remote.api.MarketApi
 import com.subnetik.unlock.data.remote.api.NotificationApi
 import com.subnetik.unlock.data.remote.api.PaymentApi
 import com.subnetik.unlock.data.remote.api.ProgressApi
+import com.subnetik.unlock.data.remote.api.TeacherCardsApi
+import com.subnetik.unlock.data.remote.api.TtsApi
 import com.subnetik.unlock.data.remote.interceptors.AuthInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
-import okhttp3.CertificatePinner
 import okhttp3.Dns
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -43,6 +45,12 @@ object NetworkModule {
     private val fallbackDns = object : Dns {
         private val hardcoded = mapOf(
             "unlocklingua.com" to listOf(InetAddress.getByName("157.180.90.95")),
+            // jsdelivr fronts Cloudflare — any edge IP works for fetching
+            // stroke-data JSONs via SNI over HTTPS.
+            "cdn.jsdelivr.net" to listOf(
+                InetAddress.getByName("104.16.175.226"),
+                InetAddress.getByName("104.16.174.226"),
+            ),
         )
 
         override fun lookup(hostname: String): List<InetAddress> {
@@ -64,19 +72,6 @@ object NetworkModule {
         coerceInputValues = true
     }
 
-    /**
-     * Certificate pinning for unlocklingua.com.
-     * Pins Let's Encrypt R12 (primary) and ISRG Root X1 (fallback)
-     * so the app keeps working when Let's Encrypt rotates intermediates.
-     */
-    private val certificatePinner = CertificatePinner.Builder()
-        .add(
-            "unlocklingua.com",
-            "sha256/kZwN96eHtZftBWrOZUsd6cA4es80n3NzSk/XtYz2EqQ=", // Let's Encrypt R12
-            "sha256/C5+lpZ7tcVwmwQIMcRtPbsQtWLABXhQzejna0wHFr8M=", // ISRG Root X1 (fallback)
-        )
-        .build()
-
     @Provides
     @Singleton
     fun provideOkHttpClient(authInterceptor: AuthInterceptor): OkHttpClient {
@@ -91,7 +86,6 @@ object NetworkModule {
         return OkHttpClient.Builder()
             .addInterceptor(authInterceptor)
             .addInterceptor(logging)
-            .certificatePinner(certificatePinner)
             .apply { if (BuildConfig.DEBUG) dns(fallbackDns) }
             .connectTimeout(20, TimeUnit.SECONDS)
             .readTimeout(60, TimeUnit.SECONDS)
@@ -168,4 +162,19 @@ object NetworkModule {
     @Singleton
     fun provideBlogApi(retrofit: Retrofit): BlogApi =
         retrofit.create(BlogApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideTeacherCardsApi(retrofit: Retrofit): TeacherCardsApi =
+        retrofit.create(TeacherCardsApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideChatApi(retrofit: Retrofit): ChatApi =
+        retrofit.create(ChatApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideTtsApi(retrofit: Retrofit): TtsApi =
+        retrofit.create(TtsApi::class.java)
 }
